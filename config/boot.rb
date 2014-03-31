@@ -11,17 +11,9 @@ Mongoid.load!(Peas.root + '/config/mongoid.yml')
 
 module Peas
   class API < Grape::API
+  	rescue_from :all
     format :json
-    mount ::Peas::Ping
-    mount ::Peas::RescueFrom
-    mount ::Peas::PathVersioning
-    mount ::Peas::HeaderVersioning
-    mount ::Peas::PostPut
-    mount ::Peas::PostJson
-    mount ::Peas::ContentType
-    mount ::Peas::UploadFile
-    mount ::Peas::Entities::API
+    mount ::Peas::Create
     add_swagger_documentation api_version: 'v1'
   end
 end
-

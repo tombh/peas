@@ -4,3 +4,10 @@ development:
       database: peas_dev
       hosts:
         - localhost:27017
+
+test:
+  sessions:
+    default:
+      database: peas_test
+      hosts:
+        - localhost:27017

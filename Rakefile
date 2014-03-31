@@ -24,10 +24,17 @@ task :environment do
   require File.expand_path("../config/environment", __FILE__)
 end
 
+desc "List all Grape API routes"
 task :routes => :environment do
   Peas::API.routes.each do |route|
-    p route
+    puts route
   end
+end
+
+desc "Run pry console"
+task :console do |t, args|
+  ENV['RACK_ENV'] = args[:environment] || 'development'
+  exec "pry -r ./config/environment"
 end
 
 require 'rubocop/rake_task'

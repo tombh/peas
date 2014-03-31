@@ -13,6 +13,6 @@ end
 
 require 'capybara/rspec'
 Capybara.configure do |config|
-  config.app = Peas::App.new
+  config.app = Peas::API.new
   config.server_port = 9293
 end

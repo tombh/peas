@@ -1,0 +1,1 @@
+Dir["#{File.dirname(__FILE__)}/../api/workers/**/*.rb"].each { |f| require f }
