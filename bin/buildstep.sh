@@ -3,6 +3,8 @@ set -e
 NAME="$1"
 REPO="$2"
 
+git clone $REPO /tmp
+
 # Place the app inside the container
 ID=$(tar cC /tmp/$REPO . | docker run -i -a stdin progrium/buildstep /bin/bash -c "mkdir -p /app && tar -xC /app")
 test $(docker wait $ID) -eq 0
