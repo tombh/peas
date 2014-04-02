@@ -69,10 +69,12 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     connection_pool (1.2.0)
+    database_cleaner (1.2.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
     equalizer (0.0.9)
+    fabrication (2.9.0)
     ffi (1.9.3)
     formatador (0.2.4)
     grape-entity (0.4.1)
@@ -197,6 +199,8 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
+  database_cleaner
+  fabrication
   grape!
   grape-swagger
   guard

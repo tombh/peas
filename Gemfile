@@ -21,6 +21,8 @@ group :test do
   gem 'rspec'
   gem 'rspec-sidekiq'
   gem 'rack-test'
+  gem 'database_cleaner'
+  gem 'fabrication'
   gem 'capybara'
   gem 'selenium-webdriver'
 end

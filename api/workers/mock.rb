@@ -3,7 +3,7 @@ class MockWorker
   include Sidekiq::Status::Worker
 
   def perform(arg)
-    store output: "testing"
+    store output: arg
     output = retrieve :output
   end
 end

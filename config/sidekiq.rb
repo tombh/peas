@@ -1,3 +1,4 @@
+require './config/environment'
 require 'sidekiq-status'
 
 Dir["#{File.dirname(__FILE__)}/../api/workers/**/*.rb"].each { |f| require f }

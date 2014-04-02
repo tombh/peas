@@ -9,9 +9,9 @@ describe 'Peas CLI' do
 
   it 'should create an app' do
     stub_request(:post, /create\?repo=git@github\.com:test\/test\.git/)
-      .to_return(body: '{"test": "this"}')
+      .to_return(body: '{"message": "App \'test\' successfully created\n"}')
     output = cli ['create']
-    expect(output).to eq "{\"test\": \"this\"}\n"
+    expect(output).to eq "App 'test' successfully created\n"
   end
 
   it 'should deploy an app' do

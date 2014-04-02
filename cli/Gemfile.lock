@@ -35,6 +35,7 @@ GEM
     multi_json (1.9.2)
     multi_test (0.1.1)
     multi_xml (0.5.5)
+    rainbow (2.0.0)
     rake (10.2.2)
     rdoc (4.1.1)
       json (~> 1.4)
@@ -58,6 +59,7 @@ DEPENDENCIES
   aruba
   httparty
   peas!
+  rainbow
   rake
   rdoc
   rspec

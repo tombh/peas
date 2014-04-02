@@ -15,14 +15,17 @@ version Peas::VERSION
 desc 'Create an app'
 command :create do |c|
   c.action do |global_options,options,args|
-    @api.request :post, :create, {repo: @git.remote}
+    @api.request :post, :create, {
+      first_sha: @git.first_sha,
+      remote: @git.remote
+    }
   end
 end
 
 desc 'Deploy an app'
 command :deploy do |c|
   c.action do |global_options,options,args|
-    @api.request :get, :deploy, {repo: @git.remote}
+    @api.request :get, :deploy, {first_sha: @git.first_sha}
   end
 end
 
