@@ -5,6 +5,7 @@ gem 'grape', github: 'intridea/grape'
 gem 'grape-swagger'
 gem 'mongoid', github: 'mongoid/mongoid'
 gem 'sidekiq'
+gem 'sidekiq-status'
 
 group :development do
   gem 'rake'
@@ -18,6 +19,7 @@ end
 
 group :test do
   gem 'rspec'
+  gem 'rspec-sidekiq'
   gem 'rack-test'
   gem 'capybara'
   gem 'selenium-webdriver'

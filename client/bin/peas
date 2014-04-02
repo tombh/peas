@@ -18,11 +18,10 @@ command :create do |c|
   end
 end
 
-desc 'Describe deploy here'
-arg_name 'Describe arguments to deploy here'
+desc 'Deploy an app'
 command :deploy do |c|
   c.action do |global_options,options,args|
-    puts "deploy command ran"
+    @api.request :get, :deploy, {name: @git.remote}
   end
 end
 

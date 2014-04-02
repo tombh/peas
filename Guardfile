@@ -9,5 +9,6 @@ group :server do
 end
 
 guard 'sidekiq', :require => './config/sidekiq.rb', :environment => 'development' do
-  watch(%r{^workers/(.+)\.rb$})
+  watch('config/sidekiq.rb')
+  watch(%r{workers/(.+)\.rb$})
 end

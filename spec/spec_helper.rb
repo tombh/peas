@@ -2,9 +2,10 @@ require 'rubygems'
 
 ENV["RACK_ENV"] ||= 'test'
 
-require 'rack/test'
-
 require File.expand_path("../../config/environment", __FILE__)
+require 'rack/test'
+require 'sidekiq/testing'
+
 
 RSpec.configure do |config|
   config.mock_with :rspec
