@@ -1,6 +1,0 @@
-= peas
-
-Describe your project here
-
-:include:peas.rdoc
-

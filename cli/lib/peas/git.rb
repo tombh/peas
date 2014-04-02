@@ -1,6 +1,10 @@
 class Git
   def intialize
-    @root = sh 'git rev-parse --show-toplevel'
+    @root = root_path
+  end
+
+  def root_path
+    sh 'git rev-parse --show-toplevel'
   end
 
   def sh cmd

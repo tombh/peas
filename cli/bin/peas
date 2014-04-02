@@ -3,6 +3,7 @@ require 'gli'
 require 'peas'
 
 include GLI::App
+reset # Used when this file is repetitively loaded by rspec
 
 @git = Git.new
 @api = API.new
@@ -14,14 +15,14 @@ version Peas::VERSION
 desc 'Create an app'
 command :create do |c|
   c.action do |global_options,options,args|
-    @api.request :post, :create, {name: @git.remote}
+    @api.request :post, :create, {repo: @git.remote}
   end
 end
 
 desc 'Deploy an app'
 command :deploy do |c|
   c.action do |global_options,options,args|
-    @api.request :get, :deploy, {name: @git.remote}
+    @api.request :get, :deploy, {repo: @git.remote}
   end
 end
 
@@ -46,4 +47,5 @@ on_error do |exception|
   true
 end
 
-exit run(ARGV)
+exit_status = run(ARGV)
+exit exit_status if ENV['GLI_ENV'] != 'test'

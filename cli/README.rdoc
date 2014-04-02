@@ -1,0 +1,8 @@
+= peas
+
+Command line client for Peas.
+
+Willeventually be rolled out into its own repo.
+
+:include:peas.rdoc
+
