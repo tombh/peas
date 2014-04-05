@@ -7,6 +7,9 @@ module Peas
   def self.environment
   	ENV['RACK_ENV']
   end
+  def self.domain
+  	'vcap.me'
+  end
 end
 
 $LOAD_PATH.unshift(Peas.root)

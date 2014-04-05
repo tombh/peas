@@ -1,9 +1,8 @@
 require './config/environment'
 
-use Rack::Proxy do |req|
-  if req.host =~ %r{peas.vcap.me}
-    URI.parse("http://localhost:49155/#{req.path}")
-  end
+
+use Rack::Proxy do |request|
+  Peas.proxy request
 end
 
 run Peas::Application

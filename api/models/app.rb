@@ -22,7 +22,7 @@ class App
       if peas.count == 0
         worker :scale, {web: 1} do
           broadcast
-          broadcast "        Deployed to http://#{name}.vcap.me"
+          broadcast "        Deployed to http://#{name}.#{Peas.domain}"
         end
       end
     end
@@ -51,7 +51,8 @@ class App
           app: self,
           port: port,
           docker_id: did,
-          process_type: process_type
+          process_type: process_type,
+          host: 'localhost'
         )
       end
     end

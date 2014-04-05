@@ -26,7 +26,7 @@ describe App do
       allow_any_instance_of(App).to receive(:scale) # Prevent scaling
       expect_any_instance_of(App).to receive(:broadcast).with(no_args)
       expect_any_instance_of(App).to receive(:broadcast).with(
-        /        Deployed to http:\/\/#{app.name}.vcap.me/
+        /        Deployed to http:\/\/#{app.name}.#{Peas.domain}/
       )
       Sidekiq::Testing.inline! do
         app.deploy
