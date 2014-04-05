@@ -19,7 +19,7 @@ module Peas
 
     rescue_from :all do |e|
       Application.logger.error e
-      if ENV['RACK_ENV'] = 'development'
+      if Peas.environment == 'development'
         error_response({ message: "#{e.message} @ #{e.backtrace[0]}" })
       end
     end

@@ -29,6 +29,17 @@ describe Peas::API do
       expect(ModelWorker.jobs.size).to eq 1
       expect(ModelWorker).to have_enqueued_job('App', app.id.to_s, 'deploy')
     end
+
+    it "scaling" do
+      app = Fabricate :app
+      scaling_hash = {'web' => 3, 'worker' => 2}
+      put "/scale", {first_sha: app.first_sha, scaling_hash: scaling_hash.to_json}
+      expect(last_response.status).to eq 200
+      expect(JSON.parse(last_response.body)).to have_key('job')
+      expect(ModelWorker.jobs.size).to eq 1
+      expect(ModelWorker).to have_enqueued_job('App', app.id.to_s, 'scale', scaling_hash)
+    end
+
   end
 
   describe 'Long-running requests' do

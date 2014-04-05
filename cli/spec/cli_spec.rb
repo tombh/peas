@@ -16,9 +16,24 @@ describe 'Peas CLI' do
   end
 
   it 'should deploy an app' do
-    stub_request(:get, /deploy/).to_return(body: '{"message": "deployed"}')
+    stub_request(:get, /deploy/).to_return(body: '{"job": "123"}')
+    stub_request(:get, /status/).to_return(
+      {body: '{"status": "working", "output": "deploying\n"}'}
+    )
     output = cli ['deploy']
-    expect(output).to eq "deployed\n"
+    expect(output).to eq "deploying\n"
+  end
+
+  it 'should scale an app' do
+    stub_request(
+      :put,
+      /scale\?first_sha=fakesha&scaling_hash=%7B%22web%22:%223%22,%22worker%22:%222%22%7D/
+    ).to_return(body: '{"job": "123"}')
+    stub_request(:get, /status/).to_return(
+      {body: '{"status": "working", "output": "scaling\n"}'}
+    )
+    output = cli %w(scale web=3 worker=2)
+    expect(output).to eq "scaling\n"
   end
 
   it 'should retrieve and output a long-running command' do

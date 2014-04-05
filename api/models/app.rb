@@ -43,7 +43,7 @@ class App
     peas.destroy_all
     # Respawn all needed containers
     processes.each do |process_type, quantity|
-      quantity.times do |i|
+      quantity.to_i.times do |i|
         broadcast "Scaling process '#{process_type}:#{i+1}'"
         did = docker_run process_type
         port = get_docker_port did
