@@ -42,7 +42,8 @@ module WorkerHelper
   end
 
   # Stream output to Sidekiq job status
-  def stream_sh command
+  def stream_sh command, broadcastable = true
+    accumulated = ''
     # Redirects STDOUT and STDERR to STDOUT
     IO.popen("#{command} 2>&1", chdir: Peas.root) do |data|
       while line = data.gets
@@ -51,7 +52,8 @@ module WorkerHelper
 your user to the docker group, eg: \`gpasswd -a <username> docker\`. And remember to log in and out to enable the \
 new group."""
         end
-        broadcast line
+        accumulated += line
+        broadcast line if broadcastable
       end
       data.close
       if $?.to_i > 0
@@ -62,6 +64,12 @@ new group."""
         end
       end
     end
+    return accumulated.strip
+  end
+
+  # Same as stream_sh but doesn't broadcast the ouput to Sidekiq::Status
+  def sh command
+    stream_sh command, false
   end
 
 end

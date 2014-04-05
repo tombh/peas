@@ -63,10 +63,15 @@ describe WorkerHelper do
     end
   end
 
-  describe 'Streaming shell commands' do
+  describe 'Shell commands' do
     it 'should run a shell command and broadcast its output' do
       expect(app).to receive(:broadcast).with('hi')
       app.stream_sh 'echo -n "hi"'
+    end
+
+    it 'should return the total accumulated output stipped()' do
+      output = app.stream_sh 'echo "line1\nline2"'
+      expect(output).to eq("line1\nline2")
     end
 
     it 'should stream commands by broadcasting every new line' do
@@ -81,6 +86,11 @@ describe WorkerHelper do
     it 'should raise a custom error message' do
       expect(app).to receive(:raise).with(/Peas does not have permission to use docker/)
       app.stream_sh 'echo "docker.sock: permission denied" && exit 1'
+    end
+
+    it 'should not broadcast ouput when sh() is used' do
+      expect(app).to_not receive(:broadcast)
+      app.sh 'echo -n "hi"'
     end
   end
 

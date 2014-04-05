@@ -34,26 +34,41 @@ class App
   end
 
   # Given a hash of processes like {web: 2, worker: 1} create and/or the necessary containers
-  # TODO: calculate the differences rather than blanket destroy everything and rebuild!
+  # TODO: calculate the differences rather than blanket destroy everything!
   def scale processes
     # Destroy all existing containers
     peas.each do |pea|
-      `docker inspect #{pea.docker_id} &> /dev/null && docker kill #{pea.docker_id} > /dev/null`
+      docker_kill pea.docker_id
     end
     peas.destroy_all
     # Respawn all needed containers
     processes.each do |process_type, quantity|
       quantity.times do |i|
         broadcast "Scaling process '#{process_type}:#{i+1}'"
-        did = `docker run -d -p 5000 -e PORT=5000 #{name} /bin/bash -c "/start #{process_type}"`.strip
-        port = `docker port #{did} 5000 | sed 's/0.0.0.0://'`.strip
+        did = docker_run process_type
+        port = get_docker_port did
         Pea.create!(
           app: self,
           port: port,
-          docker_id: did
+          docker_id: did,
+          process_type: process_type
         )
       end
     end
   end
 
+  # Run a docker container with the app using the specified process type
+  def docker_run process_type
+    sh "docker run -d -p 5000 -e PORT=5000 #{name} /bin/bash -c \"/start #{process_type}\""
+  end
+
+  # Run a docker container with the app using the specified process type
+  def docker_kill docker_id
+    sh "docker inspect #{docker_id} &> /dev/null && docker kill #{docker_id} > /dev/null"
+  end
+
+  # Run a docker container with the app using the specified process type
+  def get_docker_port docker_id
+    sh "docker port #{docker_id} 5000 | sed 's/0.0.0.0://'"
+  end
 end
