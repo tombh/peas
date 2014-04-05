@@ -1,12 +1,10 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'mongoid'
-require 'sidekiq'
-require 'sidekiq-status'
 
 Bundler.require :default, ENV['RACK_ENV']
 
-Dir["#{File.dirname(__FILE__)}/../api/**/*.rb"].each { |f| require f }
+Dir["#{Peas.root}/lib/**/*.rb"].each { |f| require f }
+Dir["#{Peas.root}/api/**/*.rb"].each { |f| require f }
 
 Mongoid.load!(Peas.root + '/config/mongoid.yml')
 

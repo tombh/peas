@@ -3,12 +3,19 @@ guard 'bundler' do
 end
 
 group :server do
-  guard :shotgun, port: ENV['PORT'] do
-    watch(/.+/) # watch *every* file in the directory
+  guard :shotgun, port: ENV['PORT'] || '3004' do
+    watch(%r{api/(.+)\.rb$})
+    watch(%r{config/(.+)\.rb$})
   end
 end
 
-guard 'sidekiq', :require => './config/sidekiq.rb', :environment => 'development' do
+sidekiq_args = [
+  :require => './config/sidekiq.rb',
+  :environment => 'development',
+  :concurrency => 5
+]
+guard(:sidekiq, *sidekiq_args) do
   watch('config/sidekiq.rb')
   watch(%r{workers/(.+)\.rb$})
+  watch(%r{lib/(.+)\.rb$})
 end

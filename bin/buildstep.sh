@@ -12,6 +12,8 @@ else
 	git clone --depth 1 $REMOTE $tmp_repo_path
 fi
 
+echo
+
 # Place the app inside the container
 ID=$(tar cC $tmp_repo_path . | docker run -i -a stdin progrium/buildstep /bin/bash -c "mkdir -p /app && tar -xC /app")
 test $(docker wait $ID) -eq 0
