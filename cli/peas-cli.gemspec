@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
     "lib/peas/config.rb",
     "lib/peas/git.rb",
     "lib/peas/version.rb",
+    "peas-cli.gemspec",
     "spec/cli_spec.rb",
     "spec/spec_helper.rb"
   ]
