@@ -28,9 +28,3 @@ end
 RSpec::Sidekiq.configure do |config|
   config.warn_when_jobs_not_processed_by_sidekiq = false
 end
-
-require 'capybara/rspec'
-Capybara.configure do |config|
-  config.app = Peas::API.new
-  config.server_port = 9293
-end
