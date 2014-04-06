@@ -6,3 +6,12 @@ rvm:
 language: ruby
 
 cache: bundler
+
+services:
+  - mongodb
+  - redis-server
+
+before_script:
+  - 'cd cli && bundle install'
+
+script: './bin/travis.sh'

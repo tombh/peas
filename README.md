@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/tombh/peas.svg?branch=master)](https://travis-ci.org/tombh/peas)
 Peas
 ====
 __PaaS for the People__
@@ -7,24 +8,37 @@ inspired by [Deis](http://deis.io) and [Dokku](https://github.com/progrium/dokku
 
 Peas' philosophy is to be an accessible and easily hackable PaaS. It doesn't aim to be a complete
 enterprise solution. Instead it aims to be a relatively unopinionated, but solid starting place using all the goodness
-of Ruby; Rspec, Bundler, Guard, Rack, Puma, Grape, Sidekiq, GLI and so on.
+of Ruby;
+[Rspec](http://rspec.info/),
+[Bundler](http://bundler.io/),
+[Guard](https://github.com/guard/guard),
+[Rack](http://rack.github.io/),
+[Puma](http://puma.io/),
+[Grape](http://intridea.github.io/grape/),
+[Sidekiq](http://sidekiq.org/),
+[GLI](http://davetron5000.github.io/gli/)
+and more.
 
 #Development Installation
 
 Peas is at a very early stage and has only been tested locally and on Vagrant.
 
 ##Dependencies
-You will need Docker, Redis (for Sidekiq jobs) and Mongo DB
+You will need
+[Docker](https://www.docker.io/gettingstarted/),
+[Redis](http://redis.io/) ([OSX installation](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/), Linux users can just use your package manager) and
+[Mongo DB](http://docs.mongodb.org/manual/installation/). All of these are generally installable via your system's package, no compiling should be necessary.
 
 ##Local
 ```bash
+docker pull progrium/buildstep # This runs Heroku buildpacks against repos to create deployable app images
 git clone https://github.com/tombh/peas.git
 bundle install
 bundle exec guard
 ```
 
 ##Vagrant
-There is a Vagrantfile in the root that attempts to get most of the setup done for you.
+There is a Vagrantfile in the root that attempts to get most of the setup done for you:
 ```bash
 vagrant up # Takes a long time first time
 vagrant ssh
