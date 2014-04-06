@@ -1,6 +1,6 @@
 Peas
 ====
-_PaaS for the People_
+__PaaS for the People__
 
 Peas is a Heroku-style Platform as a Service written in Ruby using [Docker](http://www.docker.io). It is heavily
 inspired by [Deis](http://deis.io) and [Dokku](https://github.com/progrium/dokku).
@@ -64,7 +64,7 @@ You can scale processes using:
 These are the only commands currently supported.
 
 #Roadmap
-*Installation for production environments like AWS and Digital Ocean.
-*Users. Peas currently Peas has absolutely no concept of users :/
-*Nodes, or 'pods' if we're keeping with the 'pea' theme. Therefore distributing containers over multiple servers.
-*App config variables. App logs. And so on...
+  * Installation for production environments like AWS and Digital Ocean.
+  * Users. Peas currently Peas has absolutely no concept of users :/
+  * Nodes, or 'pods' if we're keeping with the 'pea' theme. Therefore distributing containers over multiple servers.
+  * App config variables. App logs. And so on...

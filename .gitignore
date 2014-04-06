@@ -4,3 +4,4 @@
 .irbrc
 .bundle
 log
+.vagrant/
