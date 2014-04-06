@@ -24,6 +24,4 @@ group :test do
   gem 'rack-test'
   gem 'database_cleaner'
   gem 'fabrication'
-  gem 'capybara'
-  gem 'selenium-webdriver'
 end

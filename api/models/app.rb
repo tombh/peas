@@ -52,7 +52,7 @@ class App
           port: port,
           docker_id: did,
           process_type: process_type,
-          host: 'localhost' 
+          host: 'localhost'
         )
       end
     end
@@ -63,12 +63,12 @@ class App
     sh "docker run -d -p 5000 -e PORT=5000 #{name} /bin/bash -c \"/start #{process_type}\""
   end
 
-  # Run a docker container with the app using the specified process type
+  # Kill a running docker container
   def docker_kill docker_id
     sh "docker inspect #{docker_id} &> /dev/null && docker kill #{docker_id} > /dev/null"
   end
 
-  # Run a docker container with the app using the specified process type
+  # Gett the publicly accessible port of a running docker container
   def get_docker_port docker_id
     sh "docker port #{docker_id} 5000 | sed 's/0.0.0.0://'"
   end

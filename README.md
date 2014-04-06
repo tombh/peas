@@ -79,6 +79,6 @@ These are the only commands currently supported.
 
 #Roadmap
   * Installation for production environments like AWS and Digital Ocean.
-  * Users. Peas currently Peas has absolutely no concept of users :/
+  * Users. Peas currently has absolutely no concept of users :/
   * Nodes, or 'pods' if we're keeping with the 'pea' theme. Therefore distributing containers over multiple servers.
   * App config variables. App logs. And so on...
