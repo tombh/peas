@@ -11,7 +11,4 @@ services:
   - mongodb
   - redis-server
 
-before_script:
-  - 'cd cli && bundle install'
-
-script: './bin/travis.sh'
+script: 'bundle exec rspec'

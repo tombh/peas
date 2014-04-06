@@ -47,7 +47,7 @@ bundle exec guard
 ```
 
 ##CLI client
-`gem install peas`
+`gem install peas-cli`
 
 #Usage
 
