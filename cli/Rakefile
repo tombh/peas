@@ -15,7 +15,7 @@ require 'jeweler'
 require './lib/peas/version.rb'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
-  gem.name = "Peas"
+  gem.name = "Peas-CLI"
   gem.homepage = "http://github.com/tombh/peas"
   gem.license = "GPL v2"
   gem.version = Peas::VERSION
