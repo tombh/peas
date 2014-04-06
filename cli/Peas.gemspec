@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     ".rspec",
     "Gemfile",
     "Gemfile.lock",
+    "Peas.gemspec",
     "README.md",
     "Rakefile",
     "VERSION",
