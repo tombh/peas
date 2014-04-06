@@ -52,7 +52,7 @@ class App
           port: port,
           docker_id: did,
           process_type: process_type,
-          host: 'localhost'
+          host: 'localhost' 
         )
       end
     end

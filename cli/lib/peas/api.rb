@@ -2,34 +2,42 @@ require 'httparty'
 
 class API
   include HTTParty
-  base_uri 'localhost:3004'
 
   LONG_POLL_TIMEOUT = 10 * 60
   LONG_POLL_INTERVAL = 0.5
 
+  # This allows base_uri to be dynamically set. Useful for testing
+  def initialize
+    self.class.base_uri Peas.config['domain'] || 'localhost:4000'
+  end
+
   # Generic wrapper to the Peas API
   def request verb, method, params
     response = self.class.send(verb, "/#{method}", {query: params}).body
-    @json = JSON.parse(response)
+    if response
+      json = JSON.parse(response)
+    else
+      json = {}
+    end
     # If there was an HTTP-level error
-    raise @json['error'].color(:red) if @json.has_key? 'error'
+    raise json['error'].color(:red) if json.has_key? 'error'
     # Successful responses
-    if @json.has_key? 'job'
+    if json.has_key? 'job'
       # Long-running jobs need to poll a job status endpoint
-      long_running_output
+      long_running_output json['job']
     else
       # Normal API repsonse
-      puts @json['message']
+      puts json['message']
     end
   end
 
   # Rudimentary long-polling to stream the status of a job.
-  def long_running_output
+  def long_running_output job
     count = 0
     begin
       sleep LONG_POLL_INTERVAL
       # API request to the /status endpoint
-      status = JSON.parse self.class.send(:get, '/status', {query: {job: @json['job']}}).body
+      status = JSON.parse self.class.send(:get, '/status', {query: {job: job}}).body
       if status['status'] != 'failed'
         if status['output']
           # Don't output the accumulated progress log every time. Just output the difference

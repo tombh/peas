@@ -40,6 +40,15 @@ describe Peas::API do
       expect(ModelWorker).to have_enqueued_job('App', app.id.to_s, 'scale', scaling_hash)
     end
 
+    describe 'Setting' do
+      it "should create a new setting" do
+        put "/setting", {domain: 'test.com'}
+        expect(Setting.count).to eq 1
+        domain = Setting.where(key: 'domain').first.value
+        expect(domain).to eq 'test.com'
+      end
+    end
+
   end
 
   describe 'Long-running requests' do

@@ -20,13 +20,14 @@ describe App do
       end
     end
 
-    it "should broadcast the app's URI" do
+    it "should broadcast the app's URI for a custom domain" do
+      Fabricate :setting, key: 'domain', value: 'custom-domain.com'
       allow_any_instance_of(App).to receive(:stream_sh).and_return(true) # Prevent a build
       allow(Sidekiq::Status).to receive(:status).and_return(:complete) # Build completes instantly
       allow_any_instance_of(App).to receive(:scale) # Prevent scaling
       expect_any_instance_of(App).to receive(:broadcast).with(no_args)
       expect_any_instance_of(App).to receive(:broadcast).with(
-        /        Deployed to http:\/\/#{app.name}.#{Peas.domain}/
+        /        Deployed to http:\/\/#{app.name}\.custom-domain\.com/
       )
       Sidekiq::Testing.inline! do
         app.deploy

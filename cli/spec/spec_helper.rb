@@ -22,22 +22,13 @@ ensure
   $stdout = old
 end
 
-# Execute a block that triggers STDERR and test output
-def capture_stderr(&blk)
-  old = $stderr
-  $stderr = fake = StringIO.new
-  blk.call
-  fake.string
-ensure
-  $stderr = old
-end
-
 # Clever little function to simulate CLI requests.
 # Usage: cli(['create', '--flag', '--switch']).
 # Output is suppressed, captured and returned.
 def cli args
   stub_const "ARGV", args
   capture_stdout do
+    ENV['GLI_DEBUG'] = 'true'
     load File.join(ROOT, 'bin/peas')
   end
 end

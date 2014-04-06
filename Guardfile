@@ -3,10 +3,9 @@ guard 'bundler' do
 end
 
 group :server do
-  guard :shotgun, port: ENV['PORT'] || '3004' do
-    watch(%r{api/(.+)\.rb$})
-    watch(%r{lib/(.+)\.rb$})
-    watch(%r{config/(.+)\.rb$})
+  guard 'puma', port: ENV['PORT'] || '4000', bind: 'tcp://0.0.0.0', quiet: false do
+    watch('Gemfile.lock')
+    watch(%r{^config|lib|api/.*})
   end
 end
 

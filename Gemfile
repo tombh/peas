@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'puma'
 gem 'rack'
 gem 'grape', github: 'intridea/grape'
 gem 'grape-swagger'
@@ -11,7 +12,7 @@ group :development do
   gem 'rake'
   gem 'guard'
   gem 'guard-bundler'
-  gem 'guard-shotgun', :git => 'https://github.com/rchampourlier/guard-shotgun.git'
+  gem 'guard-puma'
   gem 'guard-sidekiq'
   gem 'rb-inotify'
   gem 'rubocop'

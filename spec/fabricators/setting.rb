@@ -1,0 +1,2 @@
+Fabricator :setting do
+end

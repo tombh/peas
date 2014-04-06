@@ -8,7 +8,12 @@ module Peas
   	ENV['RACK_ENV']
   end
   def self.domain
-  	'vcap.me'
+  	setting = Setting.where(key: 'domain')
+  	if setting.count == 1
+      setting.first.value
+    else
+  		'vcap.me'
+    end
   end
 end
 

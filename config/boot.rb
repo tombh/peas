@@ -13,7 +13,11 @@ module Peas
 
     helpers do
       def logger
-        Application.logger
+        if Peas.environment != 'test'
+          Application.logger
+        else
+          Logger.new("/dev/null")
+        end
       end
     end
 
