@@ -1,3 +1,3 @@
 module Peas
-  VERSION = '0.0.1'
+  VERSION = File.read File.expand_path("../../../VERSION", __FILE__)
 end

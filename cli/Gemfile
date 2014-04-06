@@ -1,10 +1,14 @@
 source 'https://rubygems.org'
-gemspec
 
+gem 'gli'
 gem 'httparty'
 gem 'rainbow'
 
 group :test do
   gem 'rspec'
   gem 'webmock'
+end
+
+group :development do
+	gem 'jeweler'
 end

@@ -5,3 +5,4 @@
 .bundle
 log
 .vagrant/
+pkg

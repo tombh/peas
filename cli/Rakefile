@@ -1,44 +1,35 @@
-require 'rake/clean'
+# encoding: utf-8
+
 require 'rubygems'
-require 'rubygems/package_task'
-require 'rdoc/task'
-require 'cucumber'
-require 'cucumber/rake/task'
-Rake::RDocTask.new do |rd|
-  rd.main = "README.rdoc"
-  rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
-  rd.title = 'Your application title'
+require 'bundler'
+begin
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
 end
+require 'rake'
 
-spec = eval(File.read('peas.gemspec'))
-
-Gem::PackageTask.new(spec) do |pkg|
+require 'jeweler'
+require './lib/peas/version.rb'
+Jeweler::Tasks.new do |gem|
+  # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
+  gem.name = "Peas"
+  gem.homepage = "http://github.com/tombh/peas"
+  gem.license = "GPL v2"
+  gem.version = Peas::VERSION
+  gem.summary = %Q{CLI client for Peas}
+  gem.description = %Q{Peas is an open source Heroku-style PaaS written in Ruby and using Docker}
+  gem.email = "tom@tombh.co.uk"
+  gem.authors = ["Tom Buckley-Houston"]
+  gem.files.include 'VERSION'
+  # dependencies defined in Gemfile
 end
-CUKE_RESULTS = 'results.html'
-CLEAN << CUKE_RESULTS
-desc 'Run features'
-Cucumber::Rake::Task.new(:features) do |t|
-  opts = "features --format html -o #{CUKE_RESULTS} --format progress -x"
-  opts += " --tags #{ENV['TAGS']}" if ENV['TAGS']
-  t.cucumber_opts =  opts
-  t.fork = false
-end
+Jeweler::RubygemsDotOrgTasks.new
 
-desc 'Run features tagged as work-in-progress (@wip)'
-Cucumber::Rake::Task.new('features:wip') do |t|
-  tag_opts = ' --tags ~@pending'
-  tag_opts = ' --tags @wip'
-  t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x -s#{tag_opts}"
-  t.fork = false
+desc "Code coverage detail"
+task :simplecov do
+  ENV['COVERAGE'] = "true"
+  Rake::Task['test'].execute
 end
-
-task :cucumber => :features
-task 'cucumber:wip' => 'features:wip'
-task :wip => 'features:wip'
-require 'rake/testtask'
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList['test/*_test.rb']
-end
-
-task :default => [:test,:features]

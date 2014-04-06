@@ -1,5 +1,0 @@
-= peas
-
-Generate this with
-    peas rdoc
-After you have described your command line interface
