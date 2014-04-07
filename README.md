@@ -13,6 +13,8 @@ of Ruby;
 [Bundler](http://bundler.io/),
 [Guard](https://github.com/guard/guard),
 [Rack](http://rack.github.io/),
+[Mongoid](http://mongoid.org/en/mongoid/index.html),
+[Docker-api](https://github.com/swipely/docker-api),
 [Puma](http://puma.io/),
 [Grape](http://intridea.github.io/grape/),
 [Sidekiq](http://sidekiq.org/),

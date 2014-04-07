@@ -1,5 +1,6 @@
 # Convenience functions to allow long-running tasks such as system calls to be run asynchronously
-# with callbacks and for their status to broadcast and bubbled up through nested worker processes
+# with callbacks and for their statuses to be broadcast and bubbled up through nested worker
+# processes
 module WorkerHelper
 
   def job= jid
@@ -10,7 +11,7 @@ module WorkerHelper
     @job
   end
 
-  # Wrapper function for triggering a worker, accepts callback block.
+  # Wrapper function for triggering a worker, accepts a callback block.
   # Usage: `worker(:deploy, first_sha)`
   # or: `worker(:deploy, first_sha){ task_to_be_done_on_completion() }`
   # Is equivalent to: `ModelWorker(App, _id, :deploy, first_sha, {job: @job}).perform_async()`
@@ -37,7 +38,7 @@ module WorkerHelper
     status = "#{status}\n" if !status.end_with? "\n" # Make sure everything is a line
     # Append to the current status, so no statuses are ever lost
     current = Sidekiq::Status.get_all @job
-    status = current[key] + status if current[key]
+    status = current[key] + status.force_encoding("UTF-8") if current[key]
     Sidekiq::Status.broadcast @job, {key => status}
   end
 
@@ -48,9 +49,10 @@ module WorkerHelper
     IO.popen("#{command} 2>&1", chdir: Peas.root) do |data|
       while line = data.gets
         if line =~ /docker.sock: permission denied/
-          @custom_error = """The user running Peas does not have permission to use docker. You most likely need to add \
-your user to the docker group, eg: \`gpasswd -a <username> docker\`. And remember to log in and out to enable the \
-new group."""
+          broadcastable = true
+          @custom_error = "The user running Peas does not have permission to use docker. You most" +
+            "likely need to add your user to the docker group, eg: \`gpasswd -a <username> " +
+            "docker\`. And remember to log in and out to enable the new group."
         end
         accumulated += line
         broadcast line if broadcastable

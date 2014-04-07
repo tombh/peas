@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'gli'
-require 'peas'
+require './lib/peas'
 
 @api = API.new
 

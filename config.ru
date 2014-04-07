@@ -1,4 +1,4 @@
-require './config/environment'
+require './config/boot'
 
 use Rack::Proxy do |request|
   Peas.proxy request
