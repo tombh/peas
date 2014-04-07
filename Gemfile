@@ -14,7 +14,7 @@ group :development do
   gem 'guard-bundler'
   gem 'guard-puma'
   gem 'guard-sidekiq'
-  gem 'rb-inotify'
+  gem 'rb-inotify', :require => false
   gem 'rubocop'
 end
 
