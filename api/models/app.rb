@@ -60,7 +60,7 @@ class App
 
   # Run a docker container with the app using the specified process type
   def docker_run process_type
-    sh "docker run -d -p 5000 -e PORT=5000 #{name} /bin/bash -c \"/start #{process_type}\""
+    sh("docker run -d -p 5000 -e PORT=5000 #{name} /bin/bash -c \"/start #{process_type}\"").split(' ').last
   end
 
   # Kill a running docker container

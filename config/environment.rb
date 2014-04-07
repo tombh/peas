@@ -5,14 +5,14 @@ module Peas
     File.join(File.dirname(__FILE__), "../")
   end
   def self.environment
-  	ENV['RACK_ENV']
+    ENV['RACK_ENV']
   end
   def self.domain
-  	setting = Setting.where(key: 'domain')
-  	if setting.count == 1
+    setting = Setting.where(key: 'domain')
+    if setting.count == 1
       setting.first.value
     else
-  		'vcap.me'
+      'vcap.me:4000'
     end
   end
 end
