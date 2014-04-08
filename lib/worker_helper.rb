@@ -48,6 +48,7 @@ module WorkerHelper
     IO.popen("#{command} 2>&1", chdir: Peas.root) do |data|
       while line = data.gets
         if line =~ /docker.sock: permission denied/
+          broadcastable = true
           @custom_error = """The user running Peas does not have permission to use docker. You most likely need to add \
 your user to the docker group, eg: \`gpasswd -a <username> docker\`. And remember to log in and out to enable the \
 new group."""
