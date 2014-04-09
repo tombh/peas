@@ -11,4 +11,17 @@ services:
   - mongodb
   - redis-server
 
-script: 'bundle exec rspec'
+install:
+  - export BUNDLE_GEMFILE=$PWD/Gemfile
+  - bundle install --deployment --path=${BUNDLE_PATH:-vendor/bundle}
+  - cd cli
+  - export BUNDLE_GEMFILE=$PWD/Gemfile
+  - bundle install --deployment --path=${BUNDLE_PATH:-vendor/bundle}
+
+script:
+  - cd ..
+  - export BUNDLE_GEMFILE=$PWD/Gemfile
+  - bundle exec rspec
+  - cd cli
+  - export BUNDLE_GEMFILE=$PWD/Gemfile
+  - bundle exec rspec

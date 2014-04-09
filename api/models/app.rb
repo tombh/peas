@@ -99,6 +99,7 @@ class App
 
     # Stream the output of the the buildstep process
     build_error = false
+    last_message = nil
     building.attach do |stream, chunk|
       # Save the error for later, because we still need to clean up the continer
       build_error = chunk if stream == :stderr

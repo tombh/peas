@@ -61,7 +61,7 @@ class API
   # the 'total' output on every long-polled request. We just want to output any *new* log lines.
   def output_diff log_so_far
     @accumulated_output ||= ''
-    old_count = @accumulated_output.lines.length
+    old_count = @accumulated_output.lines.count
     new_count = log_so_far.lines.length
     diff = log_so_far.lines[old_count..new_count]
     @accumulated_output = log_so_far

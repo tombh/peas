@@ -1,3 +1,7 @@
+###To be released
+**Bugfixes**:
+  * Travis now runs both API and CLI specs during the same commit hook
+
 ###0.0.3
 **17th April 2014**    
 **Bugfixes**:
