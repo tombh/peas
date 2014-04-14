@@ -45,12 +45,11 @@ class App
     processes.each do |process_type, quantity|
       quantity.to_i.times do |i|
         broadcast "Scaling process '#{process_type}:#{i+1}'"
-        did = docker_run process_type
-        port = get_docker_port did
+        container = DockerHelper.run name, process_type
         Pea.create!(
           app: self,
-          port: port,
-          docker_id: did,
+          port: container[:port],
+          docker_id: container[:id],
           process_type: process_type,
           host: 'localhost'
         )
@@ -58,18 +57,8 @@ class App
     end
   end
 
-  # Run a docker container with the app using the specified process type
-  def docker_run process_type
-    sh("docker run -d -p 5000 -e PORT=5000 #{name} /bin/bash -c \"/start #{process_type}\"").split(' ').last
-  end
-
   # Kill a running docker container
   def docker_kill docker_id
     sh "docker inspect #{docker_id} &> /dev/null && docker kill #{docker_id} > /dev/null"
-  end
-
-  # Gett the publicly accessible port of a running docker container
-  def get_docker_port docker_id
-    sh "docker port #{docker_id} 5000 | sed 's/0.0.0.0://'"
   end
 end

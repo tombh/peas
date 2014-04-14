@@ -7,6 +7,7 @@ gem 'grape-swagger'
 gem 'mongoid', github: 'mongoid/mongoid'
 gem 'sidekiq'
 gem 'sidekiq-status'
+gem 'docker-api', :require => 'docker'
 
 group :development do
   gem 'rake'
@@ -24,4 +25,6 @@ group :test do
   gem 'rack-test'
   gem 'database_cleaner'
   gem 'fabrication'
+  gem 'webmock'
+  gem 'vcr'
 end

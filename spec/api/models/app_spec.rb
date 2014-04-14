@@ -4,6 +4,12 @@ describe App do
   let(:app) { Fabricate :app }
 
   describe 'deploy()' do
+
+    before :each do
+      allow_any_instance_of(App).to receive(:stream_sh).and_return(true) # Prevent a build
+      allow(Sidekiq::Status).to receive(:status).and_return(:complete) # Build completes instantly
+    end
+
     it 'should trigger a build' do
       expect_any_instance_of(App).to receive(:build)
       Sidekiq::Testing.inline! do
@@ -12,8 +18,6 @@ describe App do
     end
 
     it 'should scale web process to 1 if there are no existing containers for the app' do
-      allow_any_instance_of(App).to receive(:stream_sh).and_return(true) # Prevent a build
-      allow(Sidekiq::Status).to receive(:status).and_return(:complete) # Build completes instantly
       expect_any_instance_of(App).to receive(:scale).with({'web' => 1})
       Sidekiq::Testing.inline! do
         app.deploy
@@ -22,8 +26,6 @@ describe App do
 
     it "should broadcast the app's URI for a custom domain" do
       Fabricate :setting, key: 'domain', value: 'custom-domain.com'
-      allow_any_instance_of(App).to receive(:stream_sh).and_return(true) # Prevent a build
-      allow(Sidekiq::Status).to receive(:status).and_return(:complete) # Build completes instantly
       allow_any_instance_of(App).to receive(:scale) # Prevent scaling
       expect_any_instance_of(App).to receive(:broadcast).with(no_args)
       expect_any_instance_of(App).to receive(:broadcast).with(
@@ -36,8 +38,6 @@ describe App do
 
     it 'should not scale web process to 1 if there are existing containers for the app' do
       Fabricate :pea, app: app
-      allow_any_instance_of(App).to receive(:stream_sh).and_return(true) # Prevent a build
-      allow(Sidekiq::Status).to receive(:status).and_return(:complete) # Build completes instantly
       expect_any_instance_of(App).to_not receive(:scale)
       Sidekiq::Testing.inline! do
         app.deploy
@@ -58,7 +58,7 @@ describe App do
 
   describe 'scale()' do
     before :each do
-      allow(app).to receive(:sh)
+      allow(Docker::Container).to receive(:create)
     end
 
     it 'should create peas' do

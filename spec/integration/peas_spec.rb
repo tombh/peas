@@ -1,4 +1,4 @@
 require 'spec_helper'
 
-describe "The Peas PaaS" do
+describe 'The Peas PaaS' do
 end
