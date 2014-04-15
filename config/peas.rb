@@ -1,5 +1,3 @@
-ENV['RACK_ENV'] ||= "test"
-
 module Peas
   # Synchronise API version with CLI version (controversial. may need to revisit this decision)
   VERSION = File.read File.expand_path("../../cli/VERSION", __FILE__)
@@ -31,8 +29,3 @@ module Peas
     end
   end
 end
-
-# Add the Peas project path to Ruby's library path for easy require()'ing
-$LOAD_PATH.unshift(Peas.root)
-
-require 'config/boot'

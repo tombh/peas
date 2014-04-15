@@ -2,15 +2,32 @@ require 'spec_helper'
 
 describe App do
   let(:app) { Fabricate :app }
+  let(:image) {
+    double(
+      start: double(
+        info: {'id' => '123abc'},
+        json: {
+          'NetworkSettings' => {
+            'Ports' =>  {
+              '5000' => [{
+                'HostPort' => '45617'
+              }]
+            }
+          }
+        }
+      )
+    )
+  }
 
   describe 'deploy()' do
 
     before :each do
-      allow_any_instance_of(App).to receive(:stream_sh).and_return(true) # Prevent a build
+      allow_any_instance_of(App).to receive(:build).and_return(true) # Prevent building
       allow(Sidekiq::Status).to receive(:status).and_return(:complete) # Build completes instantly
     end
 
     it 'should trigger a build' do
+      allow_any_instance_of(App).to receive(:scale) # Prevent scaling
       expect_any_instance_of(App).to receive(:build)
       Sidekiq::Testing.inline! do
         app.deploy
@@ -37,6 +54,9 @@ describe App do
     end
 
     it 'should not scale web process to 1 if there are existing containers for the app' do
+      allow_any_instance_of(App).to receive(:scale) # Prevent scaling
+      allow(Docker::Container).to receive(:get)
+      allow(Docker::Container).to receive(:create).and_return(image)
       Fabricate :pea, app: app
       expect_any_instance_of(App).to_not receive(:scale)
       Sidekiq::Testing.inline! do
@@ -58,12 +78,11 @@ describe App do
 
   describe 'scale()' do
     before :each do
-      allow(Docker::Container).to receive(:create)
+      allow(Docker::Container).to receive(:get)
+      allow(Docker::Container).to receive(:create).and_return(image)
     end
 
     it 'should create peas' do
-      allow(app).to receive(:docker_run) { '123112312' }
-      allow(app).to receive(:get_docker_port) { '5000' }
       app.scale({web: 3, worker: 2})
       expect(Pea.where(app: app).where(process_type: 'web').count).to eq 3
       expect(Pea.where(app: app).where(process_type: 'worker').count).to eq 2

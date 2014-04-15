@@ -2,7 +2,7 @@ require 'rubygems'
 
 ENV["RACK_ENV"] ||= 'test'
 
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path("../../config/boot", __FILE__)
 require 'rack/test'
 require 'sidekiq/testing'
 
@@ -29,7 +29,8 @@ RSpec::Sidekiq.configure do |config|
   config.warn_when_jobs_not_processed_by_sidekiq = false
 end
 
-# VCR is used to record HTTP interactions and replay them. Currently used to fake a Docker environment
+# VCR is used to record HTTP interactions and replay them. Currently used to fake a Docker
+# environment
 DOCKER_API_FIXTURES_BASE = 'spec/fixtures/docker_api'
 
 VCR.configure do |c|
@@ -41,9 +42,9 @@ end
 # Usage: `it 'should do things', :docker {}`
 # To add a new version add the version number as a new folder under spec/fixtures/docker_api and
 # VCR will detect that no recordings have been made yet and so automatically create them.
-# NB. When setting up examples, be sure to not to put setup code that nteracts with Docker in before
-# blocks as this filter hook will not catch those calls and therefore will not be able to version
-# them.
+# NB. When setting up examples, be sure to not to put setup code that interacts with Docker in
+# 'before' blocks as this filter hook will not catch those calls and therefore will not be able to
+# version them.
 RSpec.configure do |config|
   config.around(:each, :docker) do |example|
     Dir["#{Peas.root}#{DOCKER_API_FIXTURES_BASE}/*"].each do |folder|
@@ -52,6 +53,7 @@ RSpec.configure do |config|
         c.cassette_library_dir = DOCKER_API_FIXTURES_BASE + '/' + version
       end
       VCR.use_cassette(example.metadata[:description]) do
+        # Append the Docker version otherwise each example will look the same
         example.metadata[:description] += " (Docker version: #{version})"
         example.run
       end
