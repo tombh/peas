@@ -491,4 +491,268 @@ http_interactions:
         web"],"Dns":null,"Image":"peas","Volumes":null,"VolumesFrom":"","WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18191,"ExitCode":0,"StartedAt":"2014-04-15T21:22:16.303080882Z","FinishedAt":"0001-01-01T00:00:00Z","Ghost":false},"Image":"bf61f4fe03c731d0b088636e769eadd0a72cbdb35d3a90cee6eba35aee6fab67","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49167"}]}},"ResolvConfPath":"/etc/resolv.conf","HostnamePath":"/var/lib/docker/containers/073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a/hostname","HostsPath":"/var/lib/docker/containers/073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a/hosts","Name":"/cranky_hawking","Driver":"aufs","ExecDriver":"native-0.1","Volumes":{},"VolumesRW":{},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true}}'
     http_version: 
   recorded_at: Tue, 15 Apr 2014 21:22:16 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Wed, 16 Apr 2014 18:52:24 GMT
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: 073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a
+    http_version: 
+  recorded_at: Wed, 16 Apr 2014 18:52:24 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+      TE:
+      - trailers, deflate, gzip
+      Connection:
+      - TE, close
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Wed, 16 Apr 2014 18:52:24 GMT
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: 073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a
+    http_version: 
+  recorded_at: Wed, 16 Apr 2014 18:52:24 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+      TE:
+      - trailers, deflate, gzip
+      Connection:
+      - TE, close
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Wed, 16 Apr 2014 18:52:24 GMT
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: 073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a
+    http_version: 
+  recorded_at: Wed, 16 Apr 2014 18:52:24 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+      TE:
+      - trailers, deflate, gzip
+      Connection:
+      - TE, close
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Wed, 16 Apr 2014 18:52:24 GMT
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: 073ac36c90769556bdeeebc50f22c4f9ef8af48476dfe967caeb34ae4c025c6a
+    http_version: 
+  recorded_at: Wed, 16 Apr 2014 18:52:24 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/e10c1c490a2f7e74f283710e08418f814d9f57407b2e936e3564aec2c558afe2/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Wed, 16 Apr 2014 18:55:42 GMT
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: e10c1c490a2f7e74f283710e08418f814d9f57407b2e936e3564aec2c558afe2
+    http_version: 
+  recorded_at: Wed, 16 Apr 2014 18:55:42 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/e10c1c490a2f7e74f283710e08418f814d9f57407b2e936e3564aec2c558afe2/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+      TE:
+      - trailers, deflate, gzip
+      Connection:
+      - TE, close
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Wed, 16 Apr 2014 18:55:42 GMT
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: e10c1c490a2f7e74f283710e08418f814d9f57407b2e936e3564aec2c558afe2
+    http_version: 
+  recorded_at: Wed, 16 Apr 2014 18:55:42 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/e10c1c490a2f7e74f283710e08418f814d9f57407b2e936e3564aec2c558afe2/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+      TE:
+      - trailers, deflate, gzip
+      Connection:
+      - TE, close
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Wed, 16 Apr 2014 18:55:42 GMT
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: e10c1c490a2f7e74f283710e08418f814d9f57407b2e936e3564aec2c558afe2
+    http_version: 
+  recorded_at: Wed, 16 Apr 2014 18:55:42 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/e10c1c490a2f7e74f283710e08418f814d9f57407b2e936e3564aec2c558afe2/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+      TE:
+      - trailers, deflate, gzip
+      Connection:
+      - TE, close
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Wed, 16 Apr 2014 18:55:42 GMT
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: e10c1c490a2f7e74f283710e08418f814d9f57407b2e936e3564aec2c558afe2
+    http_version: 
+  recorded_at: Wed, 16 Apr 2014 18:55:42 GMT
 recorded_with: VCR 2.9.0

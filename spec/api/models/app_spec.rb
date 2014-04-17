@@ -2,25 +2,9 @@ require 'spec_helper'
 
 describe App do
   let(:app) { Fabricate :app }
-  let(:image) {
-    double(
-      start: double(
-        info: {'id' => '123abc'},
-        json: {
-          'NetworkSettings' => {
-            'Ports' =>  {
-              '5000' => [{
-                'HostPort' => '45617'
-              }]
-            }
-          }
-        }
-      )
-    )
-  }
+  include_context :docker_creation_mock
 
   describe 'deploy()' do
-
     before :each do
       allow_any_instance_of(App).to receive(:build).and_return(true) # Prevent building
       allow(Sidekiq::Status).to receive(:status).and_return(:complete) # Build completes instantly
@@ -55,8 +39,6 @@ describe App do
 
     it 'should not scale web process to 1 if there are existing containers for the app' do
       allow_any_instance_of(App).to receive(:scale) # Prevent scaling
-      allow(Docker::Container).to receive(:get)
-      allow(Docker::Container).to receive(:create).and_return(image)
       Fabricate :pea, app: app
       expect_any_instance_of(App).to_not receive(:scale)
       Sidekiq::Testing.inline! do
@@ -77,11 +59,6 @@ describe App do
   end
 
   describe 'scale()' do
-    before :each do
-      allow(Docker::Container).to receive(:get)
-      allow(Docker::Container).to receive(:create).and_return(image)
-    end
-
     it 'should create peas' do
       app.scale({web: 3, worker: 2})
       expect(Pea.where(app: app).where(process_type: 'web').count).to eq 3

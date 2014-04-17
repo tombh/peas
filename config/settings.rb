@@ -5,6 +5,18 @@ module Peas
   # The most recent version of Docker against which Peas has been tested
   DOCKER_VERSION = '0.9.0'
 
+  # Location of Docker socket, used by Remote API
+  DOCKER_SOCKET = 'unix:///var/run/docker.sock'
+
+  # Peas base path for temp files
+  PEAS_TMP_PATH = '/tmp/peas'
+
+  # Path to clone and pull repos for deploying
+  TMP_REPOS = "#{PEAS_TMP_PATH}/repos"
+
+  # Path to tar repos into before sending to buildstep
+  TMP_TARS = "#{PEAS_TMP_PATH}/tars"
+
   # Root path of the project on the host filesystem
   def self.root
     File.join(File.dirname(__FILE__), "../")

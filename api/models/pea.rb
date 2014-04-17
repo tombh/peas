@@ -34,10 +34,14 @@ class Pea
 
   # Before removing a pea from the database kill and remove the relevant app container
   before_destroy do
-    get_docker_container
-    if docker
-      docker.kill
-      docker.delete
+    begin
+      get_docker_container
+      if docker
+        docker.kill
+        docker.delete
+      end
+    rescue Docker::Error::NotFoundError
+      Peas::Application.logger.warn "Can't find pea's container, destroying DB object anyway"
     end
   end
 
