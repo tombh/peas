@@ -1,6 +1,7 @@
 module Peas
   def self.proxy request
-    if request.host =~ %r{\.#{Peas.domain.gsub('.', '\.')}$}
+    domain = Peas.domain.split(':').first
+    if request.host =~ %r{\.#{domain.gsub('.', '\.')}$}
       app_name = request.host.split('.').first
       app = App.where(name: app_name).first
       random_web_pea = Pea.where(app: app).where(process_type: 'web').to_a.sample

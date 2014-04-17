@@ -26,7 +26,7 @@ end
 desc "Run pry console"
 task :console do |t, args|
   ENV['RACK_ENV'] = args[:environment] || 'development'
-  exec "pry -r ./config/environment"
+  exec "pry -r ./config/boot"
 end
 
 require 'rubocop/rake_task'

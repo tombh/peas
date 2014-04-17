@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Peas::API do
   include Rack::Test::Methods
 
+  let(:peas_app) {Fabricate :app}
+
   def app
     Peas::API
   end
@@ -22,22 +24,20 @@ describe Peas::API do
     end
 
     it "deploying" do
-      app = Fabricate :app
-      get "/deploy", {first_sha: app.first_sha}
+      get "/deploy", {first_sha: peas_app.first_sha}
       expect(last_response.status).to eq 200
       expect(JSON.parse(last_response.body)).to have_key('job')
       expect(ModelWorker.jobs.size).to eq 1
-      expect(ModelWorker).to have_enqueued_job('App', app.id.to_s, 'deploy')
+      expect(ModelWorker).to have_enqueued_job('App', peas_app.id.to_s, 'deploy')
     end
 
     it "scaling" do
-      app = Fabricate :app
       scaling_hash = {'web' => 3, 'worker' => 2}
-      put "/scale", {first_sha: app.first_sha, scaling_hash: scaling_hash.to_json}
+      put "/scale", {first_sha: peas_app.first_sha, scaling_hash: scaling_hash.to_json}
       expect(last_response.status).to eq 200
       expect(JSON.parse(last_response.body)).to have_key('job')
       expect(ModelWorker.jobs.size).to eq 1
-      expect(ModelWorker).to have_enqueued_job('App', app.id.to_s, 'scale', scaling_hash)
+      expect(ModelWorker).to have_enqueued_job('App', peas_app.id.to_s, 'scale', scaling_hash)
     end
 
     describe 'Setting' do
@@ -66,6 +66,14 @@ describe Peas::API do
       get "/status", {job: @job}
       expect(last_response.status).to eq 200
       expect(JSON.parse(last_response.body)).to include({'output' => 'test-statuses'})
+    end
+  end
+
+  describe 'Version check' do
+    it "should log when the machine's Docker version is newer than Peas' tested version" do
+      allow(Docker).to receive(:version).and_return({'Version' => '9999999999.9.9'})
+      expect(Peas::Application.logger).to receive(:warn).with(/Using version/)
+      get "/deploy", {first_sha: peas_app.first_sha}
     end
   end
 

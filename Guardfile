@@ -15,7 +15,5 @@ sidekiq_args = [
   :concurrency => 5
 ]
 guard(:sidekiq, *sidekiq_args) do
-  watch('config/sidekiq.rb')
-  watch(%r{workers/(.+)\.rb$})
-  watch(%r{lib/(.+)\.rb$})
+  watch(%r{^config|lib|api/.*})
 end

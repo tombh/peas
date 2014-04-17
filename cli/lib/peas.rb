@@ -1,8 +1,9 @@
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "../lib"))
 require 'json'
-require 'peas/version.rb'
-require 'peas/config.rb'
-require 'peas/git.rb'
-require 'peas/api.rb'
+require 'peas/version'
+require 'peas/config'
+require 'peas/git'
+require 'peas/api'
 require 'rainbow'
 require 'rainbow/ext/string'
 
