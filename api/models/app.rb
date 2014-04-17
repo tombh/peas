@@ -102,8 +102,8 @@ class App
     building.attach do |stream, chunk|
       # Save the error for later, because we still need to clean up the continer
       build_error = chunk if stream == :stderr
+      last_message = chunk # In case error isn't sent through :stderr
       broadcast chunk
-      @last_message = chunk
     end
 
     # Commit the container with the newly built app as a new image named after the app
@@ -111,7 +111,7 @@ class App
       builder.commit 'repo' => name
     else
       build_error = "Buildstep failed with non-zero exit status. " +
-        "The last message was: #{@last_message}"
+        "The last message was: #{last_message}"
     end
 
     # Make sure to clean up after ourselves
@@ -134,7 +134,6 @@ class App
       # Just update the changes if there's an existing version of the repo
       sh "git clone --depth 1 #{remote} #{tmp_repo_path}"
     end
-
 
     # Tar the repo to make moving it around more efficient
     broadcast "#{arrow}Tarring repo"
