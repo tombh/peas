@@ -62,7 +62,7 @@ class API
   def output_diff log_so_far
     @accumulated_output ||= ''
     old_count = @accumulated_output.lines.count
-    new_count = log_so_far.lines.length
+    new_count = log_so_far.lines.count
     diff = log_so_far.lines[old_count..new_count]
     @accumulated_output = log_so_far
     puts diff.join if diff.length > 0
