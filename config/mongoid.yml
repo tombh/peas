@@ -1,3 +1,10 @@
+production:
+  sessions:
+    default:
+      database: peas
+      hosts:
+        - localhost:27017
+
 development:
   sessions:
     default:
