@@ -40,12 +40,21 @@ bundle exec guard
 ```
 
 ##Docker
-Note that because Peas itself creates Docker contairers, the Peas Docker images uses a 'Docker in Docker'
-setup, this requires the parent container to always be run with the `--privileged` flag.
-```
-docker pull tombh/peas-dind
-docker run --privileged -p 4000:4000 -i peas-dind
-```
+Once you have installed Docker, install the Peas image with: `docker pull tombh/peas`.
+
+There are 2 things to bear in mind when running Peas' Docker image. Firstly, that because Peas
+creates Docker containers inside a parent Docker container you must remember to always
+provide the `--privileged` flag when running Docker commands. Secondly, in order to persist data,
+namely, app containers and the Peas API database, you will need to use
+a [Data Volumes](http://docs.docker.io/use/working_with_volumes/). So, let's create that first.
+Individual app containers are created by Docker, so their data is kept at `/var/lib/docker` and
+MongoDB keeps its data at `/data/db`. Therefore our Data Volume can be created with:    
+`docker run -v /var/lib/docker -v /data/db -name dind-data busybox true`
+And then to run the Peas container using that Data Volume:    
+`docker run --privileged --volumes-from dind-data -p 4000:4000 -i tombh/peas`
+If you would like to hack on the codebase whilst it's running in the container you can mount your
+code into the container:    
+`docker run --privileged --volumes-from dind-data -v [path to peas codebase on host machine]:/home/peas -p 4000:4000 -i tombh/peas`
 
 ##Vagrant
 There is a Vagrantfile in the root that attempts to get most of the setup done for you:
