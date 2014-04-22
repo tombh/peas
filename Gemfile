@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'foreman'
 gem 'puma'
 gem 'rack'
 gem 'grape', github: 'intridea/grape'

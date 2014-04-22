@@ -1,4 +1,7 @@
 ###To be released
+**Features**:
+  * `Dockerfile` to allow ease of installation in multiple environments
+
 **Bugfixes**:
   * Travis now runs both API and CLI specs during the same commit hook
 

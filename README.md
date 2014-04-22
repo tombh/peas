@@ -21,22 +21,30 @@ of Ruby;
 [GLI](http://davetron5000.github.io/gli/)
 and more.
 
-#Development Installation
+#Installation
+Peas is at a very early stage and has only been tested in development environments. Formal methods
+for installing on cloud services such as EC2 and Digital Ocean will come soon. Meanwhile you can try
+using the Docker method of installation on cloud servers.
 
-Peas is at a very early stage and has only been tested locally and on Vagrant.
-
-##Dependencies
+##Local
+###Dependencies
 You will need
 [Docker](https://www.docker.io/gettingstarted/),
 [Redis](http://redis.io/) ([OSX installation](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/), Linux users can just use your package manager) and
 [Mongo DB](http://docs.mongodb.org/manual/installation/). All of these are generally installable via your system's package, no compiling should be necessary.
-
-##Local
 ```bash
 docker pull progrium/buildstep # This runs Heroku buildpacks against repos to create deployable app images
 git clone https://github.com/tombh/peas.git
 bundle install
 bundle exec guard
+```
+
+##Docker
+Note that because Peas itself creates Docker contairers, the Peas Docker images uses a 'Docker in Docker'
+setup, this requires the parent container to always be run with the `--privileged` flag.
+```
+docker pull tombh/peas-dind
+docker run --privileged -p 4000:4000 -i peas-dind
 ```
 
 ##Vagrant
@@ -45,7 +53,7 @@ There is a Vagrantfile in the root that attempts to get most of the setup done f
 vagrant up # Takes a long time first time
 vagrant ssh
 cd peas
-bundle exec guard
+foreman start
 ```
 
 ##CLI client

@@ -34,7 +34,7 @@ Vagrant.configure('2') do |config|
     sudo update-rc.d redis-server remove
     sudo update-rc.d redis-server start 80 2 3 4 5 . stop 20 0 1 6 .
     sudo gpasswd -a vagrant docker
-    sudo su - vagrant    
+    sudo su - vagrant
     docker pull progrium/buildstep
     gem install bundler
     git clone https://github.com/tombh/peas.git
