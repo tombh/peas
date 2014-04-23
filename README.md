@@ -27,11 +27,13 @@ for installing on cloud services such as EC2 and Digital Ocean will come soon. M
 using the Docker method of installation on cloud servers.
 
 ##Local
-###Dependencies
-You will need
+This is the preferred method for local development, but note that local development is also possible
+with the Docker installation method.
+You will need;
 [Docker](https://www.docker.io/gettingstarted/),
-[Redis](http://redis.io/) ([OSX installation](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/), Linux users can just use your package manager) and
-[Mongo DB](http://docs.mongodb.org/manual/installation/). All of these are generally installable via your system's package, no compiling should be necessary.
+[Redis](http://redis.io/) ([OSX installation](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/),
+Linux users can just use your package manager) and [Mongo DB](http://docs.mongodb.org/manual/installation/).
+All of these are generally installable via your system's package manager, no compiling should be necessary.
 ```bash
 docker pull progrium/buildstep # This runs Heroku buildpacks against repos to create deployable app images
 git clone https://github.com/tombh/peas.git
@@ -39,7 +41,12 @@ bundle install
 bundle exec guard
 ```
 
+The Peas API will be available at `vcap.me:4000`.
+
 ##Docker
+This installation method will work anywhere that Docker can be installed, so both locally and on
+remote servers like AWS and Digital Ocean (though this hasn't been tested yet, please let us know if
+you have success installing Peas on a remote server).
 Once you have installed Docker, install the Peas image with: `docker pull tombh/peas`.
 
 There are 2 things to bear in mind when running Peas' Docker image. Firstly, that because Peas
@@ -56,6 +63,8 @@ If you would like to hack on the codebase whilst it's running in the container y
 code into the container:    
 `docker run --privileged --volumes-from dind-data -v [path to peas codebase on host machine]:/home/peas -p 4000:4000 -i tombh/peas`
 
+The Peas API will be available at `vcap.me:4000`.
+
 ##Vagrant
 There is a Vagrantfile in the root that attempts to get most of the setup done for you:
 ```bash
@@ -65,7 +74,10 @@ cd peas
 foreman start
 ```
 
+The Peas API will be available at `peas.local:4000`.
+
 ##CLI client
+To interact with the Peas API you will need to install the command line client:
 `gem install peas-cli`
 
 #Usage
