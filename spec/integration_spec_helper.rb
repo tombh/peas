@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'timeout'
-require_relative '../../config/settings'
+require_relative '../config/settings'
 
 TMP_PATH = '/tmp/peas'
 FileUtils.mkdir_p TMP_PATH

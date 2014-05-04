@@ -20,6 +20,10 @@ export GEM_HOME="$HOME"/.gem
 if [ "$1" == "--run-tests" ]; then
   read -r sha # read the first line to STDIN
   cleaned_sha=$(echo "$sha" | sed -r 's/[^[:alnum:]]//g') # sanitise for security
+  if [ -z "$cleaned_sha" ]; then
+    echo "No commit to test"
+    exit 1
+  fi
   cd $PEAS_ROOT
   # Checkout the commit triggered by Travis CI
   git fetch -a && git checkout $cleaned_sha
