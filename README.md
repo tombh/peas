@@ -58,10 +58,10 @@ Individual app containers are created by Docker, so their data is kept at `/var/
 MongoDB keeps its data at `/data/db`. Therefore our Data Volume can be created with:    
 `docker run -v /var/lib/docker -v /data/db --name peas-data busybox true`    
 And then to run the Peas container using that Data Volume:    
-`docker run --privileged --volumes-from peas-data -p 4000:4000 -i tombh/peas`    
+`docker run -t --privileged --volumes-from peas-data -p 4000:4000 -i tombh/peas`    
 If you would like to hack on the codebase whilst it's running in the container you can mount your
 code into the container:    
-`docker run --privileged --volumes-from peas-data -v [path to peas codebase on your machine]:/home/peas -p 4000:4000 -i tombh/peas`
+`docker run -t --privileged --volumes-from peas-data -v [path to peas codebase on your machine]:/home/peas -p 4000:4000 -i tombh/peas`
 
 The Peas API will be available at `vcap.me:4000`.
 

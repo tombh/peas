@@ -96,7 +96,6 @@ fi
 
 export LANG="C.UTF-8"
 export LC_ALL="C.UTF-8"
-export RACK_ENV=production
 /usr/bin/mongod --smallfiles &
 /usr/bin/redis-server &
 foreman start -f /home/peas/Procfile &

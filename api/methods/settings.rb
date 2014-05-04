@@ -1,7 +1,7 @@
 module Peas
   class API < Grape::API
     desc "Update Peas' settings"
-    put '/setting' do
+    put '/settings' do
       params.each do |key, value|
         next if key == 'route_info'
         setting = Setting.where(key: key)

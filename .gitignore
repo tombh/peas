@@ -6,3 +6,4 @@
 log
 .vagrant/
 pkg
+vendor/
