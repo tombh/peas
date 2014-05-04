@@ -4,23 +4,32 @@ set -e
 # Don't forget to setup the Peas repo with:
 # git config --add remote.origin.fetch '+refs/pull//head:refs/remotes/origin/pr/'
 # It brings down pull requests.
+# And install bundler, mongodb and redis-server too.
+# And give the ci user the docker group: `gpasswd -a ci docker`
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )/ci-server.sh
 PEAS_ROOT="$(dirname $SCRIPTPATH)/../.."
+
+# Because the integration spec_helper bind mounts the live code onto the container we need to make
+# sure that no gems are mounted in the process, like through vendor/bundle. So we install gems
+# outside the project' path.
+export GEM_HOME="$HOME"/.gem
 
 # Handle an incoming request from Travis to run the integration tests
 if [ "$1" == "--run-tests" ]; then
   read -r sha # read the first line to STDIN
   cleaned_sha=$(echo "$sha" | sed -r 's/[^[:alnum:]]//g') # sanitise for security
-  # Checkout the commit triggered by Travis CI
   cd $PEAS_ROOT
-  cd /home/ci/repo && git pull && git checkout $cleaned_sha
-  # Install dependencies for the CLI client only
+  # Checkout the commit triggered by Travis CI
+  git pull && git checkout $cleaned_sha
+  # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
+  docker build -t tombh/peas .
+  # Install dependencies for the CLI client
   cd $PEAS_ROOT/cli
-  bundle install --deployment --without development
+  bundle install --without development
   # Run the tests
   cd $PEAS_ROOT
-  bundle install --deployment --without development
+  bundle install --without development
   bundle exec rspec --tag integration
   # Check if they passed
   if [ $? -ne 0 ]; then

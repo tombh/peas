@@ -25,7 +25,7 @@ RUN mkdir -p /data/db
 RUN mkdir /root/.ssh -p && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
 ADD ./ /home/peas
 RUN gem install bundler
-RUN cd /home/peas && bundle install
+RUN cd /home/peas && bundle install --without development
 
 # DinD magic
 RUN apt-get install -qqy iptables ca-certificates lxc aufs-tools

@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 
+ruby '2.1.1'
+
 gem 'foreman'
 gem 'puma'
 gem 'rack'
@@ -9,9 +11,9 @@ gem 'mongoid', github: 'mongoid/mongoid'
 gem 'sidekiq'
 gem 'sidekiq-status'
 gem 'docker-api', :require => 'docker'
+gem 'rake'
 
 group :development do
-  gem 'rake'
   gem 'guard'
   gem 'guard-bundler'
   gem 'guard-puma'

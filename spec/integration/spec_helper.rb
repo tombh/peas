@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'timeout'
 require_relative '../../config/settings'
 
 TMP_PATH = '/tmp/peas'

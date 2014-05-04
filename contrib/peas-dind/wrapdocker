@@ -98,6 +98,6 @@ export LANG="C.UTF-8"
 export LC_ALL="C.UTF-8"
 /usr/bin/mongod --smallfiles &
 /usr/bin/redis-server &
-foreman start -f /home/peas/Procfile &
+cd /home/peas && bundle exec foreman start -f ./Procfile &
 sleep 5
 exec bash
