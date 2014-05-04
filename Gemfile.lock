@@ -204,6 +204,7 @@ DEPENDENCIES
   guard-puma
   guard-sidekiq
   mongoid!
+  pry
   puma
   rack
   rack-test

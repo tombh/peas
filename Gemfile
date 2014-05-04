@@ -17,7 +17,7 @@ group :development do
   gem 'guard-puma'
   gem 'guard-sidekiq'
   gem 'rb-inotify', :require => false
-  gem 'rubocop'
+  gem 'pry'
 end
 
 group :test do
@@ -28,4 +28,5 @@ group :test do
   gem 'fabrication'
   gem 'webmock'
   gem 'vcr'
+  gem 'rubocop'
 end

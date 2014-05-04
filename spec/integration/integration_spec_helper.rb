@@ -53,7 +53,7 @@ class ContainerConnection
   end
   # Run a command that you would normally run with the `rake console` IRB
   def console cmd
-    bash "cd /home/peas && echo '#{cmd}' | rake console"
+    bash "cd /home/peas && echo '#{cmd}' | bundle exec rake console"
   end
   # Close the connection
   def close
@@ -64,7 +64,7 @@ end
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
-  c.treat_symbols_as_metadata_keys_with_true_values = true
+  config.treat_symbols_as_metadata_keys_with_true_values = true
 
   # Create the Peas container against which the CLI client will interact
   config.before(:all) do
@@ -91,6 +91,7 @@ RSpec.configure do |config|
 
   # Destroy the Peas container
   config.after(:all) do
+    @peas_io.bash "mongod --shutdown"
     @peas_io.close
     # Save logs before destroying
     sh "docker logs #{@peas_container_id} > #{TMP_PATH}/integration-tests.log 2>&1"

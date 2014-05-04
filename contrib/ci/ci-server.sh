@@ -26,10 +26,10 @@ if [ "$1" == "--run-tests" ]; then
   docker build -t tombh/peas .
   # Install dependencies for the CLI client
   cd $PEAS_ROOT/cli
-  bundle install --without development
+  bundle install
   # Run the tests
   cd $PEAS_ROOT
-  bundle install --without development
+  bundle install
   bundle exec rspec spec/integration
   # Check if they passed
   if [ $? -ne 0 ]; then

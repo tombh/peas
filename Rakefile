@@ -14,7 +14,6 @@ end
 require 'rake'
 
 task :boot do
-  ENV["RACK_ENV"] ||= 'development'
   require File.expand_path('../config/boot', __FILE__)
 end
 
