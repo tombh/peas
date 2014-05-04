@@ -1,7 +1,5 @@
 source 'http://rubygems.org'
 
-ruby '2.1.1'
-
 gem 'foreman'
 gem 'puma'
 gem 'rack'

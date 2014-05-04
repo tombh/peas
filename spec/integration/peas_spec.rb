@@ -1,8 +1,6 @@
-describe 'The Peas PaaS Integration Tests', :integration do
+require 'integration/integration_spec_helper'
 
-  # When not running integration tests we don't want all the docker-specific setup to be tiggered.
-  # So keep the require inside the :integration tag above.
-  require 'integration/spec_helper'
+describe 'The Peas PaaS Integration Tests', :integration do
 
   describe 'Settings' do
     it 'should update the domain' do

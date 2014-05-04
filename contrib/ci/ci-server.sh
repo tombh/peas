@@ -30,7 +30,7 @@ if [ "$1" == "--run-tests" ]; then
   # Run the tests
   cd $PEAS_ROOT
   bundle install --without development
-  bundle exec rspec --tag integration
+  bundle exec rspec spec/integration
   # Check if they passed
   if [ $? -ne 0 ]; then
     echo "INTEGRATION TESTS FAILED"

@@ -64,6 +64,7 @@ end
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
+  c.treat_symbols_as_metadata_keys_with_true_values = true
 
   # Create the Peas container against which the CLI client will interact
   config.before(:all) do
@@ -94,6 +95,7 @@ RSpec.configure do |config|
     # Save logs before destroying
     sh "docker logs #{@peas_container_id} > #{TMP_PATH}/integration-tests.log 2>&1"
     # Remove the Peas test container. But the data container 'peas-data-test' still remains
+    sh "docker stop #{@peas_container_id}"
     sh "docker rm -f #{@peas_container_id}"
   end
 
