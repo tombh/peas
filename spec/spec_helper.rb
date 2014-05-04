@@ -10,7 +10,6 @@ require 'docker_creation_mock.rb'
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
-
   config.treat_symbols_as_metadata_keys_with_true_values = true
 
   config.before(:suite) do

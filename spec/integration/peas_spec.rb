@@ -1,4 +1,4 @@
-require 'integration_spec_helper'
+require 'integration_helper'
 
 describe 'The Peas PaaS Integration Tests', :integration do
 

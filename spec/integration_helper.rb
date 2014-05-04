@@ -62,12 +62,8 @@ class ContainerConnection
 end
 
 RSpec.configure do |config|
-  config.mock_with :rspec
-  config.expect_with :rspec
-  config.treat_symbols_as_metadata_keys_with_true_values = true
-
   # Create the Peas container against which the CLI client will interact
-  config.before(:all) do
+  config.before(:all, :integration) do
     setup_data_volume
     @peas_container_id = sh(
       "docker run -d \
@@ -90,7 +86,7 @@ RSpec.configure do |config|
   end
 
   # Destroy the Peas container
-  config.after(:all) do
+  config.after(:all, :integration) do
     @peas_io.bash "mongod --shutdown"
     @peas_io.close
     # Save logs before destroying
@@ -101,7 +97,7 @@ RSpec.configure do |config|
   end
 
   # Reset state after each spec
-  config.after(:each) do
+  config.after(:each, :integration) do
     # TODO: need a way to check if these commands were successful
     @peas_io.bash "mongo peas --eval 'db.dropDatabase();'"
     @peas_io.bash "redis-cli FLUSHALL"
