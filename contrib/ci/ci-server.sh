@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+exec 2>&1 # Redirect STDERR and STDOUT to STDOUT
 
 # Don't forget to setup the Peas repo with:
 # git config --add remote.origin.fetch '+refs/pull//head:refs/remotes/origin/pr/'
@@ -21,7 +22,7 @@ if [ "$1" == "--run-tests" ]; then
   cleaned_sha=$(echo "$sha" | sed -r 's/[^[:alnum:]]//g') # sanitise for security
   cd $PEAS_ROOT
   # Checkout the commit triggered by Travis CI
-  git pull && git checkout $cleaned_sha
+  git fetch -a && git checkout $cleaned_sha
   # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
   docker build -t tombh/peas .
   # Install dependencies for the CLI client
