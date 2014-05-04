@@ -1,10 +1,8 @@
 #!/bin/bash
+set -x
 set -e
 IFS='' # Preserves whitespace when reading line by line
 TESTS_COMPLETE=0
-
-which nc
-which netcat
 
 while read -r line; do
   echo "$line"
