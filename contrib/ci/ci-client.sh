@@ -14,7 +14,7 @@ while read -r line; do
   if echo "$line" | grep -q "Finished in"; then
     TESTS_COMPLETE=1
   fi
-done <<< $(echo $TRAVIS_COMMIT | nc ci.peas.io 7000) # Prevents using a subshell which obscures vars
+done <<< $(echo $TRAVIS_COMMIT | nc -v ci.peas.io 7000) # Prevents using a subshell which obscures vars
 
 if [ $TESTS_COMPLETE == 0 ]; then
   echo "Integration tests failed to complete"
