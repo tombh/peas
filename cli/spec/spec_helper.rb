@@ -1,7 +1,9 @@
 require 'rubygems'
 require 'stringio'
 require 'webmock/rspec'
-require 'peas'
+
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "../"))
+require 'lib/peas'
 
 ENV['GLI_ENV'] = 'test'
 ROOT = File.join(File.expand_path(File.dirname(__FILE__)), '..')

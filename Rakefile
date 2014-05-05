@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'bundler'
 
+ENV['RACK_ENV'] ||= "development"
+
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
@@ -12,7 +14,6 @@ end
 require 'rake'
 
 task :boot do
-  ENV["RACK_ENV"] ||= 'development'
   require File.expand_path('../config/boot', __FILE__)
 end
 
@@ -25,7 +26,6 @@ end
 
 desc "Run pry console"
 task :console do |t, args|
-  ENV['RACK_ENV'] = args[:environment] || 'development'
   exec "pry -r ./config/boot"
 end
 

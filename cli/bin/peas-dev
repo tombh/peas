@@ -1,0 +1,8 @@
+#!/bin/bash
+# This script lets you use the development version of the Peas CLI rather than the Rubygems version
+# installed via `gem install peas-cli`.
+# Install by symlinking this file into your executbales path, eg;
+# `sudo ln -s $(pwd)/peas-dev /usr/local/bin/peas-dev'
+set -e
+PEAS_ROOT="$(dirname "$(test -L "$0" && readlink "$0" || echo "$0")")/../.."
+BUNDLE_GEMFILE=$PEAS_ROOT/cli/Gemfile GLI_DEBUG=true bundle exec $PEAS_ROOT/cli/bin/peas $@

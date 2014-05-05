@@ -19,9 +19,4 @@ install:
   - bundle install --deployment --path=${BUNDLE_PATH:-vendor/bundle}
 
 script:
-  - cd ..
-  - export BUNDLE_GEMFILE=$PWD/Gemfile
-  - bundle exec rspec
-  - cd cli
-  - export BUNDLE_GEMFILE=$PWD/Gemfile
-  - bundle exec rspec
+  - 'cd $TRAVIS_BUILD_DIR && contrib/ci/ci-client.sh'

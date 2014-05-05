@@ -8,7 +8,7 @@ class API
 
   # This allows base_uri to be dynamically set. Useful for testing
   def initialize
-    self.class.base_uri Peas.config['domain'] || 'localhost:4000'
+    self.class.base_uri Peas.api_domain
   end
 
   # Generic wrapper to the Peas API

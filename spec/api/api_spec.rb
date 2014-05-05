@@ -42,7 +42,7 @@ describe Peas::API do
 
     describe 'Setting' do
       it "should create a new setting" do
-        put "/setting", {domain: 'test.com'}
+        put "/settings", {domain: 'test.com'}
         expect(Setting.count).to eq 1
         domain = Setting.where(key: 'domain').first.value
         expect(domain).to eq 'test.com'

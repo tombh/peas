@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 require 'gli'
-require './lib/peas'
+
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "../"))
+require 'lib/peas'
 
 @api = API.new
 
@@ -72,6 +74,7 @@ command :settings do |c|
     content = Peas.config.merge(deduped).to_json
     File.open(Peas.config_file, 'w+'){|f| f.write(content) }
     # Save the settings on the server as well
+    @api = API.new # Refresh settings from file
     @api.request :put, :settings, options
     puts "New settings:"
     puts JSON.pretty_generate(Peas.config)
@@ -100,8 +103,12 @@ post do |global, command, options, args|
 end
 
 on_error do |exception|
-  # Error logic here
-  # return false to skip default error handling
+  # Show a custom error message with backtrace if it's not a GLI error
+  if exception.class.to_s.split('::').first != 'GLI'
+    puts "Unexpected error: #{exception.class}".color(:red)
+    puts "#{exception.message} @ #{exception.backtrace.last}".color(:red)
+  end
+  # GLI needs this to do its default error reporting things
   true
 end
 

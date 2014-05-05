@@ -1,9 +1,11 @@
 ###To be released
 **Features**:
   * `Dockerfile` to allow ease of installation in multiple environments
+  * Integration tests that use the Dockerfile image for consistently reproducible testing
 
 **Bugfixes**:
   * Travis now runs both API and CLI specs during the same commit hook
+  * `/setting` API method changed to `/settings`, now works with CLI (picked up by integration tests)
 
 ###0.0.3
 **17th April 2014**    
