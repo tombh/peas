@@ -26,7 +26,13 @@ if [ "$TRAVIS_RUBY_VERSION" == "2.1.1" ]; then
   while read -r line; do # Read response from server line by line
     # Rspec should always have the string 'Finished in ...' when completed
     if echo "$line" | grep -q "Finished in"; then
-      INTEGRATION_TESTS_COMPLETE=1
+      INTEGRATION_TESTS_COMPLETE="1"
+    fi
+    if echo "$line" | grep -q ", 0 failures"; then
+      INTEGRATION_TESTS_SUCCESS="1"
+    fi
+    if echo "$line" | grep -q "Failed examples"; then
+      INTEGRATION_TESTS_SUCCESS="0"
     fi
     # The CI server traps exit and always sends the following signal
     if echo "$line" | grep -q "EXIT FROM CI-SERVER"; then
@@ -36,7 +42,8 @@ if [ "$TRAVIS_RUBY_VERSION" == "2.1.1" ]; then
         echo "Integration tests failed to complete"
         exit 1
       else
-        exit 0
+        [ "$INTEGRATION_TESTS_SUCCESS" == "1" ] && exit 0
+        [ "$INTEGRATION_TESTS_SUCCESS" == "0" ] && exit 1
       fi
     fi
     echo "$line" # Output progress as it happens

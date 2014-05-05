@@ -43,7 +43,7 @@ if [ "$1" == "--run-tests" ]; then
   cd $PEAS_ROOT
   # Checkout the commit triggered by Travis CI
   git fetch -a
-  if [ -z "$TRAVIS_PULL_REQUEST" ]; then
+  if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     # If there's no Pull Request just checkout the SHA hash
     echo "Checking out $cleaned_sha ..."
     git checkout $cleaned_sha
