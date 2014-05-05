@@ -26,7 +26,7 @@ if [ "$TRAVIS_RUBY_VERSION" == "2.1.1" ]; then
   rm -f /tmp/ci
   mkfifo /tmp/ci
   cat /tmp/ci | # STDOUT of fifo triggers the `STDIN.gets' in ruby and closes the netcat connection
-  ruby -e "p $COMMIT_REF; STDIN.gets" | # Keep ruby running and thus netcat conn too
+  ruby -e "p '$COMMIT_REF'; STDIN.gets" | # Keep ruby running and thus netcat conn too
   nc ci.peas.io 7000 | # Connect to the CI server
   while read -r line; do # Read response from server line by line
     # Rspec should always have the string 'Finished in ...' when completed
