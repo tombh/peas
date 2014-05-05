@@ -19,11 +19,4 @@ install:
   - bundle install --deployment --path=${BUNDLE_PATH:-vendor/bundle}
 
 script:
-  - cd ..
-  - export BUNDLE_GEMFILE=$PWD/Gemfile
-  - bundle exec rspec --tag ~integration # Exclude integration tests
-  - cd cli
-  - export BUNDLE_GEMFILE=$PWD/Gemfile
-  - bundle exec rspec
-  - cd ..
   - contrib/ci/ci-client.sh

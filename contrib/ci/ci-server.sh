@@ -5,7 +5,7 @@ exec 2>&1 # Redirect STDERR and STDOUT to STDOUT
 # Don't forget to setup the Peas repo with:
 # git config --add remote.origin.fetch '+refs/pull//head:refs/remotes/origin/pr/'
 # It brings down pull requests.
-# And install bundler, mongodb and redis-server too.
+# And install tombh/peas, bundler, mongodb and redis-server too.
 # And give the ci user the docker group: `gpasswd -a ci docker`
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )/ci-server.sh
@@ -19,6 +19,16 @@ export GEM_HOME="$HOME"/.gem
 # Handle an incoming request from Travis to run the integration tests
 if [ "$1" == "--run-tests" ]; then
   echo "Request to run integration tests accepted..."
+  count=0
+  while docker ps | grep -q peas-test; do
+    [ $count == 0 ] && echo "Waiting for existing integration test to finish..."
+    sleep 1
+    count=$(($count + 1))
+    if [ $count -gt 900 ]; then
+      echo "Waited more than 15 mins, aborting..."
+      exit 1
+    fi
+  done
   read -r sha # read the first line to STDIN
   cleaned_sha=$(echo "$sha" | sed -r 's/[^[:alnum:]]//g') # sanitise for security
   if [ -z "$cleaned_sha" ]; then
@@ -53,5 +63,5 @@ elif [ "$1" == "--server" ]; then
   # Yes, the ncat server and the code it runs for each connection is all here in the same file -
   # just keeps things simple and together in one place.
   echo "Starting Ncat CI server..."
-  ncat --listen --keep-open --max-conns 1 --source-port 7000 --sh-exec "$SCRIPTPATH --run-tests"
+  ncat --listen --keep-open --max-conns 6 --source-port 7000 --sh-exec "$SCRIPTPATH --run-tests"
 fi
