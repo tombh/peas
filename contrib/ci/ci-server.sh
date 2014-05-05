@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 set -e
 exec 2>&1 # Redirect STDERR and STDOUT to STDOUT
 
