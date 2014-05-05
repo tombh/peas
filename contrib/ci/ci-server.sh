@@ -35,22 +35,23 @@ if [ "$1" == "--run-tests" ]; then
     fi
   done
   read -r sha # read the first line to STDIN
-  cleaned_sha=$(echo "$sha" | sed -r 's/[^[:alnum:]]//g') # sanitise for security
-  if [ -z "$cleaned_sha" ]; then
+  cleaned_ref=$(echo "$sha" | sed -r 's/[^[:alnum:]]//g') # sanitise for security
+  if [ -z "$cleaned_ref" ]; then
     echo "No commit to test"
     exit 1
   fi
   cd $PEAS_ROOT
   # Checkout the commit triggered by Travis CI
   git fetch -a
-  if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    # If there's no Pull Request just checkout the SHA hash
-    echo "Checking out $cleaned_sha ..."
-    git checkout $cleaned_sha
-  else
+  if echo $cleaned_ref | grep -q "pullrequest"; then
     # Need to do the special Github trick to checkout PRs
-    echo "Checkout Pull Request $TRAVIS_PULL_REQUEST..."
-    git checkout "pull/origin/$TRAVIS_PULL_REQUEST"
+    pr_num=${cleaned_ref#pullrequest} # Strip 'pullrequest' from beginning of string
+    echo "Checkout Pull Request $pr_num..."
+    git checkout "pull/origin/$pr_num"
+  else
+    # If there's no Pull Request just checkout the SHA hash
+    echo "Checking out $cleaned_ref ..."
+    git checkout $cleaned_ref
   fi
   # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
   echo "Rebuilding Dockerfile..."
