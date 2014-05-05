@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 set -e
 exec 2>&1 # Redirect STDERR and STDOUT to STDOUT
 
@@ -63,5 +64,5 @@ elif [ "$1" == "--server" ]; then
   # Yes, the ncat server and the code it runs for each connection is all here in the same file -
   # just keeps things simple and together in one place.
   echo "Starting Ncat CI server..."
-  ncat --listen --keep-open --max-conns 6 --source-port 7000 --sh-exec "$SCRIPTPATH --run-tests"
+  ncat -vvv --listen --keep-open --max-conns 6 --source-port 7000 --sh-exec "$SCRIPTPATH --run-tests"
 fi

@@ -28,7 +28,7 @@ if [ "$TRAVIS_RUBY_VERSION" == "2.1.1" ]; then
     if echo "$line" | grep -q "Finished in"; then
       INTEGRATION_TESTS_COMPLETE=1
     fi
-  done <<< $(echo $TRAVIS_COMMIT | nc -v ci.peas.io 7000) # Prevents using a subshell which obscures vars
+  done <<< $(echo $TRAVIS_COMMIT | nc -vvv ci.peas.io 7000) # Prevents using a subshell which obscures vars
 
   if [ $INTEGRATION_TESTS_COMPLETE == 0 ]; then
     echo "Integration tests failed to complete"
