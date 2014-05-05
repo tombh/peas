@@ -18,6 +18,7 @@ export GEM_HOME="$HOME"/.gem
 
 # Handle an incoming request from Travis to run the integration tests
 if [ "$1" == "--run-tests" ]; then
+  echo "Request to run integration tests accepted..."
   read -r sha # read the first line to STDIN
   cleaned_sha=$(echo "$sha" | sed -r 's/[^[:alnum:]]//g') # sanitise for security
   if [ -z "$cleaned_sha" ]; then
@@ -26,15 +27,20 @@ if [ "$1" == "--run-tests" ]; then
   fi
   cd $PEAS_ROOT
   # Checkout the commit triggered by Travis CI
+  echo "Checking out $cleaned_sha ..."
   git fetch -a && git checkout $cleaned_sha
   # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
+  echo "Rebuilding Dockerfile..."
   docker build -t tombh/peas .
   # Install dependencies for the CLI client
   cd $PEAS_ROOT/cli
+  echo "Installing CLI dependencies..."
   bundle install
   # Run the tests
   cd $PEAS_ROOT
+  echo "Installing API dependencies"
   bundle install
+  echo "Running integration tests"
   bundle exec rspec spec/integration
   # Check if they passed
   if [ $? -ne 0 ]; then
