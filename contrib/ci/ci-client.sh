@@ -18,7 +18,8 @@ if [ "$TRAVIS_RUBY_VERSION" == "2.1.1" ]; then
 
   # 3. INTEGRATION TESTS run on a Digital Ocean instance via a simple netcat server.
   # Note the blocking ruby STDIN.gets to prevent prematurely sending EOF to the CI-server.
-  rm /tmp/ci && mkfifo /tmp/ci
+  rm -f /tmp/ci
+  mkfifo /tmp/ci
   cat /tmp/ci | # STDOUT of fifo triggers the `STDIN.gets' in ruby and closes the netcat connection
   ruby -e "p ENV['TRAVIS_COMMIT']; STDIN.gets" | # Keep ruby running and thus netcat conn too
   nc ci.peas.io 7000 | # Connect to the CI server
