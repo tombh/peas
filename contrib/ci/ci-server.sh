@@ -8,7 +8,7 @@ function finish {
 trap finish EXIT
 
 # Don't forget to setup the Peas repo with:
-# git config --add remote.origin.fetch '+refs/pull//head:refs/remotes/origin/pr/'
+# git config --add remote.origin.fetch '+refs/pull/*/head:refs/pull/origin/*'
 # It brings down pull requests.
 # And install tombh/peas, bundler, mongodb and redis-server too.
 # And give the ci user the docker group: `gpasswd -a ci docker`
@@ -42,8 +42,16 @@ if [ "$1" == "--run-tests" ]; then
   fi
   cd $PEAS_ROOT
   # Checkout the commit triggered by Travis CI
-  echo "Checking out $cleaned_sha ..."
-  git fetch -a && git checkout $cleaned_sha
+  git fetch -a
+  if [ -z "$TRAVIS_PULL_REQUEST" ]; then
+    # If there's no Pull Request just checkout the SHA hash
+    echo "Checking out $cleaned_sha ..."
+    git checkout $cleaned_sha
+  else
+    # Need to do the special Github trick to checkout PRs
+    echo "Checkout Pull Request $TRAVIS_PULL_REQUEST..."
+    git checkout "pull/origin/$TRAVIS_PULL_REQUEST"
+  fi
   # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
   echo "Rebuilding Dockerfile..."
   docker build -t tombh/peas .

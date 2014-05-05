@@ -62,6 +62,10 @@ class ContainerConnection
 end
 
 RSpec.configure do |config|
+  config.mock_with :rspec
+  config.expect_with :rspec
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+
   # Create the Peas container against which the CLI client will interact
   config.before(:all, :integration) do
     setup_data_volume

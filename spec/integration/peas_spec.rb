@@ -19,7 +19,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       repo_path = TMP_PATH + '/node-js-sample'
       # Clone a very basic NodeJS app
       sh "rm -rf #{repo_path}"
-      sh "cd #{TMP_PATH} && git clone https://github.com/heroku/node-js-sample"
+      sh "cd #{TMP_PATH} && git clone https://github.com/heroku/node-js-sample ."
       # Create the app in Peas
       response = cli 'create', repo_path
       expect(response).to eq "App 'node-js-sample' successfully created"
