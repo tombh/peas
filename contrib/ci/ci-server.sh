@@ -2,6 +2,11 @@
 set -e
 exec 2>&1 # Redirect STDERR and STDOUT to STDOUT
 
+function finish {
+  echo "EXIT FROM CI-SERVER"
+}
+trap finish EXIT
+
 # Don't forget to setup the Peas repo with:
 # git config --add remote.origin.fetch '+refs/pull//head:refs/remotes/origin/pr/'
 # It brings down pull requests.
@@ -52,11 +57,6 @@ if [ "$1" == "--run-tests" ]; then
   bundle install
   echo "Running integration tests"
   bundle exec rspec spec/integration
-  # Check if they passed
-  if [ $? -ne 0 ]; then
-    echo "INTEGRATION TESTS FAILED"
-    exit 1
-  fi
 
 # Run the CI server
 elif [ "$1" == "--server" ]; then
