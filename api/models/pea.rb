@@ -50,33 +50,41 @@ class Pea
   # Before persisting a pea create a running container with the parent app using the specified
   # process type
   before_validation do |pea|
-    if new_record?
-      container = Docker::Container.create(
-        # `/start` is unique to progrium/buildstep, it brings a process type, such as 'web', to life
-        'Cmd' => ['/bin/bash', '-c', "/start #{pea.process_type}"],
-        # The base Docker image to use. In this case the prebuilt image created by the buildstep
-        # process
-        'Image' => app.name,
-        # Global environment variables to pass and make available to the app
-        'Env' => 'PORT=5000',
-        # Expose port 5000 from inside the container to the host machine
-        'ExposedPorts' => {
-          '5000' => {}
-        }
-      ).start(
-        # Takes each ExposedPort and forwards an external port to it. Eg; 46517 -> 5000
-        'PublishAllPorts' => 'true'
-      )
-      # Get the Docker ID so we can find it later
-      pea.docker_id = container.info['id']
-      # Find the randomly created external port that forwards to the internal 5000 port
-      pea.port = container.json['NetworkSettings']['Ports']['5000'].first['HostPort']
-      get_docker_container
-    end
+    pea.spawn_container if new_record?
   end
 
   # Before removing a pea from the database kill and remove the relevant app container
   before_destroy do
+    destroy_container
+  end
+
+  # Create the docker container for which this object is a representation
+  def spawn_container
+    container = Docker::Container.create(
+      # `/start` is unique to progrium/buildstep, it brings a process type, such as 'web', to life
+      'Cmd' => ['/bin/bash', '-c', "/start #{pea.process_type}"],
+      # The base Docker image to use. In this case the prebuilt image created by the buildstep
+      # process
+      'Image' => app.name,
+      # Global environment variables to pass and make available to the app
+      'Env' => "PORT=5000 #{app.config.join(' ')}",
+      # Expose port 5000 from inside the container to the host machine
+      'ExposedPorts' => {
+        '5000' => {}
+      }
+    ).start(
+      # Takes each ExposedPort and forwards an external port to it. Eg; 46517 -> 5000
+      'PublishAllPorts' => 'true'
+    )
+    # Get the Docker ID so we can find it later
+    docker_id = container.info['id']
+    # Find the randomly created external port that forwards to the internal 5000 port
+    port = container.json['NetworkSettings']['Ports']['5000'].first['HostPort']
+    get_docker_container
+  end
+
+  # Destroy the pea's container
+  def destroy_container
     begin
       get_docker_container
       if docker
@@ -86,7 +94,7 @@ class Pea
         docker.delete
       end
     rescue Docker::Error::NotFoundError
-      Peas::Application.logger.warn "Can't find pea's container, destroying DB object anyway"
+      Peas::API.logger.warn "Can't find pea's container, destroying DB object anyway"
     end
   end
 

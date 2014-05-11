@@ -85,7 +85,9 @@ describe App do
 
       it 'should build an app resulting in a new Docker image', :docker do
         # Use the nodejs example just because it builds so quickly
-        app = Fabricate :app, remote: 'git@github.com:heroku/node-js-sample.git', name: 'node-js-sample'
+        app = Fabricate :app,
+          remote: 'git@github.com:heroku/node-js-sample.git',
+          name: 'node-js-sample'
         allow(app).to receive(:_fetch_and_tar_repo) # Comment out when recording
         allow(app).to receive(:broadcast)
         expect(app).to receive(:broadcast).with(/       Node.js app detected/)
@@ -94,6 +96,15 @@ describe App do
         expect_any_instance_of(Docker::Container).to receive(:commit)
         expect_any_instance_of(Docker::Container).to receive(:delete)
         app.build
+      end
+
+      it "should include the ENV vars saved in the app's config", :docker do
+        app = Fabricate :app,
+          remote: 'git@github.com:heroku/node-js-sample.git',
+          name: 'node-js-sample',
+          config: [{'FOO' => 'BAR'}]
+        details = app.build
+        expect(details).to include ('FOO=BAR')
       end
 
       it 'should deal with a failed build', :docker do

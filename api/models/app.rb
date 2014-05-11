@@ -14,6 +14,9 @@ class App
   # The human-readable name for the app. Based on the remote URI. See App.remote_to_name
   field :name, type: String
 
+  # Environment variables such as a database URI, etc
+  field :config, type: Array, default: []
+
   # Peas are needed to actually run the app, suh as web and worker processes
   has_many :peas
 
@@ -45,6 +48,10 @@ class App
     profile
   end
 
+  # Restart all the app's processes. Useful in cases such as updating environment variables
+  def restart
+    scale process_types
+  end
 
   # Fetch the latest code, create an image and fire up the necessary containers to make an app
   # pubicly accessible
@@ -84,6 +91,7 @@ class App
         'Volumes' => {
           '/tmp' => {}
         },
+        'Env' => app.config.join(' '),
         'Cmd' => [
           '/bin/bash',
           '-c',
@@ -115,11 +123,16 @@ class App
         "The last message was: #{last_message}"
     end
 
+    # Keep a copy of the build container's details
+    builder_json = builder.inspect
+
     # Make sure to clean up after ourselves
     builder.kill
     builder.delete force: true
 
     raise build_error.strip if build_error
+
+    builder_json
   end
 
   def _fetch_and_tar_repo
