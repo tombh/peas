@@ -71,6 +71,7 @@ There is a Vagrantfile in the root that attempts to get most of the setup done f
 vagrant up # Takes a long time first time
 vagrant ssh
 cd peas
+bundle install
 foreman start
 ```
 
