@@ -176,4 +176,10 @@ class App
     end
   end
 
+  # Represent the app's config as a hash
+  def config_hash
+    hashed_config = {}
+    config.map{|c| hashed_config.merge! c}
+    return hashed_config
+  end
 end

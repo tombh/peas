@@ -1,5 +1,5 @@
 module Peas
-  class API < Grape::API
+  class AdminMethods < Grape::API
     desc "Update Peas' settings"
     put :settings do
       params.each do |key, value|

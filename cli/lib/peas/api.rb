@@ -13,7 +13,7 @@ class API
 
   # Generic wrapper to the Peas API
   def request verb, method, params
-    response = self.class.send(verb, "/#{method}", {query: params}).body
+    response = self.class.send(verb, "#{method}", {query: params}).body
     if response
       json = JSON.parse(response)
     else

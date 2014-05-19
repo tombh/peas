@@ -8,6 +8,7 @@ require 'lib/peas'
 ENV['GLI_ENV'] = 'test'
 ROOT = File.join(File.expand_path(File.dirname(__FILE__)), '..')
 $LOAD_PATH.unshift(File.join(ROOT, 'lib'))
+TEST_DOMAIN = 'http://localhost:4000'
 
 RSpec.configure do |config|
   config.mock_with :rspec

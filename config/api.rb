@@ -25,15 +25,6 @@ module Peas
             "(#{Peas::DOCKER_VERSION})"
         end
       end
-
-      # Convenience method to find and load the specified Peas app
-      def get_app
-        begin
-          @app = App.find_by(first_sha: params[:first_sha])
-        rescue Mongoid::Errors::DocumentNotFound
-          error! "App does not exist", 404 if !@app
-        end
-      end
     end
 
     rescue_from :all do |e|
@@ -45,13 +36,6 @@ module Peas
 
     before do
       docker_version_check
-    end
-
-    params do
-      requires :first_sha, type: String
-    end
-    resource :app do
-      mount AppMethods
     end
 
   end
