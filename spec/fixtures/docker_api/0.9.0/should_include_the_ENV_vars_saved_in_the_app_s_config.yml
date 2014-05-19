@@ -1,0 +1,408 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/create
+    body:
+      encoding: UTF-8
+      string: '{"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"Env":"{\"FOO\"=\u003e\"BAR\"}","Cmd":["/bin/bash","-c","mkdir
+        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/node-js-sample.tgz -C /app
+        \u0026\u0026 /build/builder"]}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 19 May 2014 21:28:32 GMT
+      Content-Length:
+      - '90'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        {"Id":"64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255","Warnings":null}
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:28:32 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255/start
+    body:
+      encoding: UTF-8
+      string: '{"Binds":["/tmp:/tmp"]}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Mon, 19 May 2014 21:28:32 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:28:32 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255/attach?stderr=true&stdout=true&stream=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/vnd.docker.raw-stream
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        AQAAAAAAABwgICAgICAgTm9kZS5qcyBhcHAgZGV0ZWN0ZWQKAQAAAAAAACUt
+        LS0tLT4gUmVxdWVzdGVkIG5vZGUgcmFuZ2U6ICAwLjEwLngKAQAAAAAAAE0t
+        LS0tLT4gUmVzb2x2ZWQgbm9kZSB2ZXJzaW9uOiAwLjEwLjI4Ci0tLS0tPiBE
+        b3dubG9hZGluZyBhbmQgaW5zdGFsbGluZyBub2RlCgEAAAAAAAA2LS0tLS0+
+        IFdyaXRpbmcgYSBjdXN0b20gLm5wbXJjIHRvIGNpcmN1bXZlbnQgbnBtIGJ1
+        Z3MKAQAAAAAAAB8tLS0tLT4gSW5zdGFsbGluZyBkZXBlbmRlbmNpZXMKAQAA
+        AAAAADcgICAgICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBt
+        anMub3JnL2V4cHJlc3MKAQAAAAAAADcgICAgICAgbnBtIGh0dHAgMjAwIGh0
+        dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL2V4cHJlc3MKAQAAAAAAAEsgICAg
+        ICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL2V4
+        cHJlc3MvLS9leHByZXNzLTQuMi4wLnRnegoBAAAAAAAASyAgICAgICBucG0g
+        aHR0cCAyMDAgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvZXhwcmVzcy8t
+        L2V4cHJlc3MtNC4yLjAudGd6CgEAAAAAAAA4ICAgICAgIG5wbSBodHRwIEdF
+        VCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9wYXJzZXVybAoBAAAAAAAA
+        NyAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5v
+        cmcvYWNjZXB0cwoBAAAAAAAAPCAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6
+        Ly9yZWdpc3RyeS5ucG1qcy5vcmcvcmFuZ2UtcGFyc2VyCgEAAAAAAAA3ICAg
+        ICAgIG5wbSBodHRwIEdFVCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy90
+        eXBlLWlzCgEAAAAAAAA2ICAgICAgIG5wbSBodHRwIEdFVCBodHRwczovL3Jl
+        Z2lzdHJ5Lm5wbWpzLm9yZy9jb29raWUKAQAAAAAAADwgICAgICAgbnBtIGh0
+        dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL2J1ZmZlci1jcmMz
+        MgoBAAAAAAAANSAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6Ly9yZWdpc3Ry
+        eS5ucG1qcy5vcmcvZnJlc2gKAQAAAAAAADcgICAgICAgbnBtIGh0dHAgR0VU
+        IGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL21ldGhvZHMKAQAAAAAAADQg
+        ICAgICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3Jn
+        L3NlbmQKAQAAAAAAAEAgICAgICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVn
+        aXN0cnkubnBtanMub3JnL2Nvb2tpZS1zaWduYXR1cmUKAQAAAAAAAEEgICAg
+        ICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL21l
+        cmdlLWRlc2NyaXB0b3JzCgEAAAAAAAA7ICAgICAgIG5wbSBodHRwIEdFVCBo
+        dHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy91dGlscy1tZXJnZQoBAAAAAAAA
+        OyAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5v
+        cmcvZXNjYXBlLWh0bWwKAQAAAAAAADIgICAgICAgbnBtIGh0dHAgR0VUIGh0
+        dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL3FzCgEAAAAAAAA8ICAgICAgIG5w
+        bSBodHRwIEdFVCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9zZXJ2ZS1z
+        dGF0aWMKAQAAAAAAAD4gICAgICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVn
+        aXN0cnkubnBtanMub3JnL3BhdGgtdG8tcmVnZXhwCgEAAAAAAAA1ICAgICAg
+        IG5wbSBodHRwIEdFVCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9kZWJ1
+        ZwoBAAAAAAAAOCAgICAgICBucG0gaHR0cCAyMDAgaHR0cHM6Ly9yZWdpc3Ry
+        eS5ucG1qcy5vcmcvcGFyc2V1cmwKAQAAAAAAAE0gICAgICAgbnBtIGh0dHAg
+        R0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL3BhcnNldXJsLy0vcGFy
+        c2V1cmwtMS4wLjEudGd6CgEAAAAAAAA8ICAgICAgIG5wbSBodHRwIDIwMCBo
+        dHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9yYW5nZS1wYXJzZXIKAQAAAAAA
+        AFUgICAgICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMu
+        b3JnL3JhbmdlLXBhcnNlci8tL3JhbmdlLXBhcnNlci0xLjAuMC50Z3oKAQAA
+        AAAAADcgICAgICAgbnBtIGh0dHAgMjAwIGh0dHBzOi8vcmVnaXN0cnkubnBt
+        anMub3JnL3R5cGUtaXMKAQAAAAAAADcgICAgICAgbnBtIGh0dHAgMjAwIGh0
+        dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL2FjY2VwdHMKAQAAAAAAAEsgICAg
+        ICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL3R5
+        cGUtaXMvLS90eXBlLWlzLTEuMS4wLnRnegoBAAAAAAAASyAgICAgICBucG0g
+        aHR0cCBHRVQgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvYWNjZXB0cy8t
+        L2FjY2VwdHMtMS4wLjEudGd6CgEAAAAAAAA2ICAgICAgIG5wbSBodHRwIDIw
+        MCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9jb29raWUKAQAAAAAAADwg
+        ICAgICAgbnBtIGh0dHAgMjAwIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3Jn
+        L2J1ZmZlci1jcmMzMgoBAAAAAAAASSAgICAgICBucG0gaHR0cCBHRVQgaHR0
+        cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvY29va2llLy0vY29va2llLTAuMS4y
+        LnRnegoBAAAAAAAANCAgICAgICBucG0gaHR0cCAyMDAgaHR0cHM6Ly9yZWdp
+        c3RyeS5ucG1qcy5vcmcvc2VuZAoBAAAAAAAANSAgICAgICBucG0gaHR0cCAy
+        MDAgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvZnJlc2gKAQAAAAAAAE0g
+        ICAgICAgbnBtIGh0dHAgMjAwIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3Jn
+        L3BhcnNldXJsLy0vcGFyc2V1cmwtMS4wLjEudGd6CgEAAAAAAAA3ICAgICAg
+        IG5wbSBodHRwIDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9tZXRo
+        b2RzCgEAAAAAAABVICAgICAgIG5wbSBodHRwIEdFVCBodHRwczovL3JlZ2lz
+        dHJ5Lm5wbWpzLm9yZy9idWZmZXItY3JjMzIvLS9idWZmZXItY3JjMzItMC4y
+        LjEudGd6CgEAAAAAAABBICAgICAgIG5wbSBodHRwIDIwMCBodHRwczovL3Jl
+        Z2lzdHJ5Lm5wbWpzLm9yZy9tZXJnZS1kZXNjcmlwdG9ycwoBAAAAAAAARSAg
+        ICAgICBucG0gaHR0cCBHRVQgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcv
+        c2VuZC8tL3NlbmQtMC4zLjAudGd6CgEAAAAAAABHICAgICAgIG5wbSBodHRw
+        IEdFVCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9mcmVzaC8tL2ZyZXNo
+        LTAuMi4yLnRnegoBAAAAAAAASyAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6
+        Ly9yZWdpc3RyeS5ucG1qcy5vcmcvbWV0aG9kcy8tL21ldGhvZHMtMS4wLjAu
+        dGd6CgEAAAAAAABfICAgICAgIG5wbSBodHRwIEdFVCBodHRwczovL3JlZ2lz
+        dHJ5Lm5wbWpzLm9yZy9tZXJnZS1kZXNjcmlwdG9ycy8tL21lcmdlLWRlc2Ny
+        aXB0b3JzLTAuMC4yLnRnegoBAAAAAAAAQCAgICAgICBucG0gaHR0cCAyMDAg
+        aHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvY29va2llLXNpZ25hdHVyZQoB
+        AAAAAAAAXSAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6Ly9yZWdpc3RyeS5u
+        cG1qcy5vcmcvY29va2llLXNpZ25hdHVyZS8tL2Nvb2tpZS1zaWduYXR1cmUt
+        MS4wLjMudGd6CgEAAAAAAABVICAgICAgIG5wbSBodHRwIDIwMCBodHRwczov
+        L3JlZ2lzdHJ5Lm5wbWpzLm9yZy9yYW5nZS1wYXJzZXIvLS9yYW5nZS1wYXJz
+        ZXItMS4wLjAudGd6CgEAAAAAAAA7ICAgICAgIG5wbSBodHRwIDIwMCBodHRw
+        czovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy91dGlscy1tZXJnZQoBAAAAAAAARSAg
+        ICAgICBucG0gaHR0cCAyMDAgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcv
+        c2VuZC8tL3NlbmQtMC4zLjAudGd6CgEAAAAAAABLICAgICAgIG5wbSBodHRw
+        IDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy90eXBlLWlzLy0vdHlw
+        ZS1pcy0xLjEuMC50Z3oKAQAAAAAAAFMgICAgICAgbnBtIGh0dHAgR0VUIGh0
+        dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL3V0aWxzLW1lcmdlLy0vdXRpbHMt
+        bWVyZ2UtMS4wLjAudGd6CgEAAAAAAABHICAgICAgIG5wbSBodHRwIDIwMCBo
+        dHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9mcmVzaC8tL2ZyZXNoLTAuMi4y
+        LnRnegoBAAAAAAAASyAgICAgICBucG0gaHR0cCAyMDAgaHR0cHM6Ly9yZWdp
+        c3RyeS5ucG1qcy5vcmcvbWV0aG9kcy8tL21ldGhvZHMtMS4wLjAudGd6CgEA
+        AAAAAAA7ICAgICAgIG5wbSBodHRwIDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5w
+        bWpzLm9yZy9lc2NhcGUtaHRtbAoBAAAAAAAAUyAgICAgICBucG0gaHR0cCBH
+        RVQgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvZXNjYXBlLWh0bWwvLS9l
+        c2NhcGUtaHRtbC0xLjAuMS50Z3oKAQAAAAAAAF8gICAgICAgbnBtIGh0dHAg
+        MjAwIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL21lcmdlLWRlc2NyaXB0
+        b3JzLy0vbWVyZ2UtZGVzY3JpcHRvcnMtMC4wLjIudGd6CgEAAAAAAABdICAg
+        ICAgIG5wbSBodHRwIDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9j
+        b29raWUtc2lnbmF0dXJlLy0vY29va2llLXNpZ25hdHVyZS0xLjAuMy50Z3oK
+        AQAAAAAAAD4gICAgICAgbnBtIGh0dHAgMjAwIGh0dHBzOi8vcmVnaXN0cnku
+        bnBtanMub3JnL3BhdGgtdG8tcmVnZXhwCgEAAAAAAABTICAgICAgIG5wbSBo
+        dHRwIDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy91dGlscy1tZXJn
+        ZS8tL3V0aWxzLW1lcmdlLTEuMC4wLnRnegoBAAAAAAAAUyAgICAgICBucG0g
+        aHR0cCAyMDAgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvZXNjYXBlLWh0
+        bWwvLS9lc2NhcGUtaHRtbC0xLjAuMS50Z3oKAQAAAAAAAFkgICAgICAgbnBt
+        IGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL3BhdGgtdG8t
+        cmVnZXhwLy0vcGF0aC10by1yZWdleHAtMC4xLjIudGd6CgEAAAAAAAA8ICAg
+        ICAgIG5wbSBodHRwIDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9z
+        ZXJ2ZS1zdGF0aWMKAQAAAAAAAEsgICAgICAgbnBtIGh0dHAgMjAwIGh0dHBz
+        Oi8vcmVnaXN0cnkubnBtanMub3JnL2FjY2VwdHMvLS9hY2NlcHRzLTEuMC4x
+        LnRnegoBAAAAAAAAMiAgICAgICBucG0gaHR0cCAyMDAgaHR0cHM6Ly9yZWdp
+        c3RyeS5ucG1qcy5vcmcvcXMKAQAAAAAAAFUgICAgICAgbnBtIGh0dHAgR0VU
+        IGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL3NlcnZlLXN0YXRpYy8tL3Nl
+        cnZlLXN0YXRpYy0xLjEuMC50Z3oKAQAAAAAAAEEgICAgICAgbnBtIGh0dHAg
+        R0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL3FzLy0vcXMtMC42LjYu
+        dGd6CgEAAAAAAABJICAgICAgIG5wbSBodHRwIDIwMCBodHRwczovL3JlZ2lz
+        dHJ5Lm5wbWpzLm9yZy9jb29raWUvLS9jb29raWUtMC4xLjIudGd6CgEAAAAA
+        AAA1ICAgICAgIG5wbSBodHRwIDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpz
+        Lm9yZy9kZWJ1ZwoBAAAAAAAARyAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6
+        Ly9yZWdpc3RyeS5ucG1qcy5vcmcvZGVidWcvLS9kZWJ1Zy0wLjguMS50Z3oK
+        AQAAAAAAAFUgICAgICAgbnBtIGh0dHAgMjAwIGh0dHBzOi8vcmVnaXN0cnku
+        bnBtanMub3JnL2J1ZmZlci1jcmMzMi8tL2J1ZmZlci1jcmMzMi0wLjIuMS50
+        Z3oKAQAAAAAAAFkgICAgICAgbnBtIGh0dHAgMjAwIGh0dHBzOi8vcmVnaXN0
+        cnkubnBtanMub3JnL3BhdGgtdG8tcmVnZXhwLy0vcGF0aC10by1yZWdleHAt
+        MC4xLjIudGd6CgEAAAAAAABVICAgICAgIG5wbSBodHRwIDIwMCBodHRwczov
+        L3JlZ2lzdHJ5Lm5wbWpzLm9yZy9zZXJ2ZS1zdGF0aWMvLS9zZXJ2ZS1zdGF0
+        aWMtMS4xLjAudGd6CgEAAAAAAABBICAgICAgIG5wbSBodHRwIDIwMCBodHRw
+        czovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9xcy8tL3FzLTAuNi42LnRnegoBAAAA
+        AAAARyAgICAgICBucG0gaHR0cCAyMDAgaHR0cHM6Ly9yZWdpc3RyeS5ucG1q
+        cy5vcmcvZGVidWcvLS9kZWJ1Zy0wLjguMS50Z3oKAQAAAAAAADQgICAgICAg
+        bnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL21pbWUK
+        AQAAAAAAADogICAgICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnku
+        bnBtanMub3JnL25lZ290aWF0b3IKAQAAAAAAADQgICAgICAgbnBtIGh0dHAg
+        R0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3JnL21pbWUKAQAAAAAAAEcg
+        ICAgICAgbnBtIGh0dHAgR0VUIGh0dHBzOi8vcmVnaXN0cnkubnBtanMub3Jn
+        L2RlYnVnLy0vZGVidWctMC44LjAudGd6CgEAAAAAAABHICAgICAgIG5wbSBo
+        dHRwIDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpzLm9yZy9kZWJ1Zy8tL2Rl
+        YnVnLTAuOC4wLnRnegoBAAAAAAAANCAgICAgICBucG0gaHR0cCAyMDAgaHR0
+        cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvbWltZQoBAAAAAAAANCAgICAgICBu
+        cG0gaHR0cCAyMDAgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvbWltZQoB
+        AAAAAAAARiAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6Ly9yZWdpc3RyeS5u
+        cG1qcy5vcmcvbWltZS8tL21pbWUtMS4yLjExLnRnegoBAAAAAAAAOiAgICAg
+        ICBucG0gaHR0cCAyMDAgaHR0cHM6Ly9yZWdpc3RyeS5ucG1qcy5vcmcvbmVn
+        b3RpYXRvcgoBAAAAAAAAUSAgICAgICBucG0gaHR0cCBHRVQgaHR0cHM6Ly9y
+        ZWdpc3RyeS5ucG1qcy5vcmcvbmVnb3RpYXRvci8tL25lZ290aWF0b3ItMC40
+        LjMudGd6CgEAAAAAAABGICAgICAgIG5wbSBodHRwIDIwMCBodHRwczovL3Jl
+        Z2lzdHJ5Lm5wbWpzLm9yZy9taW1lLy0vbWltZS0xLjIuMTEudGd6CgEAAAAA
+        AABRICAgICAgIG5wbSBodHRwIDIwMCBodHRwczovL3JlZ2lzdHJ5Lm5wbWpz
+        Lm9yZy9uZWdvdGlhdG9yLy0vbmVnb3RpYXRvci0wLjQuMy50Z3oKAQAAAAAA
+        AEogICAgICAgZXhwcmVzc0A0LjIuMCBub2RlX21vZHVsZXMvZXhwcmVzcwog
+        ICAgICAg4pSc4pSA4pSAIHBhcnNldXJsQDEuMC4xCgEAAAAAAAJdICAgICAg
+        IOKUnOKUgOKUgCBtZXJnZS1kZXNjcmlwdG9yc0AwLjAuMgogICAgICAg4pSc
+        4pSA4pSAIHV0aWxzLW1lcmdlQDEuMC4wCiAgICAgICDilJzilIDilIAgY29v
+        a2llQDAuMS4yCiAgICAgICDilJzilIDilIAgZXNjYXBlLWh0bWxAMS4wLjEK
+        ICAgICAgIOKUnOKUgOKUgCBkZWJ1Z0AwLjguMQogICAgICAg4pSc4pSA4pSA
+        IGNvb2tpZS1zaWduYXR1cmVAMS4wLjMKICAgICAgIOKUnOKUgOKUgCByYW5n
+        ZS1wYXJzZXJAMS4wLjAKICAgICAgIOKUnOKUgOKUgCBmcmVzaEAwLjIuMgog
+        ICAgICAg4pSc4pSA4pSAIHFzQDAuNi42CiAgICAgICDilJzilIDilIAgbWV0
+        aG9kc0AxLjAuMAogICAgICAg4pSc4pSA4pSAIGJ1ZmZlci1jcmMzMkAwLjIu
+        MQogICAgICAg4pSc4pSA4pSAIHNlcnZlLXN0YXRpY0AxLjEuMAogICAgICAg
+        4pSc4pSA4pSAIHBhdGgtdG8tcmVnZXhwQDAuMS4yCiAgICAgICDilJzilIDi
+        lIAgc2VuZEAwLjMuMCAoZGVidWdAMC44LjAsIG1pbWVAMS4yLjExKQogICAg
+        ICAg4pSc4pSA4pSAIHR5cGUtaXNAMS4xLjAgKG1pbWVAMS4yLjExKQogICAg
+        ICAg4pSU4pSA4pSAIGFjY2VwdHNAMS4wLjEgKG5lZ290aWF0b3JAMC40LjMs
+        IG1pbWVAMS4yLjExKQoBAAAAAAAAOC0tLS0tPiBDYWNoaW5nIG5vZGVfbW9k
+        dWxlcyBkaXJlY3RvcnkgZm9yIGZ1dHVyZSBidWlsZHMKAQAAAAAAAC4tLS0t
+        LT4gQ2xlYW5pbmcgdXAgbm9kZS1neXAgYW5kIG5wbSBhcnRpZmFjdHMKAQAA
+        AAAAADstLS0tLT4gTm8gUHJvY2ZpbGUgZm91bmQ7IEFkZGluZyBucG0gc3Rh
+        cnQgdG8gbmV3IFByb2NmaWxlCgEAAAAAAAAkLS0tLS0+IEJ1aWxkaW5nIHJ1
+        bnRpbWUgZW52aXJvbm1lbnQKAQAAAAAAACEtLS0tLT4gRGlzY292ZXJpbmcg
+        cHJvY2VzcyB0eXBlcwoBAAAAAAAAJiAgICAgICBQcm9jZmlsZSBkZWNsYXJl
+        cyB0eXBlcyAtPiB3ZWIK
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:28:43 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255/wait
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 19 May 2014 21:28:43 GMT
+      Content-Length:
+      - '17'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        {"StatusCode":0}
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:28:43 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/commit?container=64fc569f&repo=node-js-sample
+    body:
+      encoding: UTF-8
+      string: 'null'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 19 May 2014 21:28:44 GMT
+      Content-Length:
+      - '74'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        {"Id":"d06c80b4808df1678e5a204d8147c7c2225947b5060ab806850105f402a018b6"}
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:28:44 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 19 May 2014 21:28:44 GMT
+      Content-Length:
+      - '1778'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: '{"ID":"64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255","Created":"2014-05-19T21:28:32.488262187Z","Path":"/bin/bash","Args":["-c","mkdir
+        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/node-js-sample.tgz -C /app
+        \u0026\u0026 /build/builder"],"Config":{"Hostname":"64fc569f2e3f","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":null,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["{\"FOO\"=\u003e\"BAR\"}","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","mkdir
+        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/node-js-sample.tgz -C /app
+        \u0026\u0026 /build/builder"],"Dns":null,"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"VolumesFrom":"","WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":false,"Pid":0,"ExitCode":0,"StartedAt":"2014-05-19T21:28:32.526657397Z","FinishedAt":"2014-05-19T21:28:43.479010094Z","Ghost":false},"Image":"117ea5403f840e36f71bfed079c16f31bb1731d6e28d68cf51293a9de3d98ae7","NetworkSettings":{"IPAddress":"","IPPrefixLen":0,"Gateway":"","Bridge":"","PortMapping":null,"Ports":null},"ResolvConfPath":"/etc/resolv.conf","HostnamePath":"/var/lib/docker/containers/64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255/hostname","HostsPath":"/var/lib/docker/containers/64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255/hosts","Name":"/furious_pare","Driver":"aufs","ExecDriver":"native-0.1","Volumes":{"/tmp":"/tmp"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":["/tmp:/tmp"],"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":false}}'
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:28:44 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255/kill
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Mon, 19 May 2014 21:28:44 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:28:44 GMT
+- request:
+    method: delete
+    uri: unix:///var/run/docker.sock/v1.10/containers/64fc569f2e3f444af3453223a619d81b48807f3eac1f47a09a8d2c1229fad255?force=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Mon, 19 May 2014 21:28:44 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:28:44 GMT
+recorded_with: VCR 2.9.0

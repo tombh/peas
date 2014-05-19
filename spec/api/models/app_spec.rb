@@ -104,7 +104,7 @@ describe App do
           name: 'node-js-sample',
           config: [{'FOO' => 'BAR'}]
         details = app.build
-        expect(details).to include ('FOO=BAR')
+        expect(details['Config']['Env']).to include('{"FOO"=>"BAR"}')
       end
 
       it 'should deal with a failed build', :docker do

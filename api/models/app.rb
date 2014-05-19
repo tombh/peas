@@ -91,7 +91,7 @@ class App
         'Volumes' => {
           '/tmp' => {}
         },
-        'Env' => app.config.join(' '),
+        'Env' => config.join(' '),
         'Cmd' => [
           '/bin/bash',
           '-c',
@@ -124,7 +124,7 @@ class App
     end
 
     # Keep a copy of the build container's details
-    builder_json = builder.inspect
+    builder_json = builder.json
 
     # Make sure to clean up after ourselves
     builder.kill

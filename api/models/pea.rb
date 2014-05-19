@@ -62,7 +62,7 @@ class Pea
   def spawn_container
     container = Docker::Container.create(
       # `/start` is unique to progrium/buildstep, it brings a process type, such as 'web', to life
-      'Cmd' => ['/bin/bash', '-c', "/start #{pea.process_type}"],
+      'Cmd' => ['/bin/bash', '-c', "/start #{process_type}"],
       # The base Docker image to use. In this case the prebuilt image created by the buildstep
       # process
       'Image' => app.name,
@@ -77,9 +77,10 @@ class Pea
       'PublishAllPorts' => 'true'
     )
     # Get the Docker ID so we can find it later
-    docker_id = container.info['id']
+    self.docker_id = container.info['id']
     # Find the randomly created external port that forwards to the internal 5000 port
-    port = container.json['NetworkSettings']['Ports']['5000'].first['HostPort']
+    self.port = container.json['NetworkSettings']['Ports']['5000'].first['HostPort']
+    save! if !new_record?
     get_docker_container
   end
 

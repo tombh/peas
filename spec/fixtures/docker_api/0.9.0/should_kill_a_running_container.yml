@@ -309,7 +309,7 @@ http_interactions:
     uri: unix:///var/run/docker.sock/v1.10/containers/3cc6ab08c50afcc16c412729a89345349a324a2757969c9869acf26a92043795/kill
     body:
       encoding: UTF-8
-      string: '{}'
+      string: "{}"
     headers:
       User-Agent:
       - Swipely/Docker-API 1.10.8
@@ -494,4 +494,35 @@ http_interactions:
         No such container: 3cc6ab08c50afcc16c412729a89345349a324a2757969c9869acf26a92043795
     http_version: 
   recorded_at: Thu, 17 Apr 2014 15:44:15 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/create
+    body:
+      encoding: UTF-8
+      string: '{"Cmd":["/bin/bash","-c","/start web"],"Image":"peas","Env":"PORT=5000
+        ","ExposedPorts":{"5000":{}}}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Mon, 19 May 2014 21:08:44 GMT
+      Content-Length:
+      - '34'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        No such image: peas (tag: latest)
+    http_version: 
+  recorded_at: Mon, 19 May 2014 21:08:44 GMT
 recorded_with: VCR 2.9.0
