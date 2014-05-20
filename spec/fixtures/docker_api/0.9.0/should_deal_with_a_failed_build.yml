@@ -5,12 +5,12 @@ http_interactions:
     uri: unix:///var/run/docker.sock/v1.10/containers/create
     body:
       encoding: UTF-8
-      string: '{"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"Cmd":["/bin/bash","-c","mkdir
+      string: '{"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"Env":"","Cmd":["/bin/bash","-c","mkdir
         -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/hello-world-cpp.tgz -C /app
         \u0026\u0026 /build/builder"]}'
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.10.8
+      - Swipely/Docker-API 1.10.10
       Content-Type:
       - application/json
   response:
@@ -21,7 +21,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Thu, 17 Apr 2014 15:40:24 GMT
+      - Tue, 20 May 2014 16:44:03 GMT
       Content-Length:
       - '90'
       Connection:
@@ -29,18 +29,18 @@ http_interactions:
     body:
       encoding: UTF-8
       string: |
-        {"Id":"a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6","Warnings":null}
+        {"Id":"5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179","Warnings":null}
     http_version: 
-  recorded_at: Thu, 17 Apr 2014 15:40:24 GMT
+  recorded_at: Tue, 20 May 2014 16:44:03 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6/start
+    uri: unix:///var/run/docker.sock/v1.10/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/start
     body:
       encoding: UTF-8
       string: '{"Binds":["/tmp:/tmp"]}'
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.10.8
+      - Swipely/Docker-API 1.10.10
       Content-Type:
       - application/json
   response:
@@ -49,7 +49,7 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Thu, 17 Apr 2014 15:40:24 GMT
+      - Tue, 20 May 2014 16:44:03 GMT
       Content-Length:
       - '0'
       Content-Type:
@@ -60,16 +60,16 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Thu, 17 Apr 2014 15:40:24 GMT
+  recorded_at: Tue, 20 May 2014 16:44:03 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6/attach?stderr=true&stdout=true&stream=true
+    uri: unix:///var/run/docker.sock/v1.10/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/attach?stderr=true&stdout=true&stream=true
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.10.8
+      - Swipely/Docker-API 1.10.10
       Content-Type:
       - text/plain
   response:
@@ -84,16 +84,16 @@ http_interactions:
       string: !binary |-
         AQAAAAAAACQgICAgICAgVW5hYmxlIHRvIHNlbGVjdCBhIGJ1aWxkcGFjawo=
     http_version: 
-  recorded_at: Thu, 17 Apr 2014 15:40:24 GMT
+  recorded_at: Tue, 20 May 2014 16:44:03 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6/wait
+    uri: unix:///var/run/docker.sock/v1.10/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/wait
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.10.8
+      - Swipely/Docker-API 1.10.10
       Content-Type:
       - text/plain
   response:
@@ -104,7 +104,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Thu, 17 Apr 2014 15:40:24 GMT
+      - Tue, 20 May 2014 16:44:03 GMT
       Content-Length:
       - '17'
       Connection:
@@ -114,16 +114,49 @@ http_interactions:
       string: |
         {"StatusCode":1}
     http_version: 
-  recorded_at: Thu, 17 Apr 2014 15:40:24 GMT
+  recorded_at: Tue, 20 May 2014 16:44:03 GMT
 - request:
-    method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6/kill
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/json
     body:
-      encoding: UTF-8
-      string: "{}"
+      encoding: US-ASCII
+      string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.10.8
+      - Swipely/Docker-API 1.10.10
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 20 May 2014 16:44:03 GMT
+      Content-Length:
+      - '1869'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: '{"ID":"5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179","Created":"2014-05-20T16:44:03.661261747Z","Path":"/bin/bash","Args":["-c","mkdir
+        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/hello-world-cpp.tgz -C /app
+        \u0026\u0026 /build/builder"],"Config":{"Hostname":"5ec490fb8e71","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":null,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","mkdir
+        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/hello-world-cpp.tgz -C /app
+        \u0026\u0026 /build/builder"],"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":false,"Pid":0,"ExitCode":1,"StartedAt":"2014-05-20T16:44:03.689516547Z","FinishedAt":"2014-05-20T16:44:03.880753173Z","Ghost":false},"Image":"117ea5403f840e36f71bfed079c16f31bb1731d6e28d68cf51293a9de3d98ae7","NetworkSettings":{"IPAddress":"","IPPrefixLen":0,"Gateway":"","Bridge":"","PortMapping":null,"Ports":null},"ResolvConfPath":"/var/lib/docker/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/resolv.conf","HostnamePath":"/var/lib/docker/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/hostname","HostsPath":"/var/lib/docker/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/hosts","Name":"/condescending_hypatia","Driver":"aufs","ExecDriver":"native-0.1","Volumes":{"/tmp":"/tmp"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":["/tmp:/tmp"],"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":false,"Dns":null,"DnsSearch":null,"VolumesFrom":null}}'
+    http_version: 
+  recorded_at: Tue, 20 May 2014 16:44:03 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/kill
+    body:
+      encoding: UTF-8
+      string: '{}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.10
       Content-Type:
       - application/json
   response:
@@ -132,7 +165,7 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Thu, 17 Apr 2014 15:40:24 GMT
+      - Tue, 20 May 2014 16:44:03 GMT
       Content-Length:
       - '0'
       Content-Type:
@@ -143,137 +176,5 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Thu, 17 Apr 2014 15:40:24 GMT
-- request:
-    method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6/json
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.10.10
-      Content-Type:
-      - text/plain
-  response:
-    status:
-      code: 404
-      message: 
-    headers:
-      Content-Type:
-      - text/plain; charset=utf-8
-      Date:
-      - Mon, 19 May 2014 21:32:51 GMT
-      Content-Length:
-      - '84'
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: |
-        No such container: a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6
-    http_version: 
-  recorded_at: Mon, 19 May 2014 21:32:51 GMT
-- request:
-    method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6/json
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.10.10
-      Content-Type:
-      - text/plain
-      TE:
-      - trailers, deflate, gzip
-      Connection:
-      - TE, close
-  response:
-    status:
-      code: 404
-      message: 
-    headers:
-      Content-Type:
-      - text/plain; charset=utf-8
-      Date:
-      - Mon, 19 May 2014 21:32:51 GMT
-      Content-Length:
-      - '84'
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: |
-        No such container: a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6
-    http_version: 
-  recorded_at: Mon, 19 May 2014 21:32:51 GMT
-- request:
-    method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6/json
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.10.10
-      Content-Type:
-      - text/plain
-      TE:
-      - trailers, deflate, gzip
-      Connection:
-      - TE, close
-  response:
-    status:
-      code: 404
-      message: 
-    headers:
-      Content-Type:
-      - text/plain; charset=utf-8
-      Date:
-      - Mon, 19 May 2014 21:32:51 GMT
-      Content-Length:
-      - '84'
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: |
-        No such container: a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6
-    http_version: 
-  recorded_at: Mon, 19 May 2014 21:32:51 GMT
-- request:
-    method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6/json
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.10.10
-      Content-Type:
-      - text/plain
-      TE:
-      - trailers, deflate, gzip
-      Connection:
-      - TE, close
-  response:
-    status:
-      code: 404
-      message: 
-    headers:
-      Content-Type:
-      - text/plain; charset=utf-8
-      Date:
-      - Mon, 19 May 2014 21:32:51 GMT
-      Content-Length:
-      - '84'
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: |
-        No such container: a0388993ff88ebf5b00641ffe7e969a36dd089ad1a33ec711f47b9735c108cd6
-    http_version: 
-  recorded_at: Mon, 19 May 2014 21:32:51 GMT
+  recorded_at: Tue, 20 May 2014 16:44:03 GMT
 recorded_with: VCR 2.9.0

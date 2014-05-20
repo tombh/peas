@@ -132,4 +132,15 @@ describe App do
     end
   end
 
+  describe 'restart()' do
+    include_context :docker_creation_mock
+
+    it 'should restart all peas belonging to an app' do
+      app.scale({web: 3, worker: 2})
+      expect(app.peas).to receive(:destroy_all)
+      expect(Pea).to receive(:create!).exactly(5).times
+      app.restart
+    end
+  end
+
 end
