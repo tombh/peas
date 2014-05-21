@@ -88,6 +88,16 @@ RSpec.configure do |config|
     end
     # Open an IO pipe to the launched container
     @peas_io = ContainerConnection.new @peas_container_id
+
+    # Clone a very basic NodeJS app
+    REPO_PATH = TMP_PATH + '/node-js-sample'
+    sh "rm -rf #{REPO_PATH}"
+    sh "cd #{TMP_PATH} && git clone https://github.com/heroku/node-js-sample"
+  end
+
+  config.before(:each, :integration) do
+    # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
+    @peas_io.console 'Setting.create(key: "domain", value: "vcap.me:4004")'
   end
 
   # Destroy the Peas container

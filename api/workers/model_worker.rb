@@ -9,7 +9,7 @@ class ModelWorker
   def perform(model, id, method, *args)
     begin
       # Instantiate the model instance
-      instance = model.constantize.where(_id: id).first
+      instance = model.constantize.find_by(_id: id)
       # Look for a job id in the arguments
       args.select{|arg| arg.is_a? Hash}.each do |hash|
         if hash.keys.length == 1 && hash.has_key?('job')

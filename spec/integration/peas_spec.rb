@@ -10,21 +10,14 @@ describe 'The Peas PaaS Integration Tests', :integration do
   end
 
   describe 'Deploy' do
-    # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
     before :each do
-      @peas_io.console 'Setting.create(key: "domain", value: "vcap.me:4004")'
+      # Create the app in Peas
+      response = cli 'create', REPO_PATH
+      expect(response).to eq "App 'node-js-sample' successfully created"
     end
 
     it 'should deploy a basic nodejs app' do
-      repo_path = TMP_PATH + '/node-js-sample'
-      # Clone a very basic NodeJS app
-      sh "rm -rf #{repo_path}"
-      sh "cd #{TMP_PATH} && git clone https://github.com/heroku/node-js-sample"
-      # Create the app in Peas
-      response = cli 'create', repo_path
-      expect(response).to eq "App 'node-js-sample' successfully created"
-      # And deploy
-      response = cli 'deploy', repo_path
+      response = cli 'deploy', REPO_PATH
       expect(response).to include '-----> Fetching https://github.com/heroku/node-js-sample'
       expect(response).to include '-----> Installing dependencies'
       expect(response).to include '-----> Discovering process types'
@@ -35,6 +28,15 @@ describe 'The Peas PaaS Integration Tests', :integration do
       sleep 2
       response = sh "curl -s node-js-sample.vcap.me:4004"
       expect(response).to eq 'Hello World!'
+    end
+
+    it 'should use a custom buildpack' do
+
+    end
+  end
+
+  describe 'Config' do
+    it 'should set config for an app' do
     end
   end
 end

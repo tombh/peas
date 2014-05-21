@@ -12,6 +12,6 @@ class Git
   end
 
   def self.first_sha
-    sh 'git rev-list --max-parents=0 HEAD'
+    sh 'git rev-list --max-parents=0 HEAD | head -n1'
   end
 end
