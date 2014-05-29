@@ -1,3 +1,8 @@
+###0.1.0
+**date**    
+**Features**:
+  * App config for setting app's environment variables. Vars also available during build.
+
 ###0.0.4
 **5th April 2014**    
 **Features**:

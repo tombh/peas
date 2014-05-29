@@ -63,6 +63,8 @@ If you would like to hack on the codebase whilst it's running in the container y
 code into the container:    
 `docker run -t --privileged --volumes-from peas-data -v [path to peas codebase on your machine]:/home/peas -p 4000:4000 -i tombh/peas`
 
+Or you can just run the helpful script at `contrib/peas-dind/run.sh` that does all the above for you.
+
 The Peas API will be available at `vcap.me:4000`.
 
 ##Vagrant
