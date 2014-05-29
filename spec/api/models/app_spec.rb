@@ -86,7 +86,7 @@ describe App do
       it 'should build an app resulting in a new Docker image', :docker do
         # Use the nodejs example just because it builds so quickly
         app = Fabricate :app,
-          remote: 'git@github.com:heroku/node-js-sample.git',
+          remote: 'https://github.com/heroku/node-js-sample.git',
           name: 'node-js-sample'
         allow(app).to receive(:_fetch_and_tar_repo) # Comment out when recording
         allow(app).to receive(:broadcast)
@@ -100,7 +100,7 @@ describe App do
 
       it "should include the ENV vars saved in the app's config", :docker do
         app = Fabricate :app,
-          remote: 'git@github.com:heroku/node-js-sample.git',
+          remote: 'https://github.com/heroku/node-js-sample.git',
           name: 'node-js-sample',
           config: [{'FOO' => 'BAR'}]
         details = app.build
@@ -109,7 +109,7 @@ describe App do
 
       it 'should deal with a failed build', :docker do
         app = Fabricate :app,
-          remote: 'git@github.com:saddleback/hello-world-cpp.git',
+          remote: 'https://github.com/saddleback/hello-world-cpp.git',
           name: 'hello-world-cpp'
         allow(app).to receive(:_fetch_and_tar_repo) # Comment out when recording
         allow(app).to receive(:broadcast)
