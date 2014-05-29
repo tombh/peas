@@ -22,9 +22,9 @@ command :config do |c|
       end
       vars = {}
       args.each do |arg|
-        parts = arg.split('=')
+        parts = arg.split('=', 2)
         key = parts[0]
-        value = parts[1..-1].join
+        value = parts[1]
         vars[key] = value
       end
       @api.request :put, "/app/#{Git.first_sha}/config", {

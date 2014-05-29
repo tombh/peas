@@ -91,7 +91,7 @@ class App
         'Volumes' => {
           '/tmp' => {}
         },
-        'Env' => config.join(' '),
+        'Env' => config_for_docker,
         'Cmd' => [
           '/bin/bash',
           '-c',

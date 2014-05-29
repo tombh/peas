@@ -2,6 +2,7 @@
 **date**    
 **Features**:
   * App config for setting app's environment variables. Vars also available during build.
+  * CLI client checks minor version match for compatibility.
 
 ###0.0.4
 **5th April 2014**    

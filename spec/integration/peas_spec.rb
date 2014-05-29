@@ -34,8 +34,13 @@ describe 'The Peas PaaS Integration Tests', :integration do
         expect(response).to eq 'Hello World!'
       end
 
-      it 'should use a custom buildpack' do
-
+      it 'should use a custom buildpack proving build time env vars work' do
+        @cli.run 'config set BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs.git'
+        response = @cli.run 'deploy'
+        expect(response).to include 'Fetching custom buildpack'
+        sleep 2
+        response = sh "curl -s node-js-sample.vcap.me:4004"
+        expect(response).to eq 'Hello World!'
       end
     end
 
@@ -43,6 +48,22 @@ describe 'The Peas PaaS Integration Tests', :integration do
       it 'should set config for an app' do
         response = @cli.run 'config set FOO=BAR'
         expect(response).to eq '{"FOO"=>"BAR"}'
+        @cli.run 'deploy'
+        sleep 2
+        response = sh "curl -s node-js-sample.vcap.me:4004"
+        expect(response).to eq 'Hello BAR!'
+      end
+      it 'should delete config for an app' do
+        response = @cli.run 'config set FOO=BAR'
+        expect(response).to eq '{"FOO"=>"BAR"}'
+        response = @cli.run 'config rm FOO'
+        expect(response).to eq ''
+      end
+      it 'should list config for an app' do
+        response = @cli.run 'config set FOO=BAR'
+        response = @cli.run 'config set MOO=CAR'
+        response = @cli.run 'config'
+        expect(response).to eq "{\"FOO\"=>\"BAR\"}\n{\"MOO\"=>\"CAR\"}"
       end
     end
   end

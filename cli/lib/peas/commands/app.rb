@@ -25,7 +25,7 @@ command :scale do |c|
     end
     scaling_hash = {}
     args.each do |arg|
-      parts = arg.split('=')
+      parts = arg.split('=', 2)
       process_type = parts[0]
       quantity = parts[1]
       scaling_hash[process_type] = quantity
