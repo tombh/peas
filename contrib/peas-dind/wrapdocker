@@ -1,4 +1,5 @@
 #!/bin/bash
+exec 2>&1 # Redirect STDERR and STDOUT to STDOUT
 
 # First, make sure that cgroups are mounted correctly.
 CGROUP=/sys/fs/cgroup

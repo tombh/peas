@@ -23,4 +23,8 @@ module Peas
     end
   end
 
+  def self.error_message string
+    puts string.color(:red)
+  end
+
 end

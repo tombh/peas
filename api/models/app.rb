@@ -109,7 +109,7 @@ class App
     build_error = false
     last_message = nil
     building.attach do |stream, chunk|
-      # Save the error for later, because we still need to clean up the continer
+      # Save the error for later, because we still need to clean up the container
       build_error = chunk if stream == :stderr
       last_message = chunk # In case error isn't sent through :stderr
       broadcast chunk
@@ -119,16 +119,20 @@ class App
     if builder.wait['StatusCode'] == 0
       builder.commit 'repo' => name
     else
-      build_error = "Buildstep failed with non-zero exit status. " +
-        "The last message was: #{last_message}"
+      build_error = "Buildstep failed with non-zero (#{builder.wait['StatusCode']}) exit status. " +
+        "Error message was: '#{build_error}'. " +
+        "Last message was: '#{last_message}'."
     end
 
     # Keep a copy of the build container's details
     builder_json = builder.json
 
     # Make sure to clean up after ourselves
-    builder.kill
-    builder.delete force: true
+    begin
+      builder.kill
+      builder.delete force: true
+    rescue Docker::Error::NotFoundError
+    end
 
     raise build_error.strip if build_error
 

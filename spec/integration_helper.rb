@@ -17,7 +17,7 @@ end
 
 # Helper to call Peas CLI
 def cli cmd, path = '.'
-  sh "cd #{path} && PEAS_API_ENDPOINT=localhost:4004 #{Peas.root}/cli/bin/peas-dev #{cmd}"
+  sh "cd #{path} && HOME=/tmp/peas PEAS_API_ENDPOINT=localhost:4004 #{Peas.root}/cli/bin/peas-dev #{cmd}"
 end
 
 # Find the test-specific data volume
@@ -55,6 +55,14 @@ class ContainerConnection
   def console cmd
     bash "cd /home/peas && echo '#{cmd}' | bundle exec rake console"
   end
+  # Reset DBs and docker ready for new tests
+  def env_reset
+    # TODO: need a way to check if these commands were successful
+    bash "mongo peas --eval 'db.dropDatabase();'"
+    bash "redis-cli FLUSHALL"
+    bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
+    sleep 1
+  end
   # Close the connection
   def close
     @io.close
@@ -82,7 +90,7 @@ RSpec.configure do |config|
         tombh/peas"
     )
     # Wait until the container has completely booted
-    Timeout::timeout(15*60) do
+    Timeout::timeout(4*60) do
       result = `bash -c 'until [ "$(curl -s localhost:4004)" == "Not Found" ]; do sleep 1; done' 2>&1`
       raise result if $?.to_i != 0
     end
@@ -93,11 +101,19 @@ RSpec.configure do |config|
     REPO_PATH = TMP_PATH + '/node-js-sample'
     sh "rm -rf #{REPO_PATH}"
     sh "cd #{TMP_PATH} && git clone https://github.com/heroku/node-js-sample"
+
+    # Just to make sure everything is clean before we start
+    @peas_io.env_reset
   end
 
   config.before(:each, :integration) do
     # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
     @peas_io.console 'Setting.create(key: "domain", value: "vcap.me:4004")'
+  end
+
+  # Reset state after each spec
+  config.after(:each, :integration) do
+    @peas_io.env_reset
   end
 
   # Destroy the Peas container
@@ -109,14 +125,6 @@ RSpec.configure do |config|
     # Remove the Peas test container. But the data container 'peas-data-test' still remains
     sh "docker stop #{@peas_container_id}"
     sh "docker rm -f #{@peas_container_id}"
-  end
-
-  # Reset state after each spec
-  config.after(:each, :integration) do
-    # TODO: need a way to check if these commands were successful
-    @peas_io.bash "mongo peas --eval 'db.dropDatabase();'"
-    @peas_io.bash "redis-cli FLUSHALL"
-    @peas_io.bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
   end
 end
 
