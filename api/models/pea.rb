@@ -67,7 +67,7 @@ class Pea
       # process
       'Image' => app.name,
       # Global environment variables to pass and make available to the app
-      'Env' => "PORT=5000 #{app.config.join(' ')}",
+      'Env' => ['PORT=5000'].concat(app.config_for_docker),
       # Expose port 5000 from inside the container to the host machine
       'ExposedPorts' => {
         '5000' => {}

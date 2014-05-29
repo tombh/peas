@@ -15,11 +15,6 @@ def sh cmd
   end
 end
 
-# Helper to call Peas CLI
-def cli cmd, path = '.'
-  sh "cd #{path} && HOME=/tmp/peas PEAS_API_ENDPOINT=localhost:4004 #{Peas.root}/cli/bin/peas-dev #{cmd}"
-end
-
 # Find the test-specific data volume
 def get_data_vol_id
   output = sh "docker ps -a | grep 'busybox:latest.*peas-data-test' | awk '{print $1}'"
@@ -69,6 +64,17 @@ class ContainerConnection
   end
 end
 
+class Cli
+  def initialize path
+    @path = path
+  end
+
+  # Helper to call Peas CLI
+  def run cmd
+    sh "cd #{@path} && HOME=/tmp/peas PEAS_API_ENDPOINT=localhost:4004 #{Peas.root}/cli/bin/peas-dev #{cmd}"
+  end
+end
+
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
@@ -100,7 +106,7 @@ RSpec.configure do |config|
     # Clone a very basic NodeJS app
     REPO_PATH = TMP_PATH + '/node-js-sample'
     sh "rm -rf #{REPO_PATH}"
-    sh "cd #{TMP_PATH} && git clone https://github.com/heroku/node-js-sample"
+    sh "cd #{TMP_PATH} && git clone https://github.com/tombh/node-js-sample.git"
 
     # Just to make sure everything is clean before we start
     @peas_io.env_reset

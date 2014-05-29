@@ -186,4 +186,12 @@ class App
     config.map{|c| hashed_config.merge! c}
     return hashed_config
   end
+
+  def config_for_docker
+    result = []
+    config_hash.each do |k, v|
+      result << "#{k}=#{v}"
+    end
+    result
+  end
 end

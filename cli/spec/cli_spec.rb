@@ -26,7 +26,7 @@ describe 'Peas CLI' do
     end
   end
 
-  describe 'API methods' do
+  describe 'App methods' do
     it 'should create an app' do
       stub_request(:post, TEST_DOMAIN + '/app/fakesha?remote=git@github.com:test/test.git')
         .to_return(body: '{"message": "App \'test\' successfully created\n"}')
