@@ -56,7 +56,7 @@ class ContainerConnection
     bash "mongo peas --eval 'db.dropDatabase();'"
     bash "redis-cli FLUSHALL"
     bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
-    sleep 1
+    sleep 2
   end
   # Close the connection
   def close
@@ -131,6 +131,11 @@ RSpec.configure do |config|
     # Remove the Peas test container. But the data container 'peas-data-test' still remains
     sh "docker stop #{@peas_container_id}"
     sh "docker rm -f #{@peas_container_id}"
+  end
+
+  config.after(:suite, :integration) do
+    puts ""
+    puts "Integration tests log available at #{TMP_PATH}/integration-tests.log"
   end
 end
 

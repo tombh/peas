@@ -1,17 +1,19 @@
 require 'integration_helper'
 
 describe 'The Peas PaaS Integration Tests', :integration do
+  before :each do
+    @cli = Cli.new REPO_PATH
+  end
 
   describe 'Settings' do
     it 'should update the domain' do
-      response = cli 'settings --domain 127.0.0.1:4004'
+      response = @cli.run 'settings --domain 127.0.0.1:4004'
       expect(response).to eq "New settings:\n{\n  \"domain\": \"http://127.0.0.1:4004\"\n}"
     end
   end
 
   context 'Apps' do
     before :each do
-      @cli = Cli.new REPO_PATH
       # Create the app in Peas
       response = @cli.run 'create'
       expect(response).to eq "App 'node-js-sample' successfully created"

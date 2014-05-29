@@ -39,8 +39,8 @@ on_error do |exception|
       Peas.error_message "Couldn't connect to the Peas API. The current endpoint is '#{Peas.config['domain']}', make " +
         "sure it is up and accessible."
     else
-      Peas.error_message "Unexpected error: #{exception.class}".color(:red)
-      Peas.error_message "#{exception.message} @ #{exception.backtrace.last}".color(:red)
+      Peas.error_message "Unexpected error: #{exception.class}"
+      Peas.error_message "#{exception.message} @ #{exception.backtrace.last}"
     end
   end
   # GLI needs this to do its default error reporting things
