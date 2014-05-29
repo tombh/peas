@@ -177,4 +177,34 @@ http_interactions:
       string: ''
     http_version: 
   recorded_at: Tue, 20 May 2014 16:44:03 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179/wait
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.10.8
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 500
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 29 May 2014 15:40:48 GMT
+      Content-Length:
+      - '90'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        wait: no such container: 5ec490fb8e717972945154d5e2869006dec740a9ea76f8fd7775d2e4239b8179
+    http_version: 
+  recorded_at: Thu, 29 May 2014 15:40:48 GMT
 recorded_with: VCR 2.9.0

@@ -119,7 +119,7 @@ class App
     if builder.wait['StatusCode'] == 0
       builder.commit 'repo' => name
     else
-      build_error = "Buildstep failed with non-zero (#{builder.wait['StatusCode']}) exit status. " +
+      build_error = "Buildstep failed with non-zero exit status. " +
         "Error message was: '#{build_error}'. " +
         "Last message was: '#{last_message}'."
     end
