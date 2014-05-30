@@ -21,6 +21,25 @@ of Ruby;
 [GLI](http://davetron5000.github.io/gli/)
 and more.
 
+#Quickstart
+```bash
+git clone https://github.com/tombh/peas.git
+gem install peas-cli
+cd peas
+./contrib/peas-dind/run.sh
+=> (lots of logs about Peas booting up)
+cd [my cool app on github]
+peas create
+peas deploy
+=>
+"-----> Installing dependencies
+ -----> Discovering process types
+ -----> Scaling process 'web:1'
+        Deployed to http://mycoolapp.vcap.me:4000"
+curl mycoolapp.vcap.me:4000
+=> Yay!
+```
+
 #Installation
 Peas is at a very early stage and has only been tested in development environments. Formal methods
 for installing on cloud services such as EC2 and Digital Ocean will come soon. Meanwhile you can try
