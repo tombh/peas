@@ -1,5 +1,5 @@
 ###0.1.0
-**date**    
+**30th May 2014**    
 **Features**:
   * App config for setting app's environment variables. Vars also available during build.
   * Better namespacing of API methods. Eg; App methods live under /app/[sha1]/[method]
