@@ -65,7 +65,8 @@ describe Peas::API do
         expect_any_instance_of(App).to receive(:restart)
         put "/app/#{peas_app.first_sha}/config", {vars: {'foo' => 'bar'}.to_json}
         expect(last_response.status).to eq 200
-        expect(last_response.body).to eq '{"message":[{"foo":"bar"}]}'
+        message = JSON.parse(last_response.body)['message']
+        expect(message).to eq [{'foo' => 'bar'}]
       end
 
       context "for app's with existing config" do
@@ -80,19 +81,22 @@ describe Peas::API do
         it 'should return all existing config vars' do
           get "/app/#{peas_app.first_sha}/config"
           expect(last_response.status).to eq 200
-          expect(last_response.body).to eq '{"message":[{"foo":"bar"},{"mange":"tout"}]}'
+          message = JSON.parse(last_response.body)['message']
+          expect(message).to eq [{'foo' => 'bar'}, {'mange' => 'tout'}]
         end
 
         it 'should update an existing config var' do
           put "/app/#{peas_app.first_sha}/config", {vars: {'foo' => 'peas'}.to_json}
           expect(last_response.status).to eq 200
-          expect(last_response.body).to eq '{"message":[{"foo":"peas"},{"mange":"tout"}]}'
+          message = JSON.parse(last_response.body)['message']
+          expect(message).to eq [{'foo' => 'peas'}, {'mange' => 'tout'}]
         end
 
         it 'should delete existing config var' do
           delete "/app/#{peas_app.first_sha}/config", {keys: ['foo'].to_json}
           expect(last_response.status).to eq 200
-          expect(last_response.body).to eq '{"message":[{"mange":"tout"}]}'
+          message = JSON.parse(last_response.body)['message']
+          expect(message).to eq [{'mange' => 'tout'}]
         end
       end
     end

@@ -25,6 +25,15 @@ ensure
   $stdout = old
 end
 
+# Form a response as the API would. Useful as you only need to provide a string without any JSON
+# formatting
+def response_mock response, key=:message
+  {
+    'version' => Peas::VERSION,
+    key => response
+  }.to_json
+end
+
 # Clever little function to simulate CLI requests.
 # Usage: cli(['create', '--flag', '--switch']).
 # Output is suppressed, captured and returned.

@@ -27,4 +27,8 @@ module Peas
     puts string.color(:red)
   end
 
+  def self.warning_message string
+    puts string.color(:magenta)
+  end
+
 end

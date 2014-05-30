@@ -3,7 +3,7 @@ module Peas
     desc "Deploy an app"
     get :deploy do
       app = get_app
-      { job: app.worker(:deploy) }
+      respond app.worker(:deploy), :job
     end
   end
 end

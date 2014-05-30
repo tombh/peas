@@ -11,6 +11,7 @@ module Peas
           Setting.create(key: key, value: value)
         end
       end
+      respond nil
     end
   end
 end

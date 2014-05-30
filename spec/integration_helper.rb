@@ -131,9 +131,6 @@ RSpec.configure do |config|
     # Remove the Peas test container. But the data container 'peas-data-test' still remains
     sh "docker stop #{@peas_container_id}"
     sh "docker rm -f #{@peas_container_id}"
-  end
-
-  config.after(:suite, :integration) do
     puts ""
     puts "Integration tests log available at #{TMP_PATH}/integration-tests.log"
   end

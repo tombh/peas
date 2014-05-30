@@ -14,7 +14,7 @@ module Peas
         app.config = new_config.map{|key, value| {key => value}}
         app.save!
         app.restart
-        {message: app.config}
+        respond app.config
       end
 
       # Remove environment variables
@@ -34,13 +34,13 @@ module Peas
         app.config = new_config
         app.save!
         app.restart
-        {message: app.config}
+        respond app.config
       end
 
       desc "Return all of the app's custom environment variables"
       get do
         app = get_app
-        {message: app.config}
+        respond app.config
       end
     end
   end

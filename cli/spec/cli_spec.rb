@@ -13,6 +13,7 @@ describe 'Peas CLI' do
   describe 'Settings' do
     it 'should set settings' do
       stub_request(:put, 'http://new-domain.com:4000/admin/settings?domain=new-domain.com:4000')
+        .to_return(body: response_mock(nil))
       output = cli %w(settings --domain=new-domain.com:4000)
       expect(output).to eq "\nNew settings:\n{\n  \"domain\": \"http://new-domain.com:4000\"\n}\n"
       config = JSON.parse File.open('/tmp/.peas').read
@@ -22,6 +23,7 @@ describe 'Peas CLI' do
     it 'should use the domain setting' do
       File.open('/tmp/.peas', 'w'){|f| f.write('{"domain":"test.com"}') }
       stub_request(:get, /test.com/)
+        .to_return(body: response_mock(nil))
       cli %w(deploy)
     end
   end
@@ -29,7 +31,7 @@ describe 'Peas CLI' do
   describe 'App methods' do
     it 'should create an app' do
       stub_request(:post, TEST_DOMAIN + '/app/fakesha?remote=git@github.com:test/test.git')
-        .to_return(body: '{"message": "App \'test\' successfully created\n"}')
+        .to_return(body: response_mock("App 'test' successfully created"))
       output = cli ['create']
       expect(output).to eq "App 'test' successfully created\n"
     end
@@ -66,5 +68,12 @@ describe 'Peas CLI' do
     )
     output = cli ['deploy']
     expect(output).to eq "doing\nsomething\ndone\n"
+  end
+
+  it 'should show a warning when there is a version mismatch' do
+    stub_request(:get, TEST_DOMAIN + '/app/fakesha/config')
+        .to_return(body: '{"version": "100000.1000000.100000"}')
+    output = cli %w(config)
+    expect(output).to include 'Your version of the CLI client is out of date'
   end
 end

@@ -26,7 +26,24 @@ class API
       # Long-running jobs need to poll a job status endpoint
       long_running_output json['job']
     else
-      # Normal API repsonse
+      # Check CLI client is up to date.
+      # Only check major and minor versions
+      version_mismatch = false
+      api_version = json['version'].split('.')
+      client_version = Peas::VERSION.split('.')
+      if api_version[0] != client_version[0]
+        version_mismatch = true
+      else
+        if api_version[1] != client_version[1]
+          version_mismatch = true
+        end
+      end
+      if version_mismatch
+        Peas.warning_message "Your version of the CLI client is out of date " +
+          "(Client: #{Peas::VERSION}, API: #{json['version']}). " +
+          "Please update using `gem install peas-cli`."
+      end
+      # Normal API response
       puts json['message']
     end
   end

@@ -25,6 +25,13 @@ module Peas
             "(#{Peas::DOCKER_VERSION})"
         end
       end
+
+      def respond response, key=:message
+        {
+          version: Peas::VERSION,
+          key => response
+        }
+      end
     end
 
     rescue_from :all do |e|

@@ -8,7 +8,7 @@ module Peas
         remote: params[:remote],
         name: name
       })
-      {message: "App '#{name}' successfully created"}
+      respond "App '#{name}' successfully created"
     end
   end
 end

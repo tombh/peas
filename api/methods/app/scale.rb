@@ -7,7 +7,7 @@ module Peas
     put :scale do
       app = get_app
       scaling_hash = JSON.parse params[:scaling_hash]
-      { job: app.worker(:scale, scaling_hash) }
+      respond app.worker(:scale, scaling_hash), :job
     end
   end
 end
