@@ -29,7 +29,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         expect(response).to include "       Deployed to http://node-js-sample.vcap.me:4004"
         expect(response.lines.length).to be > 50
         # The app should be accessible
-        sleep 2
+        sleep 5
         response = sh "curl -s node-js-sample.vcap.me:4004"
         expect(response).to eq 'Hello World!'
       end
@@ -38,7 +38,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         @cli.run 'config set BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs.git'
         response = @cli.run 'deploy'
         expect(response).to include 'Fetching custom buildpack'
-        sleep 2
+        sleep 5
         response = sh "curl -s node-js-sample.vcap.me:4004"
         expect(response).to eq 'Hello World!'
       end
@@ -49,7 +49,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         response = @cli.run 'config set FOO=BAR'
         expect(response).to eq '{"FOO"=>"BAR"}'
         @cli.run 'deploy'
-        sleep 2
+        sleep 5
         response = sh "curl -s node-js-sample.vcap.me:4004"
         expect(response).to eq 'Hello BAR!'
       end
