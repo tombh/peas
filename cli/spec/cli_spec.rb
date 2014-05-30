@@ -56,6 +56,29 @@ describe 'Peas CLI' do
       output = cli %w(scale web=3 worker=2)
       expect(output).to eq "scaling\n"
     end
+
+    describe 'Config' do
+      it 'should set config for an app' do
+        stub_request(:put, TEST_DOMAIN + '/app/fakesha/config?vars=%7B%22FOO%22:%22BAR%22%7D')
+          .to_return(body: response_mock("{'FOO' => 'BAR'}"))
+        output = cli %w(config set FOO=BAR)
+        expect(output).to eq "{'FOO' => 'BAR'}\n"
+      end
+
+      it 'delete config for an app' do
+        stub_request(:delete, TEST_DOMAIN + '/app/fakesha/config?keys=%5B%22FOO%22%5D')
+          .to_return(body: response_mock(nil))
+        output = cli %w(config rm FOO)
+        expect(output).to eq "\n"
+      end
+
+      it 'should list all config for an app' do
+        stub_request(:get, TEST_DOMAIN + '/app/fakesha/config')
+          .to_return(body: response_mock("{'FOO' => 'BAR'}\n{'MOO' => 'CAR'}"))
+        output = cli %w(config)
+        expect(output).to eq "{'FOO' => 'BAR'}\n{'MOO' => 'CAR'}\n"
+      end
+    end
   end
 
   it 'should retrieve and output a long-running command' do

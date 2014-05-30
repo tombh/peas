@@ -2,6 +2,7 @@
 **date**    
 **Features**:
   * App config for setting app's environment variables. Vars also available during build.
+  * Better namespacing of API methods. Eg; App methods live under /app/[sha1]/[method]
   * CLI client checks minor version match for compatibility.
 
 ###0.0.4
