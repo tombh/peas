@@ -17,12 +17,29 @@ class App
   # Environment variables such as a database URI, etc
   field :config, type: Array, default: []
 
-  # Peas are needed to actually run the app, suh as web and worker processes
-  has_many :peas
+  # Peas are needed to actually run the app, such as web and worker processes
+  has_many :peas, :dependent => :destroy
 
   # Validations
   validates_presence_of :first_sha, :remote, :name
   validates_uniqueness_of :first_sha, :name
+
+  # Create a capped collection for the logs.
+  # Capped collections are of a fixed size (both by rows and memory) and circular, ie; old rows
+  # are deleted to make place for new rows when the collection reaches any of its limits.
+  after_create do |app|
+    Mongoid::Sessions.default.command(
+      create: "#{app.first_sha}_logs",
+      capped: true,
+      size: 1000000, # max physical size of 1MB
+      max: 2000 # max number of docuemnts
+    )
+  end
+
+  # Remove the capped collection containing the app's logs
+  after_destroy do |app|
+    Mongoid::Sessions.default["#{app.first_sha}_logs"].drop
+  end
 
   # Pretty arrow. Same as used in Heroku buildpacks
   def arrow

@@ -24,7 +24,7 @@ module WorkerHelper
         sleep 0.1
         status = Sidekiq::Status.status @current_job
       end while status == :queued || status == :working
-      if status == :complete
+      if status == :complete && status != :failed
         yield
       end
     end
@@ -62,6 +62,7 @@ module WorkerHelper
         if @custom_error
           raise @custom_error
         else
+          broadcast accumulated
           raise "#{command} exited with non-zero status"
         end
       end

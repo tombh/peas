@@ -33,6 +33,9 @@ class Pea
   # the app will create a Procfile during the build process with default process types.
   field :process_type, type: String
 
+  # The identifying number for a process_type, eg; web.2 or worker.3
+  field :process_number, type: Integer
+
   # The hostname of the machine upon which the Docker container resides. This allows peas to be
   # arbitrarily distributed across multiple machines in a cluster. WOW SUCH ELASTIC
   field :host, type: String
@@ -52,6 +55,15 @@ class Pea
   before_validation do |pea|
     pea.spawn_container if new_record?
   end
+
+  # Assign the process a number representing how many processes there are of this type.
+  # Eg; web.1, worker.2, etc
+  after_create do |pea|
+    number = pea.app.peas.where(process_type: pea.process_type).count
+    pea.process_number = number
+    pea.save!
+  end
+
 
   # Before removing a pea from the database kill and remove the relevant app container
   before_destroy do
@@ -100,15 +112,21 @@ class Pea
   end
 
   def get_docker_container
-    @container = Docker::Container.get(docker_id) if docker_id
+    begin
+      @container = Docker::Container.get(docker_id) if docker_id
+    rescue Docker::Error::NotFoundError
+      false
+    end
   end
 
   def docker
+    get_docker_container
     @container
   end
 
   # Return whether an app container is running or not
   def running?
-    @container.json['State']['Running']
+    return false if !docker
+    docker.json['State']['Running']
   end
 end

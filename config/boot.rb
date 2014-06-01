@@ -7,7 +7,7 @@ Bundler.require :default, ENV['RACK_ENV']
 
 I18n.enforce_available_locales = false
 
-require './config/settings'
+require_relative './settings'
 
 Mongoid.load!(Peas.root + '/config/mongoid.yml')
 
