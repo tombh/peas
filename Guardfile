@@ -45,8 +45,8 @@ module ::Guard
       true
     end
 
-    def run_on_change(paths)
-      true
+    def run_on_changes(paths)
+      reload
     end
 
   end
@@ -54,4 +54,43 @@ end
 
 guard 'nats' do
   watch('Gemfile.lock')
+end
+
+
+module ::Guard
+  class MessageServer < Guard
+    def start
+      puts "Starting messaging server"
+      # TODO check if already running
+      @pid = spawn 'bundle exec ./messaging/bin/server'
+      puts "Messaging server running with PID #{@pid}"
+      @pid
+    end
+
+    def stop
+      if @pid
+        puts "Sending TERM signal to messaging server (#{@pid})"
+        Process.kill("TERM", @pid)
+        true
+      end
+    end
+
+    def reload
+      stop
+      start
+    end
+
+    def run_all
+      true
+    end
+
+    def run_on_changes(paths)
+      reload
+    end
+
+  end
+end
+
+guard 'message_server' do
+  watch('messaging/bin/server')
 end

@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+require_relative '../../config/boot'
+require 'nats/client'
+
+["TERM", "INT", "SIGINT"].each { |sig|
+  Signal.trap(sig) {
+    exit!
+  }
+}
+
+NATS.on_error { |err| puts "Server Error: #{err}"; exit! }
+
+Thread::abort_on_exception = true
+
+def serve
+  NATS.start(autostart: true) do
+    puts "Peas messaging server listening..."
+
+    # Insert individual app logs into capped collection
+    NATS.subscribe('logs.>') do |msg, _, sub|
+      parts = sub.split('.')
+      app = App.find(parts[1])
+      pea = Pea.find(parts[2])
+      line = "#{DateTime.now} app[#{pea.process_type}.#{pea.process_number}]: #{msg}"
+      app_logs_collection = Mongoid::Sessions.default["#{app.first_sha}_logs"]
+      app_logs_collection.insert({line: line})
+    end
+
+
+    NATS.subscribe('api.>') do |msg, _, sub|
+      parts = sub.split('.')
+      app = App.find(parts[1])
+      connection = parts[2]
+      puts "Request to stream logs for #{app.name} from #{connection}"
+      Thread.new do
+        cursor = Mongoid::Sessions.default["#{app.first_sha}_logs"].find.tailable.cursor
+        documents = cursor.load_docs
+        documents.each { |doc| NATS.publish("#{connection}.output", doc['line']) }
+        while cursor.more?
+          subscriber_absent = true
+          NATS.request("#{connection}.ping") do
+            subscriber_absent = false
+          end
+          sleep 2 # Amount of time to wait for CLI client to respond
+          if subscriber_absent
+            cursor.kill
+            Mongoid::Sessions.clear
+            puts "Finsished request to stream logs for #{app.name} from #{connection}"
+            break
+          end
+          documents = cursor.get_more
+          documents.each { |doc| NATS.publish("#{connection}.output", doc['line']) }
+        end
+      end
+      # Thread.new do
+      #   loop do
+      #   end
+      # end
+    end
+  end
+end
+
+begin
+  serve
+rescue Exception => ex
+  puts "EXCEPTION! #{ex}"
+  puts ex.backtrace
+  retry
+end

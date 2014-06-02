@@ -10,11 +10,12 @@ require 'nats/client'
 
 NATS.on_error { |err| puts "Server Error: #{err}"; exit! }
 
+connection = rand(9999999999999999)
+
 NATS.start do
-  NATS.subscribe('cli'){ |msg, reply, sub|
+  NATS.subscribe("#{connection}.ping") { |msg, reply| NATS.publish(reply, "HERE!") }
+  NATS.subscribe("#{connection}.output"){ |msg, _, sub|
     puts msg
   }
-  NATS.connect { |nc|
-    nc.publish("api.#{App.first._id}")
-  }
+  NATS.publish("api.#{App.first._id}.#{connection}")
 end
