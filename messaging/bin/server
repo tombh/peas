@@ -20,11 +20,8 @@ class LogsCursor
     @cursor.load_docs.each { |doc|  @socket.puts doc['line'] }
   end
   def more
-    putc "1"
     if @cursor.more?
-      putc "2"
       @cursor.get_more.each do |doc|
-        put "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         @socket.puts doc['line']
       end
     end
@@ -53,9 +50,23 @@ class MessageServer
     loop { async.handle_connection @server.accept }
   end
 
+  def close_connection socket
+    puts "*** Closing connection..."
+    socket.close
+  rescue IOError
+  end
+
+  def check_connection socket
+      loop { socket.recv 1 }
+  rescue EOFError, IOError
+    close_connection socket
+  end
+
   def handle_connection(socket)
+    puts "Current number of tasks: #{tasks.count}"
     _, port, host = socket.peeraddr
     puts "*** Received connection from #{host}:#{port}"
+    async.check_connection socket
     header = socket.readline.chomp
     parts = header.split('.')
     command = parts[0]
@@ -67,8 +78,6 @@ class MessageServer
         pea = Pea.find(parts[2])
         loop do
           line = "#{DateTime.now} app[#{pea.process_type}.#{pea.process_number}]: #{socket.readline.chomp}"
-          puts line
-
           app_logs_collection = Mongoid::Sessions.default["#{app.first_sha}_logs"]
           app_logs_collection.insert({line: line})
         end
@@ -77,14 +86,13 @@ class MessageServer
         app = App.find(parts[1])
         puts "Request to stream logs for #{app.name}"
         logs = LogsCursor.new app, socket
-
         loop do
+          break if socket.closed?
+          putc "."
           logs.more
         end
     end
-  rescue EOFError
-    puts "*** #{host}:#{port} disconnected"
-    socket.close
+    close_connection socket
   end
 end
 
