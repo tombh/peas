@@ -11,23 +11,16 @@ require 'nats/client'
 NATS.on_error { |err| puts "Server Error: #{err}"; exit! }
 
 # Stream the ouput of a command and publish to NATS
-# TODO: use Docker::Container.logs when it becomes available
 def stream_logs pea
   # Just make sure the pea's container has booted up first
   while !pea.running? do
     sleep 1
   end
-  IO.popen("docker logs -f #{pea.docker_id} 2>&1") do |data|
-    while line = data.gets
-      line.strip!
-      next if line.empty?
-      NATS.start do
-        NATS.publish("logs.#{pea.app._id}.#{pea._id}", line){ NATS.stop }
-      end
-    end
-    data.close
-    if $?.to_i > 0
-      raise "Docker logs exited with non-zero status"
+  pea.attach(logs:true, stdout:true, stderr:true, stream: true) do |stream, chunk|
+    chunk.strip!
+    next if chunk.empty?
+    NATS.start do
+      NATS.publish("logs.#{pea.app._id}.#{pea._id}", line){ NATS.stop }
     end
   end
 end
