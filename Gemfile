@@ -6,11 +6,12 @@ gem 'rack'
 gem 'grape', github: 'intridea/grape'
 gem 'grape-swagger'
 gem 'mongoid', github: 'mongoid/mongoid'
+gem 'celluloid'
+gem 'celluloid-io'
 gem 'sidekiq'
 gem 'sidekiq-status'
 gem 'docker-api', :require => 'docker'
 gem 'rake'
-gem 'nats', github: 'derekcollison/nats', branch: 'cluster' # For ruby 2.1 support
 
 group :development do
   gem 'guard'

@@ -1,21 +1,18 @@
 require_relative '../config/boot'
-require 'nats/client'
+require 'socket'
 
-["TERM", "INT", "SIGINT"].each { |sig|
-  Signal.trap(sig) {
-    exit
-    `kill -5 #{Process.pid}`
-  }
-}
+socket = TCPSocket.new 'localhost', 4444
 
-NATS.on_error { |err| puts "Server Error: #{err}"; exit! }
-
-connection = rand(9999999999999999)
-
-NATS.start do
-  NATS.subscribe("#{connection}.ping") { |msg, reply| NATS.publish(reply, "HERE!") }
-  NATS.subscribe("#{connection}.output"){ |msg, _, sub|
-    puts msg
-  }
-  NATS.publish("api.#{App.first._id}.#{connection}")
+at_exit do
+  puts "11"
+  socket.close
 end
+
+socket.puts "api.#{App.find_by(name: 'node-js-sample')._id}"
+
+while line = socket.gets
+  puts line
+end
+
+socket.close
+

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require_relative '../../config/boot'
-require 'nats/client'
+require 'celluloid/io'
 
 ["TERM", "INT", "SIGINT"].each { |sig|
   Signal.trap(sig) {
@@ -8,62 +8,86 @@ require 'nats/client'
   }
 }
 
-NATS.on_error { |err| puts "Server Error: #{err}"; exit! }
-
-Thread::abort_on_exception = true
-
-def serve
-  NATS.start(autostart: true) do
-    puts "Peas messaging server listening..."
-
-    # Insert individual app logs into capped collection
-    NATS.subscribe('logs.>') do |msg, _, sub|
-      parts = sub.split('.')
-      app = App.find(parts[1])
-      pea = Pea.find(parts[2])
-      line = "#{DateTime.now} app[#{pea.process_type}.#{pea.process_number}]: #{msg}"
-      app_logs_collection = Mongoid::Sessions.default["#{app.first_sha}_logs"]
-      app_logs_collection.insert({line: line})
-    end
-
-
-    NATS.subscribe('api.>') do |msg, _, sub|
-      parts = sub.split('.')
-      app = App.find(parts[1])
-      connection = parts[2]
-      puts "Request to stream logs for #{app.name} from #{connection}"
-      Thread.new do
-        cursor = Mongoid::Sessions.default["#{app.first_sha}_logs"].find.tailable.cursor
-        documents = cursor.load_docs
-        documents.each { |doc| NATS.publish("#{connection}.output", doc['line']) }
-        while cursor.more?
-          subscriber_absent = true
-          NATS.request("#{connection}.ping") do
-            subscriber_absent = false
-          end
-          sleep 2 # Amount of time to wait for CLI client to respond
-          if subscriber_absent
-            cursor.kill
-            Mongoid::Sessions.clear
-            puts "Finsished request to stream logs for #{app.name} from #{connection}"
-            break
-          end
-          documents = cursor.get_more
-          documents.each { |doc| NATS.publish("#{connection}.output", doc['line']) }
-        end
+class LogsCursor
+  include Celluloid::IO
+  def initialize app, socket
+    @app = app
+    @socket = socket
+    # Mongoid apparently creates a new session for every thread, so as long as the thread dies, so too does the
+    # underlying Moped session.
+    @cursor = Mongoid::Sessions.default["#{app.first_sha}_logs"].find.tailable.cursor
+    # Grab a handful of the logs to get us going
+    @cursor.load_docs.each { |doc|  @socket.puts doc['line'] }
+  end
+  def more
+    putc "1"
+    if @cursor.more?
+      putc "2"
+      @cursor.get_more.each do |doc|
+        put "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        @socket.puts doc['line']
       end
-      # Thread.new do
-      #   loop do
-      #   end
-      # end
     end
   end
 end
 
-begin
-  serve
-rescue Exception => ex
-  puts "EXCEPTION! #{ex}"
-  puts ex.backtrace
-  retry
+
+class MessageServer
+  include Celluloid::IO
+  finalizer :finalize
+
+  def initialize(host, port)
+    puts "*** Starting message server on #{host}:#{port}"
+
+    # Since we included Celluloid::IO, we're actually making a
+    # Celluloid::IO::TCPServer here
+    @server = TCPServer.new(host, port)
+    async.run
+  end
+
+  def finalize
+    @server.close if @server
+  end
+
+  def run
+    loop { async.handle_connection @server.accept }
+  end
+
+  def handle_connection(socket)
+    _, port, host = socket.peeraddr
+    puts "*** Received connection from #{host}:#{port}"
+    header = socket.readline.chomp
+    parts = header.split('.')
+    command = parts[0]
+
+    case command
+      when 'logs'
+        puts '>LOGS received'
+        app = App.find(parts[1])
+        pea = Pea.find(parts[2])
+        loop do
+          line = "#{DateTime.now} app[#{pea.process_type}.#{pea.process_number}]: #{socket.readline.chomp}"
+          puts line
+
+          app_logs_collection = Mongoid::Sessions.default["#{app.first_sha}_logs"]
+          app_logs_collection.insert({line: line})
+        end
+      when 'api'
+        puts '>API received'
+        app = App.find(parts[1])
+        puts "Request to stream logs for #{app.name}"
+        logs = LogsCursor.new app, socket
+
+        loop do
+          logs.more
+        end
+    end
+  rescue EOFError
+    puts "*** #{host}:#{port} disconnected"
+    socket.close
+  end
 end
+
+supervisor = MessageServer.supervise("127.0.0.1", 4444)
+trap("INT") { supervisor.terminate; exit }
+sleep

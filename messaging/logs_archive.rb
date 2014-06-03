@@ -1,26 +1,27 @@
 require_relative '../config/boot'
-require 'nats/client'
-
-["TERM", "INT", "SIGINT"].each { |sig|
-  Signal.trap(sig) {
-    exit
-    `kill -5 #{Process.pid}`
-  }
-}
-
-NATS.on_error { |err| puts "Server Error: #{err}"; exit! }
 
 # Stream the ouput of a command and publish to NATS
 def stream_logs pea
+  socket = TCPSocket.new 'localhost', 4444
+  socket.puts "logs.#{pea.app._id}.#{pea._id}"
   # Just make sure the pea's container has booted up first
+  if !pea.running?
+    puts "Waiting for #{pea.app.name} #{pea.process_type}.#{pea.process_number} to be up and running..."
+  end
   while !pea.running? do
     sleep 1
   end
-  pea.attach(logs:true, stdout:true, stderr:true, stream: true) do |stream, chunk|
-    chunk.strip!
-    next if chunk.empty?
-    NATS.start do
-      NATS.publish("logs.#{pea.app._id}.#{pea._id}", line){ NATS.stop }
+  # Shelling is better than using Docker.attach because it doesn't timeout
+  IO.popen("docker logs -f #{pea.docker_id} 2>&1") do |data|
+    while line = data.gets
+      line.strip!
+      next if line.empty?
+      socket.puts line
+    end
+    data.close
+    socket.close
+    if $?.to_i > 0
+      raise "Docker logs exited with non-zero status"
     end
   end
 end

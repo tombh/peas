@@ -19,45 +19,6 @@ guard(:sidekiq, *sidekiq_args) do
 end
 
 module ::Guard
-  class Nats < Guard
-    def start
-      puts "Starting nats-server"
-      # TODO check if already running
-      @child = IO.popen("bundle exec nats-server")
-      puts "NATs running with PID #{@child.pid}"
-      $?.success?
-    end
-
-    def stop
-      if @child.pid
-        puts "Sending TERM signal to nats-server (#{@child.pid})"
-        Process.kill("TERM", @child.pid)
-        true
-      end
-    end
-
-    def reload
-      stop
-      start
-    end
-
-    def run_all
-      true
-    end
-
-    def run_on_changes(paths)
-      reload
-    end
-
-  end
-end
-
-guard 'nats' do
-  watch('Gemfile.lock')
-end
-
-
-module ::Guard
   class MessageServer < Guard
     def start
       puts "Starting messaging server"
