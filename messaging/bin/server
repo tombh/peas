@@ -98,4 +98,4 @@ end
 
 supervisor = MessageServer.supervise("127.0.0.1", 4444)
 trap("INT") { supervisor.terminate; exit }
-sleep
+sleep # Celluloid thing. Stops the main thread from finishing and allows child thread to continue.
