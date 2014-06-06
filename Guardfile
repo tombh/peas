@@ -53,5 +53,5 @@ module ::Guard
 end
 
 guard 'message_server' do
-  watch('messaging/bin/server')
+  watch('messaging/.*')
 end

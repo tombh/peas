@@ -4,7 +4,6 @@ require 'socket'
 socket = TCPSocket.new 'localhost', 4444
 
 at_exit do
-  puts "11"
   socket.close
 end
 

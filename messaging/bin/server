@@ -1,101 +1,10 @@
 #!/usr/bin/env ruby
-require_relative '../../config/boot'
-require 'celluloid/io'
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../..')
+require 'messaging/server/message_server'
 
-["TERM", "INT", "SIGINT"].each { |sig|
-  Signal.trap(sig) {
-    exit!
-  }
-}
-
-class LogsCursor
-  include Celluloid::IO
-  def initialize app, socket
-    @app = app
-    @socket = socket
-    # Mongoid apparently creates a new session for every thread, so as long as the thread dies, so too does the
-    # underlying Moped session.
-    @cursor = Mongoid::Sessions.default["#{app.first_sha}_logs"].find.tailable.cursor
-    # Grab a handful of the logs to get us going
-    @cursor.load_docs.each { |doc|  @socket.puts doc['line'] }
-  end
-  def more
-    if @cursor.more?
-      @cursor.get_more.each do |doc|
-        @socket.puts doc['line']
-      end
-    end
-  end
-end
-
-
-class MessageServer
-  include Celluloid::IO
-  finalizer :finalize
-
-  def initialize(host, port)
-    puts "*** Starting message server on #{host}:#{port}"
-
-    # Since we included Celluloid::IO, we're actually making a
-    # Celluloid::IO::TCPServer here
-    @server = TCPServer.new(host, port)
-    async.run
-  end
-
-  def finalize
-    @server.close if @server
-  end
-
-  def run
-    loop { async.handle_connection @server.accept }
-  end
-
-  def close_connection socket
-    puts "*** Closing connection..."
-    socket.close
-  rescue IOError
-  end
-
-  def check_connection socket
-      loop { socket.recv 1 }
-  rescue EOFError, IOError
-    close_connection socket
-  end
-
-  def handle_connection(socket)
-    puts "Current number of tasks: #{tasks.count}"
-    _, port, host = socket.peeraddr
-    puts "*** Received connection from #{host}:#{port}"
-    async.check_connection socket
-    header = socket.readline.chomp
-    parts = header.split('.')
-    command = parts[0]
-
-    case command
-      when 'logs'
-        puts '>LOGS received'
-        app = App.find(parts[1])
-        pea = Pea.find(parts[2])
-        loop do
-          line = "#{DateTime.now} app[#{pea.process_type}.#{pea.process_number}]: #{socket.readline.chomp}"
-          app_logs_collection = Mongoid::Sessions.default["#{app.first_sha}_logs"]
-          app_logs_collection.insert({line: line})
-        end
-      when 'api'
-        puts '>API received'
-        app = App.find(parts[1])
-        puts "Request to stream logs for #{app.name}"
-        logs = LogsCursor.new app, socket
-        loop do
-          break if socket.closed?
-          putc "."
-          logs.more
-        end
-    end
-    close_connection socket
-  end
-end
-
+# The supervise method is like God or Monit. It keeps watch of the Celluloid actor and restarts it
+# if it crashes.
 supervisor = MessageServer.supervise("127.0.0.1", 4444)
 trap("INT") { supervisor.terminate; exit }
+
 sleep # Celluloid thing. Stops the main thread from finishing and allows child thread to continue.

@@ -1,11 +1,11 @@
 ###0.1.1
 **date**    
 **Features**:
-  * NATS server for internal messaging
+  * Celluloid based messaging server for internal messaging
   * App logging in capped MongoDB collections and new `peas logs` command.
 
 **Bugfixes**:
-  * Apps build stop and return messages on error
+  * App builds stop and return messages on error
 
 ###0.1.0
 **30th May 2014**    
