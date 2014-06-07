@@ -1,4 +1,5 @@
 require 'httparty'
+require 'socket'
 
 class API
   include HTTParty
@@ -83,6 +84,10 @@ class API
     diff = log_so_far.lines.to_a[old_count..new_count]
     @accumulated_output = log_so_far
     puts diff.join if diff.length > 0
+  end
+
+  def self.switchboard_connection
+    TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
   end
 
 end

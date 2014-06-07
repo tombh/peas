@@ -17,6 +17,9 @@ module Peas
   # Path to tar repos into before sending to buildstep
   TMP_TARS = "#{TMP_BASE}/tars"
 
+  # Port on which the messaging server runs
+  SWITCHBOARD_PORT = 9345
+
   # Root path of the project on the host filesystem
   def self.root
     File.join(File.dirname(__FILE__), "../")
@@ -33,12 +36,25 @@ module Peas
   def self.domain
     setting = Setting.where(key: 'domain')
     if setting.count == 1
-      setting.first.value
+      domain = setting.first.value
     else
       # Default.
       # 'vcap.me' is managed by Cloud Foundry and has wildcard resolution to 127.0.0.1
-      # port 4000 is just the default port used by Puma in a development environment
-      'vcap.me:4000'
+      # Port 4000 is just the default port used by Puma in a development environment
+      domain = 'vcap.me:4000'
     end
+    unless domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
+      domain = "http://#{domain}"
+    else
+      domain
+    end
+  end
+
+  def self.host
+    URI.parse(Peas.domain).host
+  end
+
+  def self.switchboard_server_uri
+    "#{Peas.host}:#{SWITCHBOARD_PORT}"
   end
 end

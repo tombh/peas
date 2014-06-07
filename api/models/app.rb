@@ -29,7 +29,7 @@ class App
   # are deleted to make place for new rows when the collection reaches any of its limits.
   after_create do |app|
     Mongoid::Sessions.default.command(
-      create: "#{app.first_sha}_logs",
+      create: "#{app._id}_logs",
       capped: true,
       size: 1000000, # max physical size of 1MB
       max: 2000 # max number of docuemnts
@@ -38,7 +38,7 @@ class App
 
   # Remove the capped collection containing the app's logs
   after_destroy do |app|
-    Mongoid::Sessions.default["#{app.first_sha}_logs"].drop
+    app.logs_collection.drop
   end
 
   # Pretty arrow. Same as used in Heroku buildpacks
@@ -211,4 +211,16 @@ class App
     end
     result
   end
+
+  # Return a connection to the capped collection that stores all the logs for this app
+  def logs_collection
+    Mongoid::Sessions.default["#{_id}_logs"]
+  end
+
+  # Log any activity for this app
+  def log line, from = 'general', level = :info
+    line = "#{DateTime.now} app[#{from}]: #{line}"
+    logs_collection.insert({line: line})
+  end
+
 end

@@ -129,4 +129,9 @@ class Pea
     return false if !docker
     docker.json['State']['Running']
   end
+
+  # Human friendly string name. Eg; 'web.1'
+  def name
+    "#{process_type}.#{process_number}"
+  end
 end

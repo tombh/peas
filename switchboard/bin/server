@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../..')
-require 'messaging/server/message_server'
+require 'switchboard/server/lib/switchboard_server'
 
 # The supervise method is like God or Monit. It keeps watch of the Celluloid actor and restarts it
 # if it crashes.
-supervisor = MessageServer.supervise("127.0.0.1", 4444)
+supervisor = SwitchboardServer.supervise(Peas.host, Peas::SWITCHBOARD_PORT)
 trap("INT") { supervisor.terminate; exit }
 
 sleep # Celluloid thing. Stops the main thread from finishing and allows child thread to continue.

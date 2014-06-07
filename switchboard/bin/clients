@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../..')
+require 'celluloid/io'
+require 'config/boot'
+
+Dir["#{Peas.root}/switchboard/clients/**/*.rb"].each { |f| require f }
+
+Peas::Switchboard.wait_for_connection
+
+clients = [
+  LogsArchiver
+]
+running = []
+
+# We don't want to use a Celluloid::SupervisionGroup as each client Actor is independent and needs
+# to be able to crash and restart independent of the others.
+clients.map do |client|
+  running << client.supervise
+end
+
+# Not sure how relevant the termination is for blocking threads, actors just seem to not respond
+# and you get the 'Couldn't cleanly terminate all actors in 10 seconds!' error message.
+trap('INT') do
+  running.each do |client|
+    client.terminate
+  end
+  exit
+end
+
+sleep # Celluloid thing. Stops the main thread from finishing and allows child thread to continue.
