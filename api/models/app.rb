@@ -82,7 +82,7 @@ class App
       broadcast
       worker :scale, scaling_profile, :deploy do
         broadcast
-        broadcast "       Deployed to http://#{name}.#{Peas.domain}"
+        broadcast "       Deployed to http://#{name}.#{Peas.domain.gsub('http://', '')}"
       end
     end
   end

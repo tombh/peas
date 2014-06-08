@@ -1,6 +1,6 @@
 module Peas
   def self.proxy request
-    domain = Peas.domain.split(':').first
+    domain = Peas.host
     if request.host =~ %r{\.#{domain.gsub('.', '\.')}$}
       app_name = request.host.split('.').first
       app = App.where(name: app_name).first

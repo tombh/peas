@@ -55,7 +55,7 @@ describe Peas::API do
       end
     end
 
-    describe 'Config' do
+    describe 'Config ENV vars' do
       it 'should return 400 if no config values are given' do
         put "/app/#{peas_app.first_sha}/config"
         expect(last_response.status).to eq 400

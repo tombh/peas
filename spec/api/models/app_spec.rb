@@ -88,7 +88,10 @@ describe App do
         app = Fabricate :app,
           remote: 'https://github.com/heroku/node-js-sample.git',
           name: 'node-js-sample'
-        allow(app).to receive(:_fetch_and_tar_repo) # Comment out when recording
+        # Hack to detect whether this is being recorded for the first time or not
+        if !VCR.current_cassette.originally_recorded_at.nil?
+          allow(app).to receive(:_fetch_and_tar_repo)
+        end
         allow(app).to receive(:broadcast)
         expect(app).to receive(:broadcast).with(/       Node.js app detected/)
         expect(app).to receive(:broadcast).with(/-----> Installing dependencies/)
@@ -104,14 +107,17 @@ describe App do
           name: 'node-js-sample',
           config: [{'FOO' => 'BAR'}]
         details = app.build
-        expect(details['Config']['Env']).to include('{"FOO"=>"BAR"}')
+        expect(details['Config']['Env']).to include("FOO=BAR")
       end
 
       it 'should deal with a failed build', :docker do
         app = Fabricate :app,
           remote: 'https://github.com/saddleback/hello-world-cpp.git',
           name: 'hello-world-cpp'
-        allow(app).to receive(:_fetch_and_tar_repo) # Comment out when recording
+        # Hack to detect whether this is being recorded for the first time or not
+        if !VCR.current_cassette.originally_recorded_at.nil?
+          allow(app).to receive(:_fetch_and_tar_repo)
+        end
         allow(app).to receive(:broadcast)
         expect_any_instance_of(Docker::Container).to_not receive(:commit)
         expect_any_instance_of(Docker::Container).to receive(:delete)

@@ -24,9 +24,8 @@ end
 
 group :test do
   gem 'rspec'
-  gem 'rspec-sidekiq'
+  gem 'rspec-sidekiq', github: 'yelled3/rspec-sidekiq', branch: 'rspec3-beta'
   gem 'rack-test'
-  gem 'database_cleaner'
   gem 'fabrication'
   gem 'webmock'
   gem 'vcr'

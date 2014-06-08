@@ -3,7 +3,7 @@ module Peas
   VERSION = File.read File.expand_path("../../cli/VERSION", __FILE__)
 
   # The most recent version of Docker against which Peas has been tested
-  DOCKER_VERSION = '0.9.0'
+  DOCKER_VERSION = '0.11.1'
 
   # Location of Docker socket, used by Remote API
   DOCKER_SOCKET = 'unix:///var/run/docker.sock'

@@ -44,7 +44,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       end
     end
 
-    describe 'Config' do
+    describe 'Config ENV vars' do
       it 'should set config for an app' do
         response = @cli.run 'config set FOO=BAR'
         expect(response).to eq '{"FOO"=>"BAR"}'

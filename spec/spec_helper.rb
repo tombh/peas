@@ -10,19 +10,17 @@ require 'docker_creation_mock.rb'
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
-  config.treat_symbols_as_metadata_keys_with_true_values = true
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
+    Mongoid.default_session.drop
   end
 
   config.before(:each) do
-    DatabaseCleaner.start
     allow(Docker).to receive(:version).and_return({'Version' => Peas::DOCKER_VERSION})
   end
 
   config.after(:each) do
-    DatabaseCleaner.clean
+    Mongoid.default_session.drop
   end
 end
 

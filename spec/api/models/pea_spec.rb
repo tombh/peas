@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe Pea do
-  let(:app) { Fabricate :app, name: 'peas' }
+  let(:app) { Fabricate :app, name: 'node-js-sample' }
 
   it 'should create a running docker container', :docker do
     pea = Fabricate :pea, app: app, port: nil, docker_id: nil
     expect(pea.docker.json['State']['Running']).to eq true
-    expect(pea.docker.json['Config']['Image']).to eq 'peas'
-    expect(pea.docker.json['Config']['Env']).to eq ['PORT=5000']
+    expect(pea.docker.json['Config']['Image']).to eq 'node-js-sample'
+    expect(pea.docker.json['Config']['Env']).to include 'PORT=5000'
     expect(pea.docker.json['Config']['Cmd']).to eq ["/bin/bash", "-c", "/start web"]
   end
 

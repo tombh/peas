@@ -23,6 +23,15 @@ GIT
       origin (~> 2.1)
       tzinfo (>= 0.3.37)
 
+GIT
+  remote: git://github.com/yelled3/rspec-sidekiq.git
+  revision: e4a1c5a3b8fc9b42c318bf4efd73f7f004d8f93b
+  branch: rspec3-beta
+  specs:
+    rspec-sidekiq (1.0.0)
+      rspec (>= 3.0.0)
+      sidekiq (>= 2.4.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -55,7 +64,6 @@ GEM
     connection_pool (2.0.0)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
-    database_cleaner (1.3.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
@@ -155,9 +163,6 @@ GEM
       rspec-support (~> 3.0.0)
     rspec-mocks (3.0.0)
       rspec-support (~> 3.0.0)
-    rspec-sidekiq (1.0.0)
-      rspec (>= 2.0.0)
-      sidekiq (>= 2.4.0)
     rspec-support (3.0.0)
     rubocop (0.22.0)
       json (>= 1.7.7, < 2)
@@ -196,7 +201,6 @@ PLATFORMS
 DEPENDENCIES
   celluloid
   celluloid-io
-  database_cleaner
   docker-api
   fabrication
   foreman
@@ -214,7 +218,7 @@ DEPENDENCIES
   rake
   rb-inotify
   rspec
-  rspec-sidekiq
+  rspec-sidekiq!
   rubocop
   sidekiq
   sidekiq-status

@@ -1,0 +1,180 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/create
+    body:
+      encoding: UTF-8
+      string: '{"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"Env":[],"Cmd":["/bin/bash","-c","mkdir
+        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/hello-world-cpp.tgz -C /app
+        \u0026\u0026 /build/builder"]}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.11.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 08 Jun 2014 01:11:57 GMT
+      Content-Length:
+      - '90'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        {"Id":"b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208","Warnings":null}
+    http_version: 
+  recorded_at: Sun, 08 Jun 2014 01:11:57 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/start
+    body:
+      encoding: UTF-8
+      string: '{"Binds":["/tmp:/tmp"]}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.11.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Sun, 08 Jun 2014 01:11:57 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sun, 08 Jun 2014 01:11:57 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/attach?stderr=true&stdout=true&stream=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.11.0
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/vnd.docker.raw-stream
+    body:
+      encoding: UTF-8
+      string: !binary |-
+        AQAAAAAAACQgICAgICAgVW5hYmxlIHRvIHNlbGVjdCBhIGJ1aWxkcGFjawo=
+    http_version: 
+  recorded_at: Sun, 08 Jun 2014 01:11:57 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/wait
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.11.0
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 08 Jun 2014 01:11:57 GMT
+      Content-Length:
+      - '17'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: |
+        {"StatusCode":1}
+    http_version: 
+  recorded_at: Sun, 08 Jun 2014 01:11:57 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.11.0
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 08 Jun 2014 01:11:57 GMT
+      Content-Length:
+      - '1900'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: '{"ID":"b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208","Created":"2014-06-08T01:11:57.798322518Z","Path":"/bin/bash","Args":["-c","mkdir
+        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/hello-world-cpp.tgz -C /app
+        \u0026\u0026 /build/builder"],"Config":{"Hostname":"b359bf8516df","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":null,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","mkdir
+        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/hello-world-cpp.tgz -C /app
+        \u0026\u0026 /build/builder"],"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":false,"Pid":0,"ExitCode":1,"StartedAt":"2014-06-08T01:11:57.852336925Z","FinishedAt":"2014-06-08T01:11:57.979654491Z"},"Image":"117ea5403f840e36f71bfed079c16f31bb1731d6e28d68cf51293a9de3d98ae7","NetworkSettings":{"IPAddress":"","IPPrefixLen":0,"Gateway":"","Bridge":"","PortMapping":null,"Ports":null},"ResolvConfPath":"/var/lib/docker/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/resolv.conf","HostnamePath":"/var/lib/docker/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/hostname","HostsPath":"/var/lib/docker/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/hosts","Name":"/sleepy_lovelace","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/tmp"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":["/tmp:/tmp"],"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":false,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+    http_version: 
+  recorded_at: Sun, 08 Jun 2014 01:11:58 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/kill
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.11.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Sun, 08 Jun 2014 01:11:58 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sun, 08 Jun 2014 01:11:58 GMT
+recorded_with: VCR 2.9.2
