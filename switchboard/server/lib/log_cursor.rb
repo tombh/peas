@@ -1,5 +1,8 @@
 # Retrieves the aggregated logs from a capped MongoDB collection in real time. Provices tail-like
 # reading of logs.
+# Note that Mongoid apparently creates a new session for every thread. You can think of every
+# Celluloid actor being a thread. So as long as the thread ends, so too does the underlying Moped
+# session.
 class LogsCursor
   include Celluloid::IO
 
@@ -9,8 +12,6 @@ class LogsCursor
 
   # Return the existing logs for an app
   def existing
-    # Mongoid apparently creates a new session for every thread, so as long as the thread dies, so
-    # too does the underlying Moped session.
     @cursor = @app.logs_collection.find.tailable.cursor
     # Grab a handful of the logs to get us going
     @cursor.load_docs.each do |doc|

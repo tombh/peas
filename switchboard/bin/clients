@@ -27,4 +27,4 @@ trap('INT') do
   exit
 end
 
-sleep # Celluloid thing. Stops the main thread from finishing and allows child thread to continue.
+sleep # Celluloid thing. Stops the main thread from finishing and allows child threads to continue.

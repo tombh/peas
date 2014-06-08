@@ -5,6 +5,7 @@ ENV["RACK_ENV"] ||= 'test'
 require File.expand_path("../../config/boot", __FILE__)
 require 'rack/test'
 require 'sidekiq/testing'
+require 'celluloid/test'
 require 'docker_creation_mock.rb'
 
 RSpec.configure do |config|
@@ -73,3 +74,5 @@ RSpec.configure do |config|
     end
   end
 end
+
+Celluloid.logger = nil

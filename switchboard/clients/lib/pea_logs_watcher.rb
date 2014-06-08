@@ -7,7 +7,7 @@ class PeaLogsWatcher
   def initialize pea, archiver
     info "Starting to watch #{name(pea)}'s logs for archiving"
     socket = Peas::Switchboard.connection
-    socket.puts "logs.#{pea.app._id}.#{pea._id}"
+    socket.puts "app_logs.#{pea._id}"
     archiver.watched << pea._id
 
     # Just make sure the pea's container has booted up first

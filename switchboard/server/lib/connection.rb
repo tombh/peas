@@ -13,7 +13,7 @@ class Connection
     info "Received connection (ID: #{@socket.object_id}) from #{@host}:#{@port}"
 
     # The first line of a request should contain something like:
-    # 'app_logs.5389cf295a454e7d26000000.5390f5665a454e77990b0000'
+    # 'app_logs.5390f5665a454e77990b0000'
     begin
       @header = @socket.readline.chomp.split('.')
     rescue EOFError
@@ -25,7 +25,7 @@ class Connection
     # first. This could easily be abused :/
     if command.to_sym.in? Connection.instance_methods
       begin
-        # All commands are kept at messaging/server/commands
+        # All commands are kept at switchboard/server/commands
         send(command)
       rescue EOFError
       end
