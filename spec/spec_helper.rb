@@ -1,6 +1,6 @@
 require 'rubygems'
 
-ENV["RACK_ENV"] ||= 'test'
+ENV["RACK_ENV"] ||= ENV["PEAS_ENV"] ||= 'test'
 
 require File.expand_path("../../config/boot", __FILE__)
 require 'rack/test'
@@ -75,17 +75,23 @@ RSpec.configure do |config|
   end
 end
 
+SWITCHBOARD_TEST_HOST = '127.0.0.1'
+SWITCHBOARD_TEST_PORT = 79345
+
 Celluloid.logger = nil
 
-# For Switchboard. Creates a client and server into which you can inject a manipulated Connection instance for testing.
+def client_connection
+  TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
+end
+
+# For Switchboard. Creates a client and server into which you can inject a manipulated Connection
+# instance for testing.
 # Got the idea from celluloid/reel's spec_helper
 def with_socket_pair
-  host = '127.0.0.1'
-  port = 79345
 
-  server = TCPServer.new(host, port)
-  client = TCPSocket.new(host, port)
-  peer   = server.accept
+  server = TCPServer.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
+  client = client_connection
+  peer = server.accept
 
   begin
     yield client, peer
@@ -93,5 +99,25 @@ def with_socket_pair
     server.close rescue nil
     client.close rescue nil
     peer.close   rescue nil
+  end
+end
+
+module Commands
+  def fake; end
+  def sleep
+    sleep 0.1
+  end
+  def raise_exception
+    puts "before"
+    raise Exception
+    puts "after"
+  end
+  def echo
+    while incoming = @socket.gets
+      @socket.puts incoming
+    end
+  end
+  def ping
+    @socket.puts 'pong'
   end
 end

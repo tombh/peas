@@ -6,6 +6,13 @@ class Connection
   include Celluloid::Logger
   include Commands
 
+  trap_exit :exception_handler
+
+  def exception_handler actor, reason
+    puts "#{actor} crashed because #{reason}"
+    error "#{actor} crashed because #{reason}"
+  end
+
   def initialize socket
     @socket = socket
   end
@@ -26,16 +33,12 @@ class Connection
     # Dynamically call the requested command as an instance method. But do a little sanity check
     # first. This could easily be abused :/
     if command.to_sym.in? Commands.instance_methods
-      begin
-        # All commands are kept at switchboard/server/commands
-        send(command)
-      rescue EOFError
-      end
+      # All commands are kept at switchboard/server/commands
+      send(command)
     else
+      raise Exception
       warn "Uknown command requested in connection header"
     end
-
-    close
   end
 
   # Check if the client is still there. Used for long-running client connections, like the log
