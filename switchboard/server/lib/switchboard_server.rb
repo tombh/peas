@@ -29,7 +29,8 @@ class SwitchboardServer
   def handle_connection socket
     debug "Current number of tasks: #{tasks.count}"
     connection = Connection.new socket
-    connection.close
+    connection.dispatch
+    socket.close
   rescue => exception
     error "#{exception.class} :: #{exception.message} #{exception.backtrace.first}"
     socket.close

@@ -76,3 +76,22 @@ RSpec.configure do |config|
 end
 
 Celluloid.logger = nil
+
+# For Switchboard. Creates a client and server into which you can inject a manipulated Connection instance for testing.
+# Got the idea from celluloid/reel's spec_helper
+def with_socket_pair
+  host = '127.0.0.1'
+  port = 79345
+
+  server = TCPServer.new(host, port)
+  client = TCPSocket.new(host, port)
+  peer   = server.accept
+
+  begin
+    yield client, peer
+  ensure
+    server.close rescue nil
+    client.close rescue nil
+    peer.close   rescue nil
+  end
+end

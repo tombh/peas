@@ -8,8 +8,10 @@ class Connection
 
   def initialize socket
     @socket = socket
+  end
 
-    _, @port, @host = socket.peeraddr
+  def dispatch
+    _, @port, @host = @socket.peeraddr
     info "Received connection (ID: #{@socket.object_id}) from #{@host}:#{@port}"
 
     # The first line of a request should contain something like:
@@ -23,7 +25,7 @@ class Connection
 
     # Dynamically call the requested command as an instance method. But do a little sanity check
     # first. This could easily be abused :/
-    if command.to_sym.in? Connection.instance_methods
+    if command.to_sym.in? Commands.instance_methods
       begin
         # All commands are kept at switchboard/server/commands
         send(command)

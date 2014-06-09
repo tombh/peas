@@ -17,7 +17,7 @@ end
 
 # Find the test-specific data volume
 def get_data_vol_id
-  output = sh "docker ps -a | grep 'busybox:latest.*peas-data-test' | awk '{print $1}'"
+  output = sh "docker ps -a | grep 'busybox:.*peas-data-test' | awk '{print $1}'"
   if output.length == 12 # Trivial sanity check
     output
   else
