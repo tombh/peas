@@ -1,7 +1,7 @@
 ###0.1.1
 **date**    
 **Features**:
-  * Celluloid based messaging server for internal messaging
+  * Introducing Switchboard: a Celluloid-based messaging client/server for internal messaging.
   * App logging in capped MongoDB collections and new `peas logs` command.
 
 **Bugfixes**:
