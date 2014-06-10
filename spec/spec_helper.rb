@@ -108,9 +108,7 @@ module Commands
     sleep 0.1
   end
   def raise_exception
-    puts "before"
-    raise Exception
-    puts "after"
+    raise
   end
   def echo
     while incoming = @socket.gets

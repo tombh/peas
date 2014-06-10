@@ -6,13 +6,6 @@ class Connection
   include Celluloid::Logger
   include Commands
 
-  trap_exit :exception_handler
-
-  def exception_handler actor, reason
-    puts "#{actor} crashed because #{reason}"
-    error "#{actor} crashed because #{reason}"
-  end
-
   def initialize socket
     @socket = socket
   end
@@ -36,7 +29,6 @@ class Connection
       # All commands are kept at switchboard/server/commands
       send(command)
     else
-      raise Exception
       warn "Uknown command requested in connection header"
     end
   end

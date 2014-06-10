@@ -6,6 +6,9 @@ class SwitchboardServer
   include Celluloid::IO
   include Celluloid::Logger
 
+  trap_exit :handler
+  def handler actor, reason; end
+
   def initialize host, port
     info "Starting Peas Switchboard Server on #{Peas.switchboard_server_uri}"
 
@@ -20,7 +23,7 @@ class SwitchboardServer
   end
 
   def run
-    loop { async.handle_connection @server.accept }
+    loop { handle_connection @server.accept }
   end
 
   # Note how the socket has to be passed around as a method argument. Instance variables in a
@@ -31,8 +34,7 @@ class SwitchboardServer
     connection = Connection.new socket
     connection.dispatch
     socket.close
-  rescue => exception
-    error "#{exception.class} :: #{exception.message} #{exception.backtrace.first}"
+  rescue
     socket.close
   end
 
