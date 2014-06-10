@@ -31,6 +31,8 @@ class Connection
     else
       warn "Uknown command requested in connection header"
     end
+  ensure
+    close
   end
 
   # Check if the client is still there. Used for long-running client connections, like the log

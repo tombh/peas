@@ -33,24 +33,35 @@ describe 'Switchboard' do
       @client.puts 'echo'
       second.puts 'echo'
       @client.puts 'foo'
-      expect(@client.gets).to eq "foo\n"
+      expect(@client.gets.strip).to eq 'foo'
       second.puts 'bar'
-      expect(second.gets).to eq "bar\n"
+      expect(second.gets.strip).to eq 'bar'
       second.close
     end
 
-    it 'should not leak tasks' do
-      100.times do
-        # Use the client_connection() method to create a new socket for every iteration
-        client_connection.puts 'fake'
+    context 'should not leak tasks' do
+      it 'for non-errored connections' do
+        100.times do
+          # Use the client_connection() method to create a new socket for every iteration
+          client_connection.puts 'fake'
+        end
+        sleep 0.1
+        expect(@server.tasks.count).to eq 3
       end
-      sleep 0.1
-      expect(@server.tasks.count).to eq 3
+      it 'for errored connections' do
+        100.times do
+          client_connection.puts 'raise_exception'
+        end
+        sleep 0.1
+        expect(@server.tasks.count).to eq 3
+      end
     end
 
-    it 'should not inherit exceptions from the connection actor' do
+    it 'should not crash if a connection actor crashes' do
       @client.puts 'raise_exception'
-      # expect { @client.puts 'raise_exception' }.to_not raise_error
+      second = client_connection
+      second.puts 'ping'
+      expect(second.gets.strip).to eq 'pong'
     end
   end
 

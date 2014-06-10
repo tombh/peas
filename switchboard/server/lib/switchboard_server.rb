@@ -1,20 +1,18 @@
 require 'config/boot'
 require 'switchboard/server/lib/connection'
 require 'celluloid/io'
+require 'io/wait'
 
 class SwitchboardServer
   include Celluloid::IO
   include Celluloid::Logger
-
-  trap_exit :handler
-  def handler actor, reason; end
 
   def initialize host, port
     info "Starting Peas Switchboard Server on #{Peas.switchboard_server_uri}"
 
     # Since we included Celluloid::IO, we're actually making a Celluloid::IO::TCPServer here
     @server = TCPServer.new(host, port)
-    async.run
+    async.accept_connections
   end
 
   finalizer :finalize
@@ -22,20 +20,15 @@ class SwitchboardServer
     @server.close if @server
   end
 
-  def run
-    loop { handle_connection @server.accept }
+  def accept_connections
+    loop { async.handle_connection @server.accept }
   end
 
-  # Note how the socket has to be passed around as a method argument. Instance variables in a
-  # concurrent Celluloid object are shared between threads. If you store each connection socket as
-  # an instance variable then it gets overwritten by each new connection.
   def handle_connection socket
     debug "Current number of tasks: #{tasks.count}"
     connection = Connection.new socket
-    connection.dispatch
-    socket.close
-  rescue
-    socket.close
+    # Because the connection actor isn't linked we don't have to worry about it crashing the server.
+    # Any errors should be logged by the Connection object itself.
+    connection.dispatch rescue nil
   end
-
 end
