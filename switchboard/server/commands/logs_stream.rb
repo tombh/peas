@@ -10,7 +10,7 @@ module Commands
 
     # Stream the existing logs
     logs.existing do |line|
-      @socket.puts line
+      write_line line
     end
 
     # This is a potentially leaky block as it reads from the log store indefinitely. So we need
@@ -19,7 +19,7 @@ module Commands
     loop do
       break if @socket.closed?
       logs.more do |line|
-        @socket.puts line
+        write_line line
       end
     end
   end

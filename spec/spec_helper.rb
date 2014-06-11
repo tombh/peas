@@ -88,7 +88,6 @@ end
 # instance for testing.
 # Got the idea from celluloid/reel's spec_helper
 def with_socket_pair
-
   server = TCPServer.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
   client = client_connection
   peer = server.accept
@@ -102,20 +101,13 @@ def with_socket_pair
   end
 end
 
+# Some extra Switchboard commands specifically for use in testing
 module Commands
   def fake; end
-  def sleep
-    sleep 0.1
+  def dose
+    sleep @header[1].to_i / 1000 # milliseconds
   end
   def raise_exception
     raise
-  end
-  def echo
-    while incoming = @socket.gets
-      @socket.puts incoming
-    end
-  end
-  def ping
-    @socket.puts 'pong'
   end
 end

@@ -23,9 +23,9 @@ describe 'Switchboard' do
       @server.terminate
     end
 
-    it 'should accept a connection' do
-      expect(Connection).to receive(:new)
-      @client.puts 'fake'
+    it 'should accept a basic connection' do
+      @client.puts 'ping'
+      expect(@client.gets.strip).to eq 'pong'
     end
 
     it 'should accept multiple simultaneous connections' do
@@ -65,13 +65,25 @@ describe 'Switchboard' do
     end
   end
 
+  describe Connection do
+    it 'should read a header and call the relevant method' do
+      with_socket_pair do |client, peer|
+        connection = Connection.new(peer)
+        expect(connection.wrapped_object).to receive(:fake)
+        client.puts 'fake.foo.bar'
+        connection.dispatch
+      end
+    end
 
-  it 'should read a header and call the relevant method' do
-    with_socket_pair do |client, peer|
-      connection = Connection.new(peer).wrapped_object
-      expect(connection).to receive(:fake)
-      client.puts 'fake.foo.bar'
-      connection.dispatch
+    it 'should close a long running connection after an inactivity timeout' do
+      with_socket_pair do |client, peer|
+        stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
+        connection = Connection.new(peer)
+        expect(connection.wrapped_object).to receive(:terminate)
+        client.puts 'dose.1000' # Sleep for 1 second
+        connection.async.dispatch
+        sleep 0.01
+      end
     end
   end
 end
