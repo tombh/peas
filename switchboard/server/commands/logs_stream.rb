@@ -11,6 +11,7 @@ module Commands
     # Stream the existing logs
     logs.existing do |line|
       write_line line
+      sleep 0.2
     end
 
     # This is a potentially leaky block as it reads from the log store indefinitely. So we need

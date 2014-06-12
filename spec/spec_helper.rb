@@ -78,7 +78,7 @@ end
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
 SWITCHBOARD_TEST_PORT = 79345
 
-Celluloid.logger = nil
+# Celluloid.logger = nil
 
 def client_connection
   TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
@@ -104,10 +104,5 @@ end
 # Some extra Switchboard commands specifically for use in testing
 module Commands
   def fake; end
-  def dose
-    sleep @header[1].to_i / 1000 # milliseconds
-  end
-  def raise_exception
-    raise
-  end
+  def raise_exception; raise; end
 end

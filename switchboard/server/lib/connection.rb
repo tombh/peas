@@ -22,10 +22,13 @@ class Connection
     # The first line of a request should contain something like:
     # 'app_logs.5390f5665a454e77990b0000'
     begin
-      @header = read_line.chomp.split('.')
+      response = read_line
+      return if response.nil? # Most likely Peas checking if the server's up
+      @header = response.chomp.split('.')
     rescue EOFError
       return
     end
+
     command = @header[0]
 
     # Dynamically call the requested command as an instance method. But do a little sanity check
@@ -37,7 +40,7 @@ class Connection
       warn "Uknown command requested in connection header"
     end
   ensure
-    close
+    # close
   end
 
   # Resets the inactivity timer
@@ -63,27 +66,17 @@ class Connection
 
   # Read a fixed number of bytes from the incoming connection
   def read_partial bytes = 1
-    begin
-      byte = @socket.recv bytes
-    rescue EOFError, Errno::EPIPE
-      close :detected
-    end
-    if byte
-      activity
-      yield byte if block_given?
-      return byte
+    data = io{ @socket.recv bytes }
+    if data
+      yield data if block_given?
+      return data
     end
   end
 
   # Read a line from the incoming connection
   def read_line
-    begin
-      line = @socket.gets
-    rescue EOFError, Errno::EPIPE
-      close :detected
-    end
+    line = io{ @socket.gets }
     if line
-      activity
       yield line if block_given?
       return line
     end
@@ -91,11 +84,18 @@ class Connection
 
   # Write a line to the incoming connection
   def write_line line
+    io{ @socket.puts line }
+  end
+
+  # Centralised means of carrying out IO on the socket. Useful for keeping behaviour in one place.
+  def io &block
     begin
-      @socket.puts line
-    rescue EOFError, Errno::EPIPE
+      response = yield
+      activity
+      return response
+    rescue EOFError, Errno::EPIPE, IOError
       close :detected
+      return false
     end
-    activity
   end
 end

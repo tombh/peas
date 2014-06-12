@@ -75,14 +75,53 @@ describe 'Switchboard' do
       end
     end
 
-    it 'should close a long running connection after an inactivity timeout' do
+    it 'should not call native ruby instance methods' do
       with_socket_pair do |client, peer|
-        stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
         connection = Connection.new(peer)
-        expect(connection.wrapped_object).to receive(:terminate)
-        client.puts 'dose.1000' # Sleep for 1 second
-        connection.async.dispatch
-        sleep 0.01
+        expect(connection.wrapped_object).to_not receive(:call)
+        expect(connection.wrapped_object).to receive(:warn).with(/Uknown command/)
+        client.puts 'call'
+        connection.dispatch
+      end
+    end
+
+    it 'should detect a closed client connection' do
+      with_socket_pair do |client, peer|
+        allow(peer).to receive(:puts).and_raise(EOFError)
+        connection = Connection.new(peer)
+        # Allow close() to be called without args in the ensure block in dispatch()
+        allow(connection.wrapped_object).to receive(:close).with(no_args())
+        expect(connection.wrapped_object).to receive(:close).with(:detected)
+        client.puts 'ping'
+        connection.dispatch
+      end
+    end
+
+    describe 'Watching and responding to activity/inactivity' do
+      it 'should close a long running connection after an inactivity timeout' do
+        module Commands
+          def dose; sleep @header[1].to_i / 1000; end
+        end
+        with_socket_pair do |client, peer|
+          stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
+          connection = Connection.new(peer)
+          expect(connection.wrapped_object).to receive(:terminate)
+          client.puts 'dose.1000' # Sleep for 1 second
+          connection.dispatch
+        end
+      end
+
+      it 'io activity prevents timeout' do
+        module Commands
+          def keep_awake; 10.times{ write_line 'foo'; sleep 0.0005 }; end
+        end
+        with_socket_pair do |client, peer|
+          stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
+          connection = Connection.new(peer)
+          expect(connection.wrapped_object).to_not receive(:terminate)
+          client.puts 'keep_awake'
+          connection.dispatch
+        end
       end
     end
   end

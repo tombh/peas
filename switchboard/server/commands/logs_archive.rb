@@ -5,8 +5,10 @@ module Commands
     pea = Pea.find(@header[1])
     app = pea.app
     info "Request to archive logs for #{pea.name}@#{app.name}"
-    read_line do |line|
-      app.log line.chomp, pea.name
+    loop do
+      p "1"
+      app.log read_line.chomp, pea.name
+      p "2"
     end
   end
 end
