@@ -89,8 +89,6 @@ describe 'Switchboard' do
       with_socket_pair do |client, peer|
         allow(peer).to receive(:puts).and_raise(EOFError)
         connection = Connection.new(peer)
-        # Allow close() to be called without args in the ensure block in dispatch()
-        allow(connection.wrapped_object).to receive(:close).with(no_args())
         expect(connection.wrapped_object).to receive(:close).with(:detected)
         client.puts 'ping'
         connection.dispatch
@@ -108,6 +106,7 @@ describe 'Switchboard' do
           expect(connection.wrapped_object).to receive(:terminate)
           client.puts 'dose.1000' # Sleep for 1 second
           connection.dispatch
+          sleep 0.01
         end
       end
 

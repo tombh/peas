@@ -134,4 +134,9 @@ class Pea
   def name
     "#{process_type}.#{process_number}"
   end
+
+  # Fuller name. Eg; 'web.1@node-js-sample'
+  def full_name
+    "#{name}@#{app.name}"
+  end
 end

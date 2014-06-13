@@ -35,12 +35,10 @@ class Connection
     # first. This could easily be abused :/
     if command.to_sym.in? Commands.instance_methods
       # All commands are kept at switchboard/server/commands
-      send(command)
+      async.send(command)
     else
       warn "Uknown command requested in connection header"
     end
-  ensure
-    # close
   end
 
   # Resets the inactivity timer
@@ -93,7 +91,7 @@ class Connection
       response = yield
       activity
       return response
-    rescue EOFError, Errno::EPIPE, IOError
+    rescue EOFError, Errno::EPIPE, IOError, Errno::EBADF
       close :detected
       return false
     end

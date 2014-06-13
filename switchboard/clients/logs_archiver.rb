@@ -6,7 +6,6 @@ class LogsArchiver
   include Celluloid::IO
   include Celluloid::Logger
 
-  # Keep track of which peas are currently being wacthed, so we don't watch them twice
   attr_accessor :watched
 
   def initialize
@@ -19,16 +18,24 @@ class LogsArchiver
       # Fetch the latest list of peas
       Pea.all.each do |pea|
         # If the pea is not being watched then start a new thread to watch it and stream to the DB
-        async.watch pea
+        watch pea if !pea._id.in? @watched
       end
-      sleep 1 # No need to hammer the DB
+       # No need to hammer the DB
+      if ENV['RACK_ENV'] != 'test'
+        sleep 1
+      else
+        sleep 0.01
+      end
     end
   end
 
   # Start a separate thread to watch an individual pea's docker container for its log output
   def watch pea
-    # Passes in the current Actor so it can updated the @watched list
-    PeaLogsWatcher.new(pea, Actor.current) if !pea._id.in? @watched
+    @watched << pea._id
+    PeaLogsWatcher.new(pea) do
+      @watched.delete pea._id # Delete this pea from the watch list
+      info "Finished watching #{pea.full_name}'s logs"
+    end
   rescue
     # Don't want the whole LogArchiver daemon to restart, so be forgiving about all exceptions.
     # Celluloid logs the error anyway.

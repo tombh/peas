@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Pea do
+  # If recording VCRs for the first time, you will need a docker image called 'node-js-sample'
   let(:app) { Fabricate :app, name: 'node-js-sample' }
 
   it 'should create a running docker container', :docker do

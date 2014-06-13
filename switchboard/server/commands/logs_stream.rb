@@ -11,17 +11,12 @@ module Commands
     # Stream the existing logs
     logs.existing do |line|
       write_line line
-      sleep 0.2
     end
 
-    # This is a potentially leaky block as it reads from the log store indefinitely. So we need
-    # to make sure it's killed when the requesting connection dissapears.
-    async.check
+    # Wait for more logs to be added to the DB and stream them back when they are
     loop do
-      break if @socket.closed?
-      logs.more do |line|
-        write_line line
-      end
+      logs.more{ |line| write_line line }
+      sleep 0.01 # Needed to allow Celluloid to pass flow control elsewhere
     end
   end
 
