@@ -7,7 +7,7 @@ command :logs do |c|
       while line = socket.gets
         puts line
       end
-    rescue Interrupt
+    rescue Interrupt, Errno::ECONNRESET
     end
   end
 end

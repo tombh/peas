@@ -3,6 +3,40 @@ require 'spec_helper'
 describe App do
   let(:app) { Fabricate :app }
 
+  describe 'Logging' do
+    it 'should create a capped collection for logging' do
+      expect(app.logs_collection).to be_a(Moped::Collection)
+    end
+
+    it 'should remove the capped collection when the app is removed' do
+      db = Mongoid.default_session.options[:database]
+      app_id = app._id
+      collections = Mongoid::Sessions.default['system.namespaces'].find(
+        name: "#{db}.#{app_id}_logs"
+      )
+      expect(collections.count).to be 1
+      app.destroy
+      collections = Mongoid::Sessions.default['system.namespaces'].find(
+        name: "#{db}.#{app_id}_logs"
+      )
+      expect(collections.count).to be 0
+    end
+
+    it 'should add formatted lines to the logs' do
+      app.log "If my calculations are correct,\nwhen this baby hits 88 miles per hour..."
+      app.log "you're gonna see some serious shit."
+      line = app.logs_collection.find.to_a[0][:line]
+      expect(line).to include Date.today.to_s
+      expect(line).to include 'app[general]: If my calculations are correct,'
+      line = app.logs_collection.find.to_a[1][:line]
+      expect(line).to include Date.today.to_s
+      expect(line).to include 'app[general]: when this baby hits 88 miles per hour...'
+      line = app.logs_collection.find.to_a[2][:line]
+      expect(line).to include Date.today.to_s
+      expect(line).to include "app[general]: you're gonna see some serious shit."
+    end
+  end
+
   describe 'deploy()' do
     include_context :docker_creation_mock
 

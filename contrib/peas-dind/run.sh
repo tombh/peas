@@ -9,7 +9,19 @@ PEAS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../"
 data_container=$(docker ps -a | grep -P 'busybox:.*peas-data ' | awk '{print $1}')
 if [ -z "$data_container" ]; then
 	echo "Creating data container..."
-	docker run -v /var/lib/docker -v /data/db --name peas-data busybox true
+	docker run \
+	  -v /var/lib/docker \
+	  -v /data/db \
+	  -v /var/lib/gems \
+	  --name peas-data \
+	  busybox true
 fi
 
-docker run -it --privileged --volumes-from peas-data -v $PEAS_ROOT:/home/peas -p $PORT:4000 tombh/peas
+docker run \
+  -it \
+  --privileged \
+  --volumes-from peas-data \
+  -v $PEAS_ROOT:/home/peas \
+  -p $PORT:4000 \
+  -p 9345:9345 \
+  tombh/peas

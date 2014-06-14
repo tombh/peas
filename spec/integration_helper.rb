@@ -1,18 +1,43 @@
 require 'rubygems'
 require 'timeout'
+require 'pty'
+require 'net/http'
+require 'webmock'
+require 'vcr'
 require_relative '../config/settings'
 
 TMP_PATH = '/tmp/peas'
 FileUtils.mkdir_p TMP_PATH
 
-# Simple convenience wrapper for the command line
-def sh cmd
-  output = `#{cmd} 2>&1`.strip
-  if $?.to_i == 0
-    return output
-  else
-    raise "`#{cmd}` failed with: \n--- \n #{output} \n---"
+puts "\nRun `docker logs -f peas-test` to tail integration test activity\n\n"
+
+# Convenience wrapper for the command line. Kills commands if they run too long
+# Note that `curl` seems to behave oddly with this -  it doesn't output anything
+def sh command, timeout = 60
+  output = ''
+  pid = nil
+  PTY.spawn(command  + ' 2>&1') do |stdout, stdin, pid_local|
+    pid = pid_local
+    begin
+      Timeout::timeout(timeout) do
+        stdout.each do |line|
+          output += line
+        end
+      end
+    rescue Timeout::Error
+      Process.kill('INT', pid)
+    rescue Errno::EIO
+      # Most likely means child has finished giving output
+    end
   end
+  status = PTY.check(pid)
+  if !status.nil?
+    if status.exitstatus != 0
+      raise "`#{command}` failed with: \n--- \n #{output} \n---"
+    end
+  end
+  output.strip! if output.lines.count == 1
+  return output
 end
 
 # Find the test-specific data volume
@@ -29,7 +54,7 @@ end
 def setup_data_volume
   return get_data_vol_id if get_data_vol_id
   # Name the volume differently from the one that may be used in dev/prod
-  sh "docker run -v /var/lib/docker -v /data/db --name peas-data-test busybox true"
+  sh "docker run -v /var/lib/docker -v /data/db -v /var/lib/gems --name peas-data-test busybox true"
   if !get_data_vol_id
     raise "Failed to create data volume. Aborting."
   else
@@ -57,11 +82,20 @@ class ContainerConnection
     bash "redis-cli FLUSHALL"
     bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
     sleep 2
+    # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
+    console 'Setting.create(key: "domain", value: "vcap.me:4004")'
   end
   # Close the connection
   def close
     @io.close
   end
+end
+
+def http_get uri
+  unless uri[/\Ahttp:\/\//] || uri[/\Ahttps:\/\//]
+    uri = "http://#{uri}"
+  end
+  Net::HTTP.get URI(uri)
 end
 
 class Cli
@@ -70,8 +104,13 @@ class Cli
   end
 
   # Helper to call Peas CLI
-  def run cmd
-    sh "cd #{@path} && HOME=/tmp/peas PEAS_API_ENDPOINT=localhost:4004 #{Peas.root}/cli/bin/peas-dev #{cmd}"
+  def run cmd, timeout = 60
+    cmd = "cd #{@path} && " +
+      "HOME=/tmp/peas " +
+      "PEAS_API_ENDPOINT=localhost:4004 " +
+      "SWITCHBOARD_PORT=7345 " +
+      "#{Peas.root}cli/bin/peas-dev #{cmd}"
+    sh cmd, timeout
   end
 end
 
@@ -82,6 +121,8 @@ RSpec.configure do |config|
 
   # Create the Peas container against which the CLI client will interact
   config.before(:all, :integration) do
+    WebMock.allow_net_connect!
+    VCR.turn_off!
     setup_data_volume
     @peas_container_id = sh(
       "docker run -d \
@@ -91,6 +132,7 @@ RSpec.configure do |config|
         --volumes-from peas-data-test \
         -v #{Peas.root}:/home/peas \
         -p 4004:4000 \
+        -p 7345:9345 \
         -e RACK_ENV=production \
         tombh/peas"
     )
@@ -111,13 +153,16 @@ RSpec.configure do |config|
     @peas_io.env_reset
   end
 
-  config.before(:each, :integration) do
-    # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
-    @peas_io.console 'Setting.create(key: "domain", value: "vcap.me:4004")'
+  config.before(:each, :integration) do |example|
+    # Don't reset state between specs if explicitly told not to
+    if !example.metadata.has_key? :maintain_test_env
+      # Reset state after each spec
+      @peas_io.env_reset
+    end
   end
 
-  # Reset state after each spec
-  config.after(:each, :integration) do
+  # But do reset state before a series of :maintain_test_env specs
+  config.before(:all, :maintain_test_env) do
     @peas_io.env_reset
   end
 
@@ -132,6 +177,7 @@ RSpec.configure do |config|
     sh "docker rm -f #{@peas_container_id}"
     puts ""
     puts "Integration tests log available at #{TMP_PATH}/integration-tests.log"
+    WebMock.disable_net_connect!
+    VCR.turn_on!
   end
 end
-

@@ -20,6 +20,8 @@ class ModelWorker
       @job ||= jid # `jid` is provided by the Sidekiq module
       # Set the parent job id so any sub worker processes can inherit and broadcast to it
       instance.job = @job
+      # A human-friendly string for the prepending to log lines
+      instance.current_worker_call_sign = "#{model}.#{method}.worker"
       # The actual work to do
       instance.send(method, *args)
     rescue => e

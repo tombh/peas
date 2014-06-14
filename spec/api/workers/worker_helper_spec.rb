@@ -45,6 +45,18 @@ describe WorkerHelper do
       app.broadcast :status, :key
     end
 
+    it 'should log build activity to app logs' do
+      expect(ModelWorker).to receive(:perform_async) { '123' }
+      allow(Sidekiq::Status).to receive(:broadcast)
+      allow(Sidekiq::Status).to receive(:get_all) { {} }
+      allow(Sidekiq::Status).to receive(:status).with('123').and_return(:queued, :working, :complete)
+      app.worker :build do
+        app.current_worker_call_sign = 'builder'
+        app.broadcast 'Build activity'
+      end
+      expect(app.logs_collection.find.first['line']).to include 'app[builder]: Build activity'
+    end
+
     it 'should broadcast to the originating parent job in nested workers' do
       class App
         def parent_job

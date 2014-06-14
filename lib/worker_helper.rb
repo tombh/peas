@@ -3,6 +3,10 @@
 # processes
 module WorkerHelper
 
+  # A human-friendly string for the prepending to log lines
+  # Gets set in ModelWorker
+  attr_accessor :current_worker_call_sign
+
   def job= jid
     @job = jid
   end
@@ -15,7 +19,7 @@ module WorkerHelper
   # Usage: `worker(:deploy, first_sha)`
   # or: `worker(:deploy, first_sha){ task_to_be_done_on_completion() }`
   # Is equivalent to: `ModelWorker(App, _id, :deploy, first_sha, {job: @job}).perform_async()`
-  def worker *args
+  def worker *args, &block
     args.append({job: @job}) if @job
     @current_job = ModelWorker.perform_async(self.class.name, _id.to_s, args.shift, *args)
     # Wait for @current_job to finish before running subsequent tasks
@@ -31,11 +35,13 @@ module WorkerHelper
     @current_job
   end
 
-  # Convenience function for updating a job status from within the models
+  # Convenience function for updating a job status and logging from within the models
   def broadcast status = nil, key = :output
     status = status.to_s
     key = key.to_s
     status = "#{status}\n" if !status.end_with? "\n" # Make sure everything is a line
+    # Also log to the app's aggregated logs
+    self.log status, @current_worker_call_sign
     # Append to the current status, so no statuses are ever lost
     current = Sidekiq::Status.get_all @job
     status = current[key] + status.force_encoding("UTF-8") if current[key]

@@ -100,7 +100,15 @@ export LC_ALL="C.UTF-8"
 /usr/bin/mongod --smallfiles &
 /usr/bin/redis-server &
 cd /home/peas
+
+# If /var/lib/gems is mounted as a volume, then the first time Peas boots, there will be no
+# bundler command, even though it was installed with the Dockerfile. So install it.
+# Mounting /var/lib/gems means that `bundle install` is much quicker and so Peas boots faster.
+if [ `ls -1A /var/lib/gems | wc -l` -eq 0 ]; then
+    gem install bundler
+fi
 bundle install
 bundle exec foreman start -f ./Procfile &
+
 sleep 5
 exec bash

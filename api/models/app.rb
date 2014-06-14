@@ -218,9 +218,14 @@ class App
   end
 
   # Log any activity for this app
-  def log line, from = 'general', level = :info
-    line = "#{DateTime.now} app[#{from}]: #{line}"
-    logs_collection.insert({line: line})
+  def log logs, from = 'general', level = :info
+    logs = logs.to_s
+    logs.lines.each do |line|
+      line.strip!
+      next if line =~ /^\s*$/ # Is nothing but whitespace
+      line = "#{DateTime.now} app[#{from}]: #{line}"
+      logs_collection.insert({line: line})
+    end
   end
 
 end

@@ -57,7 +57,7 @@ describe 'Peas CLI' do
       expect(output).to eq "scaling\n"
     end
 
-    describe 'Config' do
+    describe 'Config ENV vars' do
       it 'should set config for an app' do
         stub_request(:put, TEST_DOMAIN + '/app/fakesha/config?vars=%7B%22FOO%22:%22BAR%22%7D')
           .to_return(body: response_mock("{'FOO' => 'BAR'}"))
@@ -78,6 +78,23 @@ describe 'Peas CLI' do
         output = cli %w(config)
         expect(output).to eq "{'FOO' => 'BAR'}\n{'MOO' => 'CAR'}\n"
       end
+    end
+  end
+
+  describe 'Logs' do
+    it 'should stream logs' do
+      stub_const 'Peas::SWITCHBOARD_PORT', 79345
+      Thread.new do
+        server = TCPServer.new Peas.host, Peas::SWITCHBOARD_PORT
+        if peer = server.accept
+          peer.puts "Here's ya logs"
+          peer.puts "MOAR logs"
+          peer.close
+        end
+      end
+      sleep 0.1
+      output = cli %w(logs)
+      expect(output).to eq "Here's ya logs\nMOAR logs\n"
     end
   end
 

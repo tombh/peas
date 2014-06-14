@@ -47,5 +47,10 @@ on_error do |exception|
   true
 end
 
+# Exit 0 if sent SIGINT
+trap('INT'){
+  exit!
+}
+
 exit_status = run(ARGV)
 exit exit_status if ENV['GLI_ENV'] != 'test'

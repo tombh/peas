@@ -1,7 +1,7 @@
 module Peas
 
   # The port for Peas' Switchboard socket server
-  SWITCHBOARD_PORT = 9345
+  SWITCHBOARD_PORT = ENV['SWITCHBOARD_PORT'] || 9345
 
   def self.config_file
     "#{ENV['HOME']}/.peas"
