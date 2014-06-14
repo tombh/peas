@@ -92,7 +92,7 @@ describe 'Peas CLI' do
           peer.close
         end
       end
-      sleep 0.1
+      sleep 0.3
       output = cli %w(logs)
       expect(output).to eq "Here's ya logs\nMOAR logs\n"
     end
