@@ -41,18 +41,18 @@ describe 'Switchboard' do
 
     context 'should not leak tasks' do
       it 'for non-errored connections' do
-        100.times do
+        50.times do
           # Use the client_connection() method to create a new socket for every iteration
           client_connection.puts 'fake'
         end
-        sleep 0.1
+        sleep 0.3
         expect(@server.tasks.count).to eq 3
       end
       it 'for errored connections' do
-        100.times do
+        50.times do
           client_connection.puts 'raise_exception'
         end
-        sleep 0.1
+        sleep 0.3
         expect(@server.tasks.count).to eq 3
       end
     end
