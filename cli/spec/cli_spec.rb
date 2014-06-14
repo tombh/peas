@@ -86,15 +86,13 @@ describe 'Peas CLI' do
       stub_const 'Peas::SWITCHBOARD_PORT', 79345
       Thread.new do
         server = TCPServer.new Peas.host, Peas::SWITCHBOARD_PORT
-        if peer = server.accept
-          peer.puts "Here's ya logs"
-          peer.puts "MOAR logs"
-          peer.close
-        end
+        peer = server.accept
+        peer.puts "Here's ya logs"
+        peer.close
       end
-      sleep 0.3
+      sleep 0.1
       output = cli %w(logs)
-      expect(output).to eq "Here's ya logs\nMOAR logs\n"
+      expect(output).to eq "Here's ya logs\n"
     end
   end
 
