@@ -66,28 +66,15 @@ The Peas API will be available at `vcap.me:4000`.
 This installation method will work anywhere that Docker can be installed, so both locally and on
 remote servers like AWS and Digital Ocean (though this hasn't been tested yet, please let us know if
 you have success installing Peas on a remote server).
-Once you have installed Docker, install the Peas image with: `docker pull tombh/peas`.
 
-There are 2 things to bear in mind when running Peas' Docker image. Firstly, that because Peas
-creates Docker containers inside a parent Docker container you must remember to always
-provide the `--privileged` flag when running Docker commands. Secondly, in order to persist data,
-namely, app containers and the Peas API database, you will need to use
-a [Data Volumes](http://docs.docker.io/use/working_with_volumes/). So, let's create that first.
-Individual app containers are created by Docker, so their data is kept at `/var/lib/docker` and
-MongoDB keeps its data at `/data/db`. Therefore our Data Volume can be created with:    
-`docker run -v /var/lib/docker -v /data/db --name peas-data busybox true`    
-And then to run the Peas container using that Data Volume:    
-`docker run -t --privileged --volumes-from peas-data -p 4000:4000 -i tombh/peas`    
-If you would like to hack on the codebase whilst it's running in the container you can mount your
-code into the container:    
-`docker run -t --privileged --volumes-from peas-data -v [path to peas codebase on your machine]:/home/peas -p 4000:4000 -i tombh/peas`
-
-Or you can just run the helpful script at `contrib/peas-dind/run.sh` that does all the above for you.
+To install and boot just use `./contrib/peas-dind/run.sh`. For a detailed explanation read
+`contrib/peas-dind/README.md`.
 
 The Peas API will be available at `vcap.me:4000`.
 
 ##Vagrant
-There is a Vagrantfile in the root that attempts to get most of the setup done for you:
+Most likely useful to you if you are on Windows. There is a Vagrantfile in the root that attempts to
+get most of the setup done for you:
 ```bash
 vagrant up # Takes a long time first time
 vagrant ssh
@@ -101,6 +88,10 @@ The Peas API will be available at `peas.local:4000`.
 To interact with the Peas API you will need to install the command line client:
 `gem install peas-cli`
 
+During development you will find it useful to use the `peas-dev` command. It uses the live code in
+your local repo as the CLI client. You can put it in your `$PATH` with something like;
+`sudo ln -s $(pwd)/peas-dev /usr/local/bin/peas-dev`
+
 #Usage
 
 Peas aims to follow the conventions and philosophies of Heroku as closely as possible. So it is worth
@@ -113,9 +104,9 @@ to 127.0.0.1
 To use a different domain:
 `peas settings --domain customdomain.com`
 
-Next thing is to get into your app's directory. Peas approaches git repos for apps differently from 
+Next thing is to get into your app's directory. Peas approaches git repos for apps differently from
 other PaaS projects. It does not have a git server so requires app repos to be remotely accessible.
-At the moment this is only web accessible repos like on Github and Bitbucket. But the plan is to allow 
+At the moment this is only web accessible repos like on Github and Bitbucket. But the plan is to allow
 pulling from local git paths as well.
 
 Then:
@@ -127,10 +118,18 @@ peas deploy
 You can scale processes using:
 `peas scale web=3 worker=2`
 
-These are the only commands currently supported.
+List of current commands;
+```
+config   - Add, remove and list config for an app
+create   - Create an app
+deploy   - Deploy an app
+help     - Shows a list of commands or help for one command
+logs     - Show logs for an app
+scale    - Scale an app
+settings - Set Peas global settings
+```
 
 #Roadmap
   * Installation for production environments like AWS and Digital Ocean.
   * Users. Peas currently has absolutely no concept of users :/
   * Nodes, or 'pods' if we're keeping with the 'pea' theme. Therefore distributing containers over multiple servers.
-  * App config variables. App logs. And so on...

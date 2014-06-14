@@ -1,5 +1,5 @@
 ###0.1.1
-**date**    
+**14th June 2014**    
 **Features**:
   * Introducing Switchboard: a Celluloid-based messaging client/server for internal messaging.
   * App logging in capped MongoDB collections and new `peas logs` command.
