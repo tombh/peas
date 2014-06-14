@@ -42,14 +42,25 @@ describe ModelWorker do
       allow(Peas).to receive(:environment).and_return('development')
       expect_any_instance_of(Logger).to receive(:error)
       expect_any_instance_of(Logger).to receive(:debug)
-      expect(Sidekiq::Status).to receive(:broadcast)
-      ModelWorker.new.perform 'App', app.id.to_s, :non_existent_method
+      expect_any_instance_of(App).to receive(:broadcast).with(
+        /ERROR: undefined method `non_existent_method'/
+      )
+      expect(Sidekiq::Status).to receive(:broadcast).with(
+        nil,
+        error: /undefined method `non_existent_method'/
+      )
+      expect {
+        ModelWorker.new.perform 'App', app.id.to_s, :non_existent_method
+      }.to raise_error NoMethodError
     end
 
     it 'should propagate exceptions in non development environments' do
+      expect_any_instance_of(App).to receive(:broadcast).with(
+        /ERROR: undefined method `non_existent_method'/
+      )
       expect {
         ModelWorker.new.perform 'App', app.id.to_s, :non_existent_method
-      }.to raise_error
+      }.to raise_error NoMethodError
     end
   end
 end
