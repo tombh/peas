@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
     "lib/peas/commands/admin.rb",
     "lib/peas/commands/app.rb",
     "lib/peas/commands/config.rb",
+    "lib/peas/commands/logs.rb",
     "lib/peas/config.rb",
     "lib/peas/git.rb",
     "lib/peas/version.rb",
