@@ -21,15 +21,20 @@ module WorkerHelper
   # Is equivalent to: `ModelWorker(App, _id, :deploy, first_sha, {job: @job}).perform_async()`
   def worker *args, &block
     args.append({job: @job}) if @job
-    @current_job = ModelWorker.perform_async(self.class.name, _id.to_s, args.shift, *args)
+    method = args.shift
+    @current_job = ModelWorker.perform_async(self.class.name, _id.to_s, method, *args)
     # Wait for @current_job to finish before running subsequent tasks
     if block_given?
       begin
         sleep 0.1
         status = Sidekiq::Status.status @current_job
       end while status == :queued || status == :working
-      if status == :complete && status != :failed
-        yield
+      if status == :complete 
+        if status == :failed
+          raise "Worker for #{self.class.name}.#{method} failed. ABORTING."
+        else
+          yield
+        end
       end
     end
     @current_job

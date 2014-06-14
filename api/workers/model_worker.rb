@@ -20,19 +20,20 @@ class ModelWorker
       @job ||= jid # `jid` is provided by the Sidekiq module
       # Set the parent job id so any sub worker processes can inherit and broadcast to it
       instance.job = @job
-      # A human-friendly string for the prepending to log lines
+      # A human-friendly string for prepending to log lines
       instance.current_worker_call_sign = "#{model}.#{method}.worker"
       # The actual work to do
       instance.send(method, *args)
     rescue => e
+      error = "#{e.message} @ #{e.backtrace[0]}"
+      instance.broadcast "ERROR: #{error}"
       if Peas.environment == 'development'
         logger.error e.message
         logger.debug e.backtrace.join("\n")
         # Pass the error back to the command line
-        Sidekiq::Status.broadcast @job, {error: "#{e.message} @ #{e.backtrace[0]}"}
-      else
-        raise e
+        Sidekiq::Status.broadcast @job, {error: error}
       end
+      raise e
     end
   end
 

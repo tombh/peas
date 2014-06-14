@@ -148,7 +148,7 @@ class App
     begin
       builder.kill
       builder.delete force: true
-    rescue Docker::Error::NotFoundError
+    rescue Docker::Error::NotFoundError, Errno::EPIPE, Excon::Errors::SocketError
     end
 
     raise build_error.strip if build_error
