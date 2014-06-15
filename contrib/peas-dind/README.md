@@ -30,3 +30,10 @@ And then to run the Peas container using that Data Volume:
 If you would like to hack on the codebase whilst it's running in the container you can mount your
 code into the container:    
 `docker run -t --privileged --volumes-from peas-data -v [path to peas codebase on your machine]:/home/peas -p 4000:4000 -i tombh/peas`
+
+##Useful commands
+Remove all untagged images
+`docker rmi $(docker images | grep "^<none>" | tr -s ' ' | cut -d ' ' -f 3)`
+
+Remove all containers that aren't Peas data containers
+`docker rm $(docker ps -a | grep -v peas-data | tr -s ' ' | cut -d ' ' -f 1)`

@@ -83,16 +83,12 @@ describe 'Peas CLI' do
 
   describe 'Logs' do
     it 'should stream logs' do
-      stub_const 'Peas::SWITCHBOARD_PORT', 79345
-      Thread.new do
-        server = TCPServer.new Peas.host, Peas::SWITCHBOARD_PORT
-        peer = server.accept
-        peer.puts "Here's ya logs"
-        peer.close
-      end
-      sleep 0.1
+      socket = double 'TCPSocket'
+      allow(socket).to receive(:puts)
+      allow(socket).to receive(:gets).and_return("Here's ya logs", "MOAR", false)
+      allow(TCPSocket).to receive(:new).and_return(socket)
       output = cli %w(logs)
-      expect(output).to eq "Here's ya logs\n"
+      expect(output).to eq "Here's ya logs\nMOAR\n"
     end
   end
 
