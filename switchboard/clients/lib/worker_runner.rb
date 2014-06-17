@@ -1,12 +1,10 @@
-# Worker for all long-running API tasks to inherit from
-class ModelWorker
-  include Sidekiq::Worker
-  include Sidekiq::Status::Worker
+class WorkerRunner
+  def initialize job, scoket
+    @socket = socket
+    model, id, method, *args = job
+  end
 
-  # Wrap perform() so that we can rescue errors and publish them to Sidekiq's
-  # status and ultimately transmit all output back to the calling user interface, most likely
-  # the Peas CLI client.
-  def perform(model, id, method, *args)
+  def perform job
     begin
       # Instantiate the model instance
       instance = model.constantize.find_by(_id: id)
@@ -31,10 +29,9 @@ class ModelWorker
         logger.error e.message
         logger.debug e.backtrace.join("\n")
         # Pass the error back to the command line
-        Sidekiq::Status.broadcast @job, {error: error}
+        @socket.puts @job, {error: error}
       end
       raise e
     end
   end
-
 end

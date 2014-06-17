@@ -1,20 +1,21 @@
+default_hosts: &default_host
+  hosts:
+    - <%= Peas::DEFAULT_CONTROLLER_DOMAIN %>:27017
+
 production:
   sessions:
     default:
       database: peas
-      hosts:
-        - localhost:27017
+      <<: *default_host
 
 development:
   sessions:
     default:
       database: peas_dev
-      hosts:
-        - localhost:27017
+      <<: *default_host
 
 test:
   sessions:
     default:
       database: peas_test
-      hosts:
-        - localhost:27017
+      <<: *default_host

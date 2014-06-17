@@ -15,12 +15,16 @@ class LogsArchiver
 
   def run
     loop do
-      # Fetch the latest list of peas
-      Pea.all.each do |pea|
+      # Fetch all the running docker containers on the current host
+      docker_ids = Docker::Container.all.map{|c| c.id}
+      docker_ids.each do |id|
         # If the pea is not being watched then start a new thread to watch it and stream to the DB
-        watch pea if !pea._id.in? @watched
+        if !id.in? @watched
+          pea = Pea.find_by docker_id: id
+          watch pea
+        end
       end
-       # No need to hammer the DB
+      # No need to hammer the Docker API
       if ENV['RACK_ENV'] != 'test'
         sleep 1
       else
@@ -31,9 +35,9 @@ class LogsArchiver
 
   # Start a separate thread to watch an individual pea's docker container for its log output
   def watch pea
-    @watched << pea._id
+    @watched << pea.docker_id
     PeaLogsWatcher.new(pea) do
-      @watched.delete pea._id # Delete this pea from the watch list
+      @watched.delete pea.docker_id # Delete this pea from the watch list
       info "Finished watching #{pea.full_name}'s logs"
     end
   rescue

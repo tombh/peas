@@ -24,5 +24,18 @@ module Peas
       )
     end
 
+    # Figure out if we're running inside a docker container. Used by pods to identify themselves to the controller.
+    # Note that pods are docker-in-docker containers, they run app docker containers inside a host docker container.
+    # Yo dawg I heard you like docker containers, and all that.
+    def self.current_docker_host_id
+      cgroups = File.open('/proc/self/cgroup').read
+      matches = cgroups.match(/docker\/([a-z0-9]*)$/)
+      if matches
+        matches.captures.first
+      else
+        false
+      end
+    end
+
   end
 end

@@ -17,6 +17,13 @@ module Peas
   # Path to tar repos into before sending to buildstep
   TMP_TARS = "#{TMP_BASE}/tars"
 
+  # See self.domain() for more info
+  # 'vcap.me' is managed by Cloud Foundry and has wildcard resolution to 127.0.0.1
+  DEFAULT_CONTROLLER_DOMAIN = ENV['PEAS_HOST'] || 'vcap.me'
+
+  # Port 4000 is just the default port used by Puma (the HTTP server) in a development environment
+  DEFAULT_API_PORT = 4000
+
   # Port on which the messaging server runs
   SWITCHBOARD_PORT = 9345
 
@@ -27,22 +34,24 @@ module Peas
 
   # Environment, normally one of: 'production', 'development', 'test'
   def self.environment
-    ENV['RACK_ENV']
+    ENV['PEAS_ENV']
   end
 
-  # The FQDN upon which the API resides and through which apps can be accessed via subdomains.
-  # Eg; peas.com is the location of the API and an app called 'hipster' is accessible via
-  # 'hipster.peas.com'
+  # Used for lots of things.
+  # 1) REST API
+  # 2) SWITCHBOARD
+  # 3) MongoDB (so pods can also access the DB)
+  # 4) By builder to create the FQDN for an app; eg http://mycoolapp.peasserver.com
+  # Note that only 4) is effected by changing the :domain key in the Setting model
   def self.domain
     setting = Setting.where(key: 'domain')
     if setting.count == 1
       domain = setting.first.value
     else
-      # Default.
-      # 'vcap.me' is managed by Cloud Foundry and has wildcard resolution to 127.0.0.1
-      # Port 4000 is just the default port used by Puma in a development environment
-      domain = 'vcap.me:4000'
+      # Default
+      domain = "#{DEFAULT_CONTROLLER_DOMAIN}:#{DEFAULT_API_PORT}"
     end
+    # Make sure the domain always has a protocol at the beginning
     unless domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
       domain = "http://#{domain}"
     else
@@ -50,6 +59,7 @@ module Peas
     end
   end
 
+  # Returns only the host part of the Peas domain. Eg; 'vcap' from http://vcap.me:4000
   def self.host
     URI.parse(Peas.domain).host
   end

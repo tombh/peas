@@ -1,7 +1,6 @@
 require 'config/boot'
 require 'switchboard/server/lib/connection'
 require 'celluloid/io'
-require 'io/wait'
 
 class SwitchboardServer
   include Celluloid::IO

@@ -1,19 +1,14 @@
 # Convenience functions to allow long-running tasks such as system calls to be run asynchronously
 # with callbacks and for their statuses to be broadcast and bubbled up through nested worker
 # processes
-module WorkerHelper
+module Worker
 
-  # A human-friendly string for the prepending to log lines
-  # Gets set in ModelWorker
+  # A human-friendly string for prepending to log lines
+  # Gets set in WorkerRunner
   attr_accessor :current_worker_call_sign
 
-  def job= jid
-    @job = jid
-  end
-
-  def job
-    @job
-  end
+  # The current job ID
+  attr_accessor :job
 
   # Wrapper function for triggering a worker, accepts a callback block.
   # Usage: `worker(:deploy, first_sha)`
@@ -22,14 +17,14 @@ module WorkerHelper
   def worker *args, &block
     args.append({job: @job}) if @job
     method = args.shift
-    @current_job = ModelWorker.perform_async(self.class.name, _id.to_s, method, *args)
+    @current_job = create_job(self.class.name, _id.to_s, method, *args)
     # Wait for @current_job to finish before running subsequent tasks
     if block_given?
       begin
         sleep 0.1
         status = Sidekiq::Status.status @current_job
       end while status == :queued || status == :working
-      if status == :complete 
+      if status == :complete
         if status == :failed
           raise "Worker for #{self.class.name}.#{method} failed. ABORTING."
         else
@@ -38,6 +33,9 @@ module WorkerHelper
       end
     end
     @current_job
+  end
+
+  def create_job
   end
 
   # Convenience function for updating a job status and logging from within the models
@@ -53,7 +51,7 @@ module WorkerHelper
     Sidekiq::Status.broadcast @job, {key => status}
   end
 
-  # Stream output to Sidekiq job status
+  # Stream shell output to Sidekiq job status
   def stream_sh command, broadcastable = true
     accumulated = ''
     # Redirects STDOUT and STDERR to STDOUT

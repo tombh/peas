@@ -6,10 +6,10 @@ describe 'Proxy' do
 
   it 'should detect the app name and proxy to one of its containers' do
     allow_any_instance_of(App).to receive(:scale) # Prevent scaling
-	  Fabricate :pea, app: app
+	  pea = Fabricate :pea, app: app
     request = double('request', host: 'fabricated.vcap.me', path: '/somewhere')
     redirect = Peas.proxy request
-    expect(redirect.to_s).to eq 'http://localhost:45617/somewhere'
+    expect(redirect.to_s).to eq "http://localhost:#{pea.port}/somewhere"
   end
 
   it 'should not forward if the app has no web containers' do

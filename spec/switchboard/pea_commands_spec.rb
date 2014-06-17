@@ -26,7 +26,7 @@ describe 'Switchboard Pea Commands' do
           client.puts 'Been busy and stuff '
           client.puts 'More busy and other stuff '
           connection.dispatch
-          sleep 0.01
+          sleep 0.1
           logs = app.logs_collection.find.to_a
           expect(logs[0]['line']).to include Date.today.to_s
           expect(logs[1]['line']).to include Date.today.to_s
@@ -78,6 +78,10 @@ describe 'Switchboard Pea Commands' do
         app = Fabricate :app
         pea1 = Fabricate :pea, app: app
         pea2 = Fabricate :pea, app: app
+        allow(Docker::Container).to receive(:all).and_return([
+          double(id: pea1.docker_id),
+          double(id: pea2.docker_id),
+        ])
         expect(PeaLogsWatcher).to receive(:new).with(pea1).once do |&block|
           block.call
         end
