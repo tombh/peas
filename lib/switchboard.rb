@@ -1,7 +1,14 @@
 require 'socket'
 
+# General Peas-specific code for working with Switchboard
 module Peas
   class Switchboard
+
+    def initialize
+      @socket = self.connection
+      @socket
+    end
+
     def self.connection
       TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
     end
@@ -22,6 +29,18 @@ module Peas
       raise (
         "Couldn't connect to the Peas Switchboard at #{Peas.host}:#{Peas::SWITCHBOARD_PORT}"
       )
+    end
+
+    # Start a connection to function as pubsub publisher
+    def self.open_broadcast_channel channel
+      self.new
+      @socket.puts "publisher.#{channel}"
+      @socket
+    end
+
+    # Publish a message to Switchboard that is heard by all subscribers to that channel
+    def publish message
+      @socket.puts message
     end
 
     # Figure out if we're running inside a docker container. Used by pods to identify themselves to the controller.

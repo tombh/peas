@@ -1,7 +1,7 @@
 # Convenience functions to allow long-running tasks such as system calls to be run asynchronously
 # with callbacks and for their statuses to be broadcast and bubbled up through nested worker
-# processes
-module Worker
+# processes. Only compatible with Mongoid model objects.
+module ModelWorker
 
   # A human-friendly string for prepending to log lines
   # Gets set in WorkerRunner
@@ -11,13 +11,16 @@ module Worker
   attr_accessor :job
 
   # Wrapper function for triggering a worker, accepts a callback block.
-  # Usage: `worker(:deploy, first_sha)`
-  # or: `worker(:deploy, first_sha){ task_to_be_done_on_completion() }`
-  # Is equivalent to: `ModelWorker(App, _id, :deploy, first_sha, {job: @job}).perform_async()`
-  def worker *args, &block
-    args.append({job: @job}) if @job
-    method = args.shift
-    @current_job = create_job(self.class.name, _id.to_s, method, *args)
+  # Usage: `worker(pod_id, :deploy, first_sha)`
+  # or: `worker(pod_id, :deploy, first_sha){ task_to_be_done_on_completion() }`
+  # @pod_id: pod ID that will run the job, either the controller or a distributed pod
+  # @method: the model method to call
+  # *args: list of arguments to the method()
+  # &block: callback on completion
+  def worker pod_id, method, *args, &block
+    @args = args.append({job: @job}) if @job # Pass on the parent job if this is a nested job
+    @method = @args.shift
+    @current_job = create_job
     # Wait for @current_job to finish before running subsequent tasks
     if block_given?
       begin
@@ -36,6 +39,7 @@ module Worker
   end
 
   def create_job
+    (self.class.name, _id.to_s, method, *args)
   end
 
   # Convenience function for updating a job status and logging from within the models
