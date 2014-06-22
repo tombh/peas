@@ -1,7 +1,7 @@
 # An app, as you might guess, represents an application. Like a Rails, Django or Wordpress app.
 class App
   include Mongoid::Document
-  include Worker
+  include ModelWorker
 
   # The first SHA1 hash of the repo's commit history is used as a fingerprint tying the repo to an
   # app
@@ -73,14 +73,14 @@ class App
   # Fetch the latest code, create an image and fire up the necessary containers to make an app
   # pubicly accessible
   def deploy
-    worker :build do
+    worker :controller, :build do
       if peas.count == 0
         scaling_profile = {web: 1}
       else
         scaling_profile = process_types
       end
       broadcast
-      worker :scale, scaling_profile, :deploy do
+      worker :controller, :scale, scaling_profile, :deploy do
         broadcast
         broadcast "       Deployed to http://#{name}.#{Peas.domain.gsub('http://', '')}"
       end
@@ -188,10 +188,13 @@ class App
     processes.each do |process_type, quantity|
       quantity.to_i.times do |i|
         broadcast "#{arrow if deploy}Scaling process '#{process_type}:#{i+1}'"
-        Pea.create!(
-          app: self,
-          process_type: process_type,
-          host: 'localhost'
+        Pea.spawn(
+          {
+            app: self,
+            process_type: process_type
+          },
+          block_until_complete: true,
+          parent_job: @job
         )
       end
     end

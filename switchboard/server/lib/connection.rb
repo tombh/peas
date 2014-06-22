@@ -1,11 +1,15 @@
+require 'celluloid/autostart' # for Celluloid::Notifications
+
 Dir["#{Peas.root}/switchboard/server/commands/**/*.rb"].each { |f| require f }
 
 # Handle individual connections to the Switchboard server
 class Connection
   include Celluloid::IO
   include Celluloid::Logger
-  include Commands
+  include Celluloid::Notifications # pubsub
+  include Commands # user-added commands
 
+  # Amount of time to pass without any socket activity before terminating the thread
   INACTIVITY_TIMEOUT = 30*60
 
   def initialize socket

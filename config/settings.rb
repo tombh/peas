@@ -67,4 +67,19 @@ module Peas
   def self.switchboard_server_uri
     "#{Peas.host}:#{SWITCHBOARD_PORT}"
   end
+
+  # Figure out if we're running inside a docker container. Used by pods to identify themselves to the controller.
+  # Note that pods are docker-in-docker containers, they run app docker containers inside a host docker container.
+  # Yo dawg I heard you like docker containers, and all that.
+  def self.current_docker_host_id
+    cgroups = File.open('/proc/self/cgroup').read
+    matches = cgroups.match(/docker\/([a-z0-9]*)$/)
+    if matches
+      matches.captures.first
+    else
+      # There is no host container when running in development
+      :dockerless_pod
+    end
+  end
+
 end
