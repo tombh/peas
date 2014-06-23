@@ -1,5 +1,10 @@
 #!/usr/bin/env ruby
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../..')
+
+# The Gardener is responsible for various long-running daemon-style tasks. Listening for worker
+# jobs, capturing and archiving logs, sending monitoring reports and so on. It's boss is the
+# Switchboard server.
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'celluloid/io'
 require 'config/boot'
 
@@ -8,7 +13,8 @@ Dir["#{Peas.root}/switchboard/clients/**/*.rb"].each { |f| require f }
 Peas::Switchboard.wait_for_connection
 
 clients = [
-  LogsArchiver
+  LogsArchiver,
+  WorkerReceiver
 ]
 running = []
 

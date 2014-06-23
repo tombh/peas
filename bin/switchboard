@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../..')
+
+# The Switchboard server is the central hub for sending and receveing communications between the
+# various components of Peas.
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'switchboard/server/lib/switchboard_server'
 
 # The supervise method is like God or Monit. It keeps watch of the Celluloid actor and restarts it

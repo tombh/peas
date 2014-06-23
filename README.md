@@ -17,8 +17,8 @@ of Ruby;
 [Docker-api](https://github.com/swipely/docker-api),
 [Puma](http://puma.io/),
 [Grape](http://intridea.github.io/grape/),
-[Sidekiq](http://sidekiq.org/),
-[GLI](http://davetron5000.github.io/gli/)
+[GLI](http://davetron5000.github.io/gli/),
+[Celluloid](http://celluloid.io/),
 and more.
 
 #Quickstart
@@ -49,10 +49,9 @@ using the Docker method of installation on cloud servers.
 This is the preferred method for local development, but note that local development is also possible
 with the Docker installation method.
 You will need;
-[Docker](https://www.docker.io/gettingstarted/),
-[Redis](http://redis.io/) ([OSX installation](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/),
-Linux users can just use your package manager) and [Mongo DB](http://docs.mongodb.org/manual/installation/).
-All of these are generally installable via your system's package manager, no compiling should be necessary.
+[Docker](https://www.docker.io/gettingstarted/)
+and [Mongo DB](http://docs.mongodb.org/manual/installation/).
+Both of these are generally installable via your system's package manager, no compiling should be necessary.
 ```bash
 docker pull progrium/buildstep # This runs Heroku buildpacks against repos to create deployable app images
 git clone https://github.com/tombh/peas.git

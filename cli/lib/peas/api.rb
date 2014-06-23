@@ -24,8 +24,8 @@ class API
     raise json['error'].color(:red) if json.has_key? 'error'
     # Successful responses
     if json.has_key? 'job'
-      # Long-running jobs need to poll a job status endpoint
-      long_running_output json['job']
+      # Long-running jobs need to stream from the Switchboard server
+      stream_output "subscribe.job_progress.#{json['job']}"
     else
       # Check CLI client is up to date.
       # Only check major and minor versions
@@ -49,45 +49,20 @@ class API
     end
   end
 
-  # Rudimentary long-polling to stream the status of a job.
-  def long_running_output job
-    count = 0
-    begin
-      sleep LONG_POLL_INTERVAL
-      # API request to the /status endpoint
-      status = JSON.parse self.class.send(:get, '/status', {query: {job: job}}).body
-      if status['status'] != 'failed'
-        if status['output']
-          # Don't output the accumulated progress log every time. Just output the difference
-          output_diff status['output']
-        end
-        # Theoretically all worker errors should be caught and handled gracefully
-        if status['error']
-          puts
-          raise status['error'].color(:red)
-        end
-      else
-        # Uncaught error or production environment error
-        raise "Long-running job failed. See worker logs for details.".color(:red)
-      end
-      count += 1
-    end while status['status'] == 'working' && (count * LONG_POLL_INTERVAL) < LONG_POLL_TIMEOUT
-  end
-
-  # The Sidekiq status gem allows you to set custom variables associated with a job. So the worker
-  # appends to an 'output' variable that accumulates the total log data. So we don't want to output
-  # the 'total' output on every long-polled request. We just want to output any *new* log lines.
-  def output_diff log_so_far
-    @accumulated_output ||= ''
-    old_count = @accumulated_output.lines.count
-    new_count = log_so_far.lines.count
-    diff = log_so_far.lines.to_a[old_count..new_count]
-    @accumulated_output = log_so_far
-    puts diff.join if diff.length > 0
-  end
-
   def self.switchboard_connection
     TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
+  end
+
+  # Stream data from the Switchboard server, usually the progress of a worker job
+  def stream_output switchboard_command
+    socket = API.switchboard_connection
+    socket.puts switchboard_command
+    begin
+      while line = socket.gets
+        puts line
+      end
+    rescue Interrupt, Errno::ECONNRESET
+    end
   end
 
 end
