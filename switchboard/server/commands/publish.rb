@@ -1,9 +1,11 @@
 module Commands
 
+  # Keep a record of everything that gets published on the channel. So that new scubscribers have the
+  # option of reading things that happened before they subscribed.
   attr_accessor :channel_history
 
   # Publish a message to a pubsub channel
-  # Usage: publish.<channel_name>\n<message_body>
+  # Usage: `publish.<channel_name>\n<message_body>`
   # Eg;
   # socket.puts 'publish.world_cup_results'
   # socket.puts '{spain: 1, netherlands: 5}'
@@ -16,9 +18,8 @@ module Commands
     # already been read on the first line)
     # `super` is used because Celluloid::Notification's pubsub also uses 'publish' as its method name
     while message = read_line do
-      debug "PUB :: #{channel} - #{message}"
+      debug "PUB SENT :: #{channel} - #{message}"
       @channel_history << message
-      puts Celluloid::Actor['publish.jobs_for.controller'].channel_history
       super channel, message
     end
   end

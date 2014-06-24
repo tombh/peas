@@ -18,6 +18,9 @@ module ModelWorker
   # progress of all decedent jobs.
   attr_accessor :job
 
+  # The current state of the worker job, either; 'queued', 'working', 'complete' or 'failed'
+  attr_reader :worker_status
+
   # This class serves no other purpose than the cosmetic convenience of being able to chain
   # a method-call onto `worker()` like so; `self.worker(:optimal_pod).scale(web: 1)`
   class ModelProxy
@@ -58,14 +61,14 @@ module ModelWorker
       # Place the job on the queue
       socket.puts job
       # Broadcast the fact that the job is now queued and waiting to be run
-      @instance.broadcast({status: 'queued'})
+      @instance.worker_status = 'queued'
       # Return the job for those interested in its progress
       current_job
     end
 
     # Manage the execution of worker code.
     #
-    # `method`: the model method to call
+    # `method` the model method to call
     # `*args` list of arguments for the @method
     # `&block` callback on completion
     def worker_manager method, *args, &block
@@ -75,9 +78,6 @@ module ModelWorker
         socket = Peas::Switchboard.connection
         socket.puts "subscribe.job_progress.#{current_job}"
         while response = socket.gets do
-          puts "!!!!!!!!"
-          puts response
-          puts "!!!!!!!!"
           progress = JSON.parse response
           status = progress['status']
           break if status != 'working' && status != 'queued'
@@ -133,13 +133,23 @@ module ModelWorker
   end
 
   # Convenience function for updating a job status and logging from within the models.
-  def broadcast message
+  def broadcast message = {}
+    if !message.is_a?(String) && !message.is_a?(Hash)
+      raise 'broadcast() must receive either a String or Hash'
+    end
     raise 'broadcast() can only be used if method is part of a running job.' if !@job
+    message[:body] = message if message.is_a? String
     open_broadcaster if !@broadcaster
-    message[:status] == 'working' if !message[:status]
+    message[:status] = worker_status if !message[:status]
     message = message.to_json.force_encoding("UTF-8")
     log message, @current_worker_call_sign if self.class.name == 'App' # Also log to the app's aggregated logs
     @broadcaster.puts message
+  end
+
+  # Broadcast the status every time it is set
+  def worker_status= status
+    @worker_status = status
+    broadcast
   end
 
   # Stream shell output

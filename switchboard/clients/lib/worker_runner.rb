@@ -21,10 +21,11 @@ class WorkerRunner
     rescue => e
       @instance.worker_status = 'failed'
       @instance.broadcast({
-        error: "#{e.message} @ #{e.backtrace[0]}"
+        status: 'failed',
+        body: "#{e.message} @ #{e.backtrace[0]}"
       })
       raise e
     end
-    @instance.worker_status 'complete'
+    @instance.worker_status = 'complete'
   end
 end

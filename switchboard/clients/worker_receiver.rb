@@ -18,9 +18,7 @@ class WorkerReceiver
 
   def listen socket
     loop do
-      # TODO: does this actually loop, or are the gets() blocking?
-      async.new_job socket.gets
-      sleep 0.01
+      new_job socket.gets
     end
   end
 
