@@ -13,10 +13,18 @@ describe ModelWorker do
   end
 
   it 'should trigger a Sidekiq job with the correct arguments and return the job id' do
-    job = app.worker :deploy
-    expect(ModelWorker.jobs.size).to eq 1
-    expect(ModelWorker).to have_enqueued_job('App', app._id.to_s, 'deploy')
-    expect(job).to eq ModelWorker.jobs.first['jid']
+    job_id = app.worker.deploy
+    job = {
+      parent_job: uuid,
+      current_job: uuid,
+      model: 'App',
+      id: peas_app._id.to_s,
+      method: 'deploy',
+      args: []
+    }
+    expect(@socket).to receive(:puts).with(job.to_json)
+    expect(@socket).to receive(:puts).with("publish.job_progress.#{uuid}")
+    expect(@socket).to receive(:puts).with('{"status":"queued"}')
   end
 
   it 'should wait for a worker to finish and then execute a given callback' do

@@ -40,6 +40,7 @@ class Connection
     if command.to_sym.in? Commands.instance_methods
       # All commands are kept at switchboard/server/commands
       async.send(command)
+      Celluloid::Actor[@header.join('.')] = Celluloid::Actor.current
     else
       warn "Uknown command requested in connection header"
     end

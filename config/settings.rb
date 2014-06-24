@@ -82,4 +82,15 @@ module Peas
     end
   end
 
+  # Is this instance of Peas functioning as a controller?
+  # Unless otherwise stated, Peas will function in a standalone state of being both the controller and a pod.
+  def self.is_controller?
+    ENV['PEAS_CONTROLLER'] ||= 'true'
+  end
+
+  # Is this instance of Peas functioning as a pod?
+  def self.is_pod?
+    ENV['PEAS_POD'] ||= 'true'
+  end
+
 end

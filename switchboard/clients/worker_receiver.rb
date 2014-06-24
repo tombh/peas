@@ -6,20 +6,25 @@ class WorkerReceiver
   include Celluloid::Logger
 
   def initialize
-    controller_queue = Peas::Switchboard.connection
-    pod_queue = Peas::Switchboard.connection
-    # Subscribe to the jobs queue
-    controller_queue.puts "subscribe.jobs_for.controller"
-    pod_queue.puts "subscribe.jobs_for.#{Peas.current_docker_host_id}"
+    open_listener 'controller' if Peas.is_controller?
+    open_listener Peas.current_docker_host_id if Peas.is_pod?
+  end
+
+  def open_listener queue
+    socket = Peas::Switchboard.connection
+    socket.puts "subscribe.jobs_for.#{queue}"
+    async.listen socket
+  end
+
+  def listen socket
     loop do
       # TODO: does this actually loop, or are the gets() blocking?
-      async.new_job controller_queue.gets
-      async.new_job pod_queue.gets
+      async.new_job socket.gets
       sleep 0.01
     end
   end
 
-  def new_job job, socket
-    WorkerRunner.new job, socket
+  def new_job job
+    WorkerRunner.new job
   end
 end

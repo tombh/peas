@@ -41,23 +41,27 @@ describe App do
     include_context :docker_creation_mock
 
     before :each do
+      stub_const('Peas::SWITCHBOARD_HOST', SWITCHBOARD_TEST_HOST)
+      stub_const('Peas::SWITCHBOARD_PORT', SWITCHBOARD_TEST_PORT)
       allow_any_instance_of(App).to receive(:build).and_return(true) # Prevent building
-      allow(Sidekiq::Status).to receive(:status).and_return(:complete) # Build completes instantly
+      @server = switchboard_server
+      @actor = WorkerReceiver.new
+    end
+
+    after :each do
+      @actor.terminate
+      @server.terminate
     end
 
     it 'should trigger a build' do
       allow_any_instance_of(App).to receive(:scale) # Prevent scaling
       expect_any_instance_of(App).to receive(:build)
-      Sidekiq::Testing.inline! do
-        app.deploy
-      end
+      app.deploy
     end
 
     it 'should scale web process to 1 if there are no existing containers for the app' do
       expect_any_instance_of(App).to receive(:scale).with({'web' => 1}, 'deploy')
-      Sidekiq::Testing.inline! do
-        app.deploy
-      end
+      app.deploy
     end
 
     it "should broadcast the app's URI for a custom domain" do
@@ -68,9 +72,7 @@ describe App do
         /       Deployed to http:\/\/#{app.name}\.custom-domain\.com/
       )
       expect_any_instance_of(App).to receive(:broadcast).with(no_args)
-      Sidekiq::Testing.inline! do
-        app.deploy
-      end
+      app.deploy
     end
 
     it "should rescale processes to the app's existing scaling profile" do
@@ -80,9 +82,7 @@ describe App do
       expect_any_instance_of(App).to receive(:scale).with(
         { 'web' => 3, 'worker' => 2 }, 'deploy'
       )
-      Sidekiq::Testing.inline! do
-        app.deploy
-      end
+      app.deploy
     end
   end
 

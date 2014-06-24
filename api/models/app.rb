@@ -73,14 +73,14 @@ class App
   # Fetch the latest code, create an image and fire up the necessary containers to make an app
   # pubicly accessible
   def deploy
-    worker :controller, :build do
+    worker.build do
       if peas.count == 0
         scaling_profile = {web: 1}
       else
         scaling_profile = process_types
       end
       broadcast
-      worker :controller, :scale, scaling_profile, :deploy do
+      worker.scale scaling_profile, :deploy do
         broadcast
         broadcast "       Deployed to http://#{name}.#{Peas.domain.gsub('http://', '')}"
       end
@@ -177,7 +177,7 @@ class App
     sh "cd #{tmp_repo_path} && tar --exclude='.git' -zcf #{@tmp_tar_path} ."
   end
 
-  # Given a hash of processes like {web: 2, worker: 1} create and/or destroy the necessary
+  # Given a hash of processes like `{web: 2, worker: 1}` create and/or destroy the necessary
   # containers.
   # TODO: when not part of a deployment calculate the differences rather than blanket destroy
   # everything!

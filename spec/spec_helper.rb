@@ -75,18 +75,25 @@ RSpec.configure do |config|
   end
 end
 
+# SWITCHBOARD
+
+Dir["#{Peas.root}/switchboard/**/*.rb"].each { |f| require f }
+
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
 SWITCHBOARD_TEST_PORT = 79345
 
-Celluloid.logger = nil
+# Celluloid.logger = nil
 # Celluloid.shutdown_timeout = 2
 
 def client_connection
   TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
 end
 
-# For Switchboard. Creates a client and server into which you can inject a manipulated Connection
-# instance for testing.
+def switchboard_server
+  SwitchboardServer.new(SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT)
+end
+
+# Creates a client and server into which you can inject a manipulated Connection instance for testing.
 # Got the idea from celluloid/reel's spec_helper
 def with_socket_pair
   server = TCPServer.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
