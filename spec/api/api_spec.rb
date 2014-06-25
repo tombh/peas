@@ -12,6 +12,7 @@ describe Peas::API do
 
   before :each do
     @socket = instance_double 'TCPSocket'
+    allow(@socket).to receive(:close)
     allow(Peas::Switchboard).to receive(:connection).and_return(@socket)
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
   end

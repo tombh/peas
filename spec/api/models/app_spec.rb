@@ -173,8 +173,8 @@ describe App do
     it 'should restart all peas belonging to an app' do
       allow(app).to receive(:broadcast)
       app.scale({web: 3, worker: 2})
-      expect(app.peas).to receive(:destroy_all)
-      expect(Pea).to receive(:create!).exactly(5).times
+      expect(app.peas).to receive(:destroy_all).and_call_original
+      expect(Pea).to receive(:create!).exactly(5).times.and_call_original
       app.restart
     end
   end

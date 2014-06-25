@@ -26,7 +26,7 @@ describe 'Switchboard Pea Commands' do
           client.puts 'Been busy and stuff '
           client.puts 'More busy and other stuff '
           connection.dispatch
-          sleep 0.1
+          sleep 0.2
           logs = app.logs_collection.find.to_a
           expect(logs[0]['line']).to include Date.today.to_s
           expect(logs[1]['line']).to include Date.today.to_s

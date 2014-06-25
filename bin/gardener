@@ -13,15 +13,17 @@ Dir["#{Peas.root}/switchboard/clients/**/*.rb"].each { |f| require f }
 Peas::Switchboard.wait_for_connection
 
 clients = [
-  LogsArchiver,
-  WorkerReceiver
+  {client: LogsArchiver},
+  Peas.is_controller? ? {client: WorkerReceiver, args: 'controller'} : {},
+  Peas.is_pod? ? {client: WorkerReceiver, args: Peas.current_docker_host_id} : {},
 ]
 running = []
 
 # We don't want to use a Celluloid::SupervisionGroup as each client Actor is independent and needs
 # to be able to crash and restart independent of the others.
-clients.map do |client|
-  running << client.supervise
+clients.each do |client|
+  next if !client.has_key? :client
+  running << client[:client].supervise(*client[:args])
 end
 
 # Not sure how relevant the termination is for blocking threads, actors just seem to not respond

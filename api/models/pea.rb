@@ -51,7 +51,7 @@ class Pea
 
   def initialize(attrs = nil)
     super
-    @container = get_docker_container if persisted?
+    @container = get_docker_container
   end
 
   # Assign the process a number representing how many processes there are of this type.
@@ -64,12 +64,15 @@ class Pea
 
   # Before removing a pea from the database kill and remove the relevant app container
   before_destroy do
-    worker(pea.pod.docker_id, block_until_complete: true).destroy_container
+    worker(pod.docker_id, block_until_complete: true).destroy_container
   end
 
   # Creates a docker container and the pea DB record representing it. Use instead of Pea.create()
   def self.spawn properties, block_until_complete: true, parent_job: nil, &block
     pea = Pea.create!(properties)
+    puts "!!!!!!!!"
+    puts pea
+    puts "!!!!!!!!"
     pea.worker(
       :optimal_pod,
       block_until_complete: block_until_complete,
@@ -95,6 +98,8 @@ class Pea
       # Takes each ExposedPort and forwards an external port to it. Eg; 46517 -> 5000
       'PublishAllPorts' => 'true'
     )
+    # What pod are we in right now?
+    self.pod = Pod.find_by(docker_id: Peas.current_docker_host_id)
     # Get the Docker ID so we can find it later
     self.docker_id = container.info['id']
     # Find the randomly created external port that forwards to the internal 5000 port
@@ -130,6 +135,9 @@ class Pea
   end
 
   def get_docker_container
+    # There'll certainly be no container if this pea hasn't even been saved to the DB yet
+    return false if !persisted?
+
     ensure_correct_host
     begin
       @container = Docker::Container.get(docker_id) if docker_id

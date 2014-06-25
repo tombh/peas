@@ -31,7 +31,8 @@ RSpec.configure do |config|
     stub_const('Peas::SWITCHBOARD_PORT', SWITCHBOARD_TEST_PORT)
     allow(Peas).to receive(:host).and_return(SWITCHBOARD_TEST_HOST)
     switchboard_server
-    WorkerReceiver.new
+    WorkerReceiver.new 'controller'
+    WorkerReceiver.new Peas.current_docker_host_id
   end
 
   config.after(:each, :with_worker) do
