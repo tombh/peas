@@ -8,18 +8,20 @@
 #   2. It can accept jobs created by 1). Whereas as 1) is most likely to occur inside a web request or
 #      console or rake task, 2) is triggered by a worker manager job queue.
 module ModelWorker
+  # The parent job ID. Used when nested, jobs-within-jobs are a created. Child jobs can then
+  # broadcast their progress to the parent job and so any listeners to the parent job can hear the
+  # progress of all decedent jobs.
+  attr_accessor :parent_job
+
+  # The current job ID. If this is a nested job then this ID will be different from the parent job
+  attr_accessor :current_job
+
+  # The current state of the current job, either; 'queued', 'working', 'complete' or 'failed'
+  attr_reader :worker_status
 
   # A human-friendly string for prepending to log lines.
   # Gets set in WorkerRunner.
-  attr_accessor :current_worker_call_sign
-
-  # The parent job ID. Used when nested, jobs-within-jobs are a created. Child jobs can then
-  # broadcast their status to the parent job and so any listeners to the parent job can hear the
-  # progress of all decedent jobs.
-  attr_accessor :job
-
-  # The current state of the worker job, either; 'queued', 'working', 'complete' or 'failed'
-  attr_reader :worker_status
+  attr_accessor :worker_call_sign
 
   # This class serves no other purpose than the cosmetic convenience of being able to chain
   # a method-call onto `worker()` like so; `self.worker(:optimal_pod).scale(web: 1)`
@@ -43,16 +45,16 @@ module ModelWorker
     # Notify a pod (or the controller) that it has a new job to do
     def create_job method, args
       # UUID's are guaranteed to be practically unique, as in *extremely* unlikely to collide
-      current_job = SecureRandom.uuid
+      @current_job = SecureRandom.uuid
       # Only set the parent_job if this is the first job
-      @instance.job = current_job if !@instance.job
+      @instance.parent_job = @current_job if !@instance.parent_job
       # Open up a pubsub publisher to add a job to the worker queue
       socket = Peas::Switchboard.connection
       socket.puts "publish.jobs_for.#{@pod_id}"
       # Package up the job
       job = {
-        parent_job: @instance.job,
-        current_job: current_job,
+        parent_job: @instance.parent_job,
+        current_job: @current_job,
         model: @instance.class.name,
         id: @instance._id.to_s,
         method: method,
@@ -63,7 +65,7 @@ module ModelWorker
       # Broadcast the fact that the job is now queued and waiting to be run
       @instance.worker_status = 'queued'
       # Return the job for those interested in its progress
-      current_job
+      @current_job
     end
 
     # Manage the execution of worker code.
@@ -72,25 +74,29 @@ module ModelWorker
     # `*args` list of arguments for the @method
     # `&block` callback on completion
     def worker_manager method, *args, &block
-      current_job = create_job method, args
-      # Wait for current_job to finish before running subsequent tasks
+      @current_job = create_job method, args
+      # Wait for @current_job to finish before running subsequent tasks
       if block_given? || @block_until_complete
         socket = Peas::Switchboard.connection
-        socket.puts "subscribe.job_progress.#{current_job}"
+        socket.puts "subscribe.job_progress.#{@current_job}"
+        # Execution will only proceed if the job is taken up by a worker process
         while response = socket.gets do
           progress = JSON.parse response
           status = progress['status']
           break if status != 'working' && status != 'queued'
         end
         if status == 'failed'
-          raise "Worker for #{@instance.class.name}.#{method} failed. Job aborted."
+          raise "Worker for #{@instance.class.name}.#{method} failed. Job aborted. " + progress['body']
         elsif status == 'complete'
+          # Note that the `status` we're checking here was set by a worker process, so it's not within the same scope
+          # (or even the same machine!), so we need to set the status here for any broadcasts that occur in the `yield`
+          @instance.worker_status = 'complete'
           yield if block_given?
         else
           raise "Unexpected status (#{status}) received from job_progress channel"
         end
       end
-      current_job
+      @current_job
     end
 
   end
@@ -126,10 +132,20 @@ module ModelWorker
     ModelProxy.new pod_id, block_until_complete, self
   end
 
-  # Open a socket to the pubsub channel for this job, so that other processes can listen to progress
-  def open_broadcaster
-    @broadcaster = Peas::Switchboard.connection
-    @broadcaster.puts "publish.job_progress.#{@job}"
+  # Send status updates for the current and pareant jobs, so that other processes can listen to progress
+  def broadcasters message
+    [@parent_job, @current_job].each do |job|
+      next if !job
+      socket = Peas::Switchboard.connection
+      socket.puts "publish.job_progress.#{job}"
+      # Don't update the parent job's status with the current job's status if the current job is a child job.
+      # All we want to do is make sure that parent job gets all the progress details from child jobs and nothing more.
+      if job == @current_job && (@parent_job != @current_job)
+          message.delete 'status'
+      end
+      socket.puts message
+      socket.close
+    end
   end
 
   # Convenience function for updating a job status and logging from within the models.
@@ -137,13 +153,20 @@ module ModelWorker
     if !message.is_a?(String) && !message.is_a?(Hash)
       raise 'broadcast() must receive either a String or Hash'
     end
-    raise 'broadcast() can only be used if method is part of a running job.' if !@job
-    message[:body] = message if message.is_a? String
-    open_broadcaster if !@broadcaster
-    message[:status] = worker_status if !message[:status]
+    raise 'broadcast() can only be used if method is part of a running job.' if !@parent_job
+    if message.is_a? String
+      tmp_msg = message
+      message = {}
+      message[:body] = tmp_msg
+    end
+    if message[:status]
+      @worker_status = message[:status]
+    else
+      message[:status] = worker_status
+    end
     message = message.to_json.force_encoding("UTF-8")
-    log message, @current_worker_call_sign if self.class.name == 'App' # Also log to the app's aggregated logs
-    @broadcaster.puts message
+    log message, @worker_call_sign if self.class.name == 'App' # Also log to the app's aggregated logs
+    broadcasters message
   end
 
   # Broadcast the status every time it is set

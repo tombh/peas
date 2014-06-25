@@ -17,8 +17,9 @@ class WorkerReceiver
   end
 
   def listen socket
-    loop do
-      new_job socket.gets
+    sleep 0.1 # To allow the other listener a chance to start listening
+    while job = socket.gets do
+      new_job job
     end
   end
 

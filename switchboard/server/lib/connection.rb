@@ -21,7 +21,7 @@ class Connection
 
   def dispatch
     _, @port, @host = @socket.peeraddr
-    info "Received connection (ID: #{@socket.object_id}) from #{@host}:#{@port}"
+    debug "Received connection (ID: #{@socket.object_id}) from #{@host}:#{@port}"
 
     # The first line of a request should contain something like:
     # 'app_logs.5390f5665a454e77990b0000'

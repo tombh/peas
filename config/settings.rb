@@ -78,7 +78,7 @@ module Peas
       matches.captures.first
     else
       # There is no host container when running in development
-      :dockerless_pod
+      'dockerless_pod'
     end
   end
 

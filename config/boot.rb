@@ -32,3 +32,12 @@ Dir["#{Peas.root}/lib/**/*.rb"].each { |f| require f }
 # The /api folder is loaded regardless of role (controller/pod). The api/methods may not be needed to run a pod, but
 # there seems little advantage in explictly preventing their loading for pods. Memory savings would be trivial.
 Dir["#{Peas.root}/api/**/*.rb"].each { |f| require f }
+
+# If this the default standalone instance of Peas (where it functions as both the controller and a pod), then make sure
+# a pod model object exists to represent the default pod. A pod stub. This could be a 'dockerless_pod' if running
+# without Docker-in-Docker in dev environment.
+if Peas.is_controller? && Peas.is_pod?
+  if Pod.count == 0
+    Pod.create docker_id: Peas.current_docker_host_id
+  end
+end

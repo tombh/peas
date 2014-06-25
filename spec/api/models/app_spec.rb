@@ -37,49 +37,38 @@ describe App do
     end
   end
 
-  describe 'deploy()' do
+  describe 'deploy()', :with_worker do
     include_context :docker_creation_mock
 
     before :each do
-      stub_const('Peas::SWITCHBOARD_HOST', SWITCHBOARD_TEST_HOST)
-      stub_const('Peas::SWITCHBOARD_PORT', SWITCHBOARD_TEST_PORT)
-      allow_any_instance_of(App).to receive(:build).and_return(true) # Prevent building
-      @server = switchboard_server
-      @actor = WorkerReceiver.new
-    end
-
-    after :each do
-      @actor.terminate
-      @server.terminate
+      allow(App).to receive(:find_by).and_return(app)
+      allow(app).to receive(:build) # Prevent build
+      allow(app).to receive(:scale) # Prevent scaling
     end
 
     it 'should trigger a build' do
-      allow_any_instance_of(App).to receive(:scale) # Prevent scaling
-      expect_any_instance_of(App).to receive(:build)
+      expect(app).to receive(:build)
       app.deploy
     end
 
     it 'should scale web process to 1 if there are no existing containers for the app' do
-      expect_any_instance_of(App).to receive(:scale).with({'web' => 1}, 'deploy')
+      expect(app).to receive(:scale).with({'web' => 1}, 'deploy')
       app.deploy
     end
 
     it "should broadcast the app's URI for a custom domain" do
       Fabricate :setting, key: 'domain', value: 'custom-domain.com'
-      allow_any_instance_of(App).to receive(:scale) # Prevent scaling
-      expect_any_instance_of(App).to receive(:broadcast).with(no_args)
-      expect_any_instance_of(App).to receive(:broadcast).with(
+      expect(app).to receive(:broadcast).at_least(:once).with(no_args()).and_call_original
+      expect(app).to receive(:broadcast).with(
         /       Deployed to http:\/\/#{app.name}\.custom-domain\.com/
       )
-      expect_any_instance_of(App).to receive(:broadcast).with(no_args)
       app.deploy
     end
 
     it "should rescale processes to the app's existing scaling profile" do
-      allow_any_instance_of(App).to receive(:scale) # Prevent scaling
       3.times { Fabricate :pea, app: app, process_type: 'web' }
       2.times { Fabricate :pea, app: app, process_type: 'worker' }
-      expect_any_instance_of(App).to receive(:scale).with(
+      expect(app).to receive(:scale).with(
         { 'web' => 3, 'worker' => 2 }, 'deploy'
       )
       app.deploy
@@ -98,16 +87,20 @@ describe App do
     context 'Fetching and tarring an app for Buildstep' do
       before :each do
         allow(app).to receive(:sh)
+        allow(app).to receive(:broadcast)
       end
+
       it 'should create the necessary directories' do
         app._fetch_and_tar_repo
         expect(File.exist? Peas::TMP_REPOS).to eq true
         expect(File.exist? Peas::TMP_TARS).to eq true
       end
+
       it "should clone the app when the repo doesn't exist locally" do
         expect(app).to receive(:sh).with(%r(git clone .* #{Peas::TMP_REPOS}/#{app.name}))
         app._fetch_and_tar_repo
       end
+
       it 'should only pull updates when the repo already exists locally' do
         FileUtils.mkdir_p "#{Peas::TMP_REPOS}/fabricated"
         expect(app).to receive(:sh).with(%r(cd #{Peas::TMP_REPOS}/#{app.name} .* git pull))
@@ -140,6 +133,7 @@ describe App do
           remote: 'https://github.com/heroku/node-js-sample.git',
           name: 'node-js-sample',
           config: [{'FOO' => 'BAR'}]
+        allow(app).to receive(:broadcast)
         details = app.build
         expect(details['Config']['Env']).to include("FOO=BAR")
       end
@@ -162,20 +156,22 @@ describe App do
     end
   end
 
-  describe 'scale()' do
+  describe 'scale()', :with_worker do
     include_context :docker_creation_mock
 
     it 'should create peas' do
+      allow(app).to receive(:broadcast)
       app.scale({web: 3, worker: 2})
       expect(Pea.where(app: app).where(process_type: 'web').count).to eq 3
       expect(Pea.where(app: app).where(process_type: 'worker').count).to eq 2
     end
   end
 
-  describe 'restart()' do
+  describe 'restart()', :with_worker do
     include_context :docker_creation_mock
 
     it 'should restart all peas belonging to an app' do
+      allow(app).to receive(:broadcast)
       app.scale({web: 3, worker: 2})
       expect(app.peas).to receive(:destroy_all)
       expect(Pea).to receive(:create!).exactly(5).times

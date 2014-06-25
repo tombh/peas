@@ -194,7 +194,7 @@ class App
             process_type: process_type
           },
           block_until_complete: true,
-          parent_job: @job
+          parent_job: @parent_job
         )
       end
     end

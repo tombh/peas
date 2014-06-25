@@ -11,15 +11,6 @@ group :server do
   end
 end
 
-sidekiq_args = [
-  :require => './config/sidekiq.rb',
-  :environment => 'development',
-  :concurrency => 5
-]
-guard(:sidekiq, *sidekiq_args) do
-  watch(%r{^(config|lib|api)/.*})
-end
-
 module ::Guard
   class BaseGuard < ::Guard::Plugin
     def log msg

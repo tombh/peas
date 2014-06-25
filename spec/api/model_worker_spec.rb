@@ -63,7 +63,7 @@ describe ModelWorker do
       allow(Sidekiq::Status).to receive(:get_all) { {} }
       allow(Sidekiq::Status).to receive(:status).with('123').and_return(:queued, :working, :complete)
       app.worker :build do
-        app.current_worker_call_sign = 'builder'
+        app.worker_call_sign = 'builder'
         app.broadcast 'Build activity'
       end
       expect(app.logs_collection.find.first['line']).to include 'app[builder]: Build activity'

@@ -9,7 +9,6 @@ class Pod
 
   # Find the best pod to add a container to
   def self.optimal_pod
-    lowest_population = Pod.all.map{|p| p.peas.count}.min
-    Pod.where(:peas.length => lowest_population).first
+    Pod.all.sort_by{|pod| pod.peas.count}.first.docker_id
   end
 end

@@ -47,11 +47,11 @@ class Pea
   # A pea lives in a pod
   belongs_to :pod
 
-  validates_presence_of :port, :docker_id, :app
+  validates_presence_of :app
 
   def initialize(attrs = nil)
     super
-    @container = get_docker_container
+    @container = get_docker_container if persisted?
   end
 
   # Assign the process a number representing how many processes there are of this type.
@@ -68,9 +68,14 @@ class Pea
   end
 
   # Creates a docker container and the pea DB record representing it. Use instead of Pea.create()
-  def self.spawn properties, parent_job: nil, &block
+  def self.spawn properties, block_until_complete: true, parent_job: nil, &block
     pea = Pea.create!(properties)
-    pea.worker(:optimal_pod, parent_job: parent_job, &block).spawn_container
+    pea.worker(
+      :optimal_pod,
+      block_until_complete: block_until_complete,
+      parent_job: parent_job,
+      &block
+    ).spawn_container
   end
 
   def spawn_container
@@ -102,8 +107,9 @@ class Pea
   # across multiple machines, we need to make sure that certain methods are only ever run on the
   # host machine upon which the pea lives.
   def ensure_correct_host
-    if Peas.current_docker_host_id != pea.pod.docker_id
-      raise "Attempt to interact with a pea (#{pea_id}) not located in the current pod."
+    if Peas.current_docker_host_id != pod.docker_id
+      raise "Attempt to interact with a pea (belonging to '#{pod.docker_id}') " +
+        "not located in the current pod ('#{Peas.current_docker_host_id}')."
     end
   end
 

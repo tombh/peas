@@ -4,7 +4,6 @@ ENV["RACK_ENV"] ||= ENV["PEAS_ENV"] ||= 'test'
 
 require File.expand_path("../../config/boot", __FILE__)
 require 'rack/test'
-require 'sidekiq/testing'
 require 'celluloid/test'
 require 'docker_creation_mock.rb'
 
@@ -14,19 +13,32 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Mongoid.default_session.drop
+    Pod.create docker_id: Peas.current_docker_host_id
   end
 
   config.before(:each) do
     allow(Docker).to receive(:version).and_return({'Version' => Peas::DOCKER_VERSION})
+    Pod.create docker_id: Peas.current_docker_host_id
   end
 
   config.after(:each) do
     Mongoid.default_session.drop
   end
-end
 
-RSpec::Sidekiq.configure do |config|
-  config.warn_when_jobs_not_processed_by_sidekiq = false
+  config.before(:each, :with_worker) do
+    Celluloid.boot
+    stub_const('Peas::SWITCHBOARD_HOST', SWITCHBOARD_TEST_HOST)
+    stub_const('Peas::SWITCHBOARD_PORT', SWITCHBOARD_TEST_PORT)
+    allow(Peas).to receive(:host).and_return(SWITCHBOARD_TEST_HOST)
+    switchboard_server
+    WorkerReceiver.new
+  end
+
+  config.after(:each, :with_worker) do
+    Celluloid::Actor.clear_registry
+    Celluloid.shutdown_timeout = 0.01
+    Celluloid.shutdown
+  end
 end
 
 # VCR is used to record HTTP interactions and replay them. Currently used to fake a Docker
@@ -74,6 +86,7 @@ RSpec.configure do |config|
     end
   end
 end
+
 
 # SWITCHBOARD
 
