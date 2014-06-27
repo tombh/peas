@@ -7,7 +7,7 @@ MAINTAINER tom@tombh.co.uk
 RUN apt-get install -qqy software-properties-common
 RUN apt-add-repository ppa:brightbox/ruby-ng -y
 RUN apt-get update
-RUN apt-get install -qqy ruby2.1 ruby2.1-dev build-essential libssl-dev git redis-server
+RUN apt-get install -qqy ruby2.1 ruby2.1-dev build-essential libssl-dev
 
 # Mongo DB
 # Add 10gen official apt source to the sources list

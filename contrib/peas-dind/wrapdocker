@@ -98,7 +98,6 @@ fi
 export LANG="C.UTF-8"
 export LC_ALL="C.UTF-8"
 /usr/bin/mongod --smallfiles &
-/usr/bin/redis-server &
 cd /home/peas
 
 # If /var/lib/gems is mounted as a volume, then the first time Peas boots, there will be no
