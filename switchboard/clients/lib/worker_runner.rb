@@ -1,6 +1,9 @@
 class WorkerRunner
+  include Celluloid::IO
+  include Celluloid::Logger
+
   def initialize job
-    perform JSON.parse(job)
+    async.perform JSON.parse(job)
   end
 
   def perform job

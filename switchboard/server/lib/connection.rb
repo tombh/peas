@@ -24,23 +24,30 @@ class Connection
     debug "Received connection (ID: #{@socket.object_id}) from #{@host}:#{@port}"
 
     # The first line of a request should contain something like:
-    # 'app_logs.5390f5665a454e77990b0000'
+    # 'app_logs.5390f5665a454e77990b0000 option1 option2'
     begin
       response = read_line
       return if response.nil? # Most likely Peas checking if the server's up
-      @header = response.chomp.split('.')
     rescue EOFError
       return
     end
 
-    command = @header[0]
+    response.strip!
+    # Split by the first space character to get;
+    # ['app_logs.5390f5665a454e77990b0000', 'option1 option2']
+    parts = response.split(' ', 2)
+    # Get the command, eg; ['app_logs', '5390f5665a454e77990b0000']
+    @command = parts[0].split('.')
+    # Get the options, eg; ['option1', 'option2']
+    @options = parts[1] ? parts[1].split(' ') : []
+    # The actual method to call, so; 'app_logs' in this example
+    method = @command[0]
 
-    # Dynamically call the requested command as an instance method. But do a little sanity check
+    # Dynamically call the requested method as an instance method. But do a little sanity check
     # first. This could easily be abused :/
-    if command.to_sym.in? Commands.instance_methods
+    if method.to_sym.in? Commands.instance_methods
       # All commands are kept at switchboard/server/commands
-      async.send(command)
-      Celluloid::Actor[@header.join('.')] = Celluloid::Actor.current
+      async.send(method)
     else
       warn "Uknown command requested in connection header"
     end

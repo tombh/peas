@@ -6,8 +6,17 @@ class SwitchboardServer
   include Celluloid::IO
   include Celluloid::Logger
 
+  # Ephemeral data store to archive activity on a pubsub channel
+  # TODO: Garbage collect contents, perhaps by deleting channel key 30 mins after last activity?
+  attr_accessor :channel_history
+
   def initialize host, port
     info "Starting Peas Switchboard Server on #{Peas.switchboard_server_uri}"
+
+    # This allows us to do `Celluloid::Actor[:switchboard_server].channel_history[:channel_name]`
+    # from any connection.
+    @channel_history = {}
+    Celluloid::Actor[:switchboard_server] = Celluloid::Actor.current
 
     # Since we included Celluloid::IO, we're actually making a Celluloid::IO::TCPServer here
     @server = TCPServer.new(host, port)
