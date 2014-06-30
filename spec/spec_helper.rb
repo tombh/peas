@@ -7,6 +7,9 @@ require 'rack/test'
 require 'celluloid/test'
 require 'docker_creation_mock.rb'
 
+# Note: I've found that the ordering for the config hooks is important. Specifically that Mongoid's
+# session needs to be dropped before shutting down Celluloid. Specifying hooks first seems to mean
+# they are run last.
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
@@ -15,19 +18,14 @@ RSpec.configure do |config|
     Mongoid.default_session.drop
   end
 
-  config.before(:each) do
-    Mongoid.default_session.drop
-    allow(Docker).to receive(:version).and_return({'Version' => Peas::DOCKER_VERSION})
-    Pod.destroy_all
-    Pod.create docker_id: Peas.current_docker_host_id
+  config.before(:each, :celluloid) do
+    Celluloid.boot
   end
 
-  # config.after(:each) do
-  #   begin
-  #   rescue => e
-  #     puts e.backtrace
-  #   end
-  # end
+  config.after(:each, :celluloid) do
+    Celluloid.shutdown_timeout = 0.02
+    Celluloid.shutdown
+  end
 
   config.before(:each, :with_worker) do
     Celluloid.boot
@@ -46,14 +44,16 @@ RSpec.configure do |config|
     Celluloid.shutdown
   end
 
-  config.before(:each, :celluloid) do
-    Celluloid.boot
+  config.before(:each) do
+    allow(Docker).to receive(:version).and_return({'Version' => Peas::DOCKER_VERSION})
+    Pod.destroy_all
+    Pod.create docker_id: Peas.current_docker_host_id
   end
 
-  config.after(:each, :celluloid) do
-    Celluloid.shutdown_timeout = 0.02
-    Celluloid.shutdown
+  config.after(:each) do
+    Mongoid.default_session.drop
   end
+
 end
 
 # VCR is used to record HTTP interactions and replay them. Currently used to fake a Docker
@@ -110,7 +110,7 @@ Dir["#{Peas.root}/switchboard/**/*.rb"].each { |f| require f }
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
 SWITCHBOARD_TEST_PORT = 79345
 
-# Celluloid.logger = nil
+Celluloid.logger = nil
 # Celluloid.shutdown_timeout = 2
 
 def client_connection

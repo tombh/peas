@@ -63,12 +63,11 @@ describe 'Switchboard Pea Commands', :celluloid do
 
   describe 'Client Commands' do
     describe LogsArchiver do
-      include_context :docker_creation_mock
 
       it 'should add a pea to the watch list and remove when finished' do
         app = Fabricate :app
-        pea1 = Fabricate :pea, app: app
-        pea2 = Fabricate :pea, app: app
+        pea1 = Fabricate :pea, app: app, docker_id: 'pea1'
+        pea2 = Fabricate :pea, app: app, docker_id: 'pea2'
         allow(Docker::Container).to receive(:all).and_return([
           double(id: pea1.docker_id),
           double(id: pea2.docker_id),
@@ -97,6 +96,7 @@ describe 'Switchboard Pea Commands', :celluloid do
         allow(@socket).to receive(:puts).with(any_args())
         @app = Fabricate :app, name: 'node-js-sample'
         @pea = Fabricate :pea, app: @app, port: nil, docker_id: nil
+        @pea.spawn_container
       end
 
       it 'should stream the logs for a pea', :docker do

@@ -35,7 +35,9 @@ class PeaLogsWatcher
       stdout: true,
       stderr: true,
     ) do |stream, chunk|
-      socket.puts chunk.strip!
+      chunk.lines.each do |line|
+        socket.puts line.strip!
+      end
     end
 
   rescue Timeout::Error
