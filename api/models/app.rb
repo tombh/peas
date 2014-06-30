@@ -1,7 +1,7 @@
 # An app, as you might guess, represents an application. Like a Rails, Django or Wordpress app.
 class App
   include Mongoid::Document
-  include ModelWorker
+  include Peas::ModelWorker
 
   # The first SHA1 hash of the repo's commit history is used as a fingerprint tying the repo to an
   # app

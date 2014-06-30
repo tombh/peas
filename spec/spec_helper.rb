@@ -18,6 +18,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     allow(Docker).to receive(:version).and_return({'Version' => Peas::DOCKER_VERSION})
+    Pod.destroy_all
     Pod.create docker_id: Peas.current_docker_host_id
   end
 
@@ -30,14 +31,17 @@ RSpec.configure do |config|
     stub_const('Peas::SWITCHBOARD_HOST', SWITCHBOARD_TEST_HOST)
     stub_const('Peas::SWITCHBOARD_PORT', SWITCHBOARD_TEST_PORT)
     allow(Peas).to receive(:host).and_return(SWITCHBOARD_TEST_HOST)
-    switchboard_server
-    WorkerReceiver.new 'controller'
-    WorkerReceiver.new Peas.current_docker_host_id
+    @server = switchboard_server
+    @controller_worker = WorkerReceiver.new 'controller'
+    @pod_worker = WorkerReceiver.new Peas.current_docker_host_id
   end
 
   config.after(:each, :with_worker) do
+    @server.terminate
+    # @controller_worker.terminate
+    # @pod_worker.terminate
     Celluloid::Actor.clear_registry
-    Celluloid.shutdown_timeout = 0.01
+    Celluloid.shutdown_timeout = 0.02
     Celluloid.shutdown
   end
 end
@@ -96,7 +100,7 @@ Dir["#{Peas.root}/switchboard/**/*.rb"].each { |f| require f }
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
 SWITCHBOARD_TEST_PORT = 79345
 
-# Celluloid.logger = nil
+Celluloid.logger = nil
 # Celluloid.shutdown_timeout = 2
 
 def client_connection

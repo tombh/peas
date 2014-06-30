@@ -1,6 +1,6 @@
 class Pod
   include Mongoid::Document
-  include ModelWorker
+  include Peas::ModelWorker
 
   # The ID of the Docker-in-Docker container. Can be nil if running in development.
   field :docker_id

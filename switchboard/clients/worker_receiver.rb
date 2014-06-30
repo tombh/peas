@@ -8,12 +8,12 @@ class WorkerReceiver
   def initialize queue
     socket = Peas::Switchboard.connection
     socket.puts "subscribe.jobs_for.#{queue}"
-    async.listen socket
+    async.listen socket, queue
   end
 
-  def listen socket
+  def listen socket, queue
     while job = socket.gets do
-      WorkerRunner.new job
+      WorkerRunner.new job, queue
     end
   end
 

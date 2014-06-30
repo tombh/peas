@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ModelWorker, :with_worker do
+describe Peas::ModelWorker, :with_worker do
   let(:app) { Fabricate :app }
   let(:uuid) {'b962c3db-9170-4962-9a7b-91db1a809c91'}
   let(:uuid2) {'b8d2cdbd6-d3d4-4d2f-8f48-96325a4f2cd6'}
@@ -10,18 +10,17 @@ describe ModelWorker, :with_worker do
     allow(SecureRandom).to receive(:uuid).and_return(uuid, uuid2)
   end
 
-
   it 'should enqueue a job with the correct arguments and return the job id' do
     job = {
       parent_job: uuid,
       current_job: uuid,
       model: 'App',
       id: app._id.to_s,
-      method: 'deploy',
+      method: 'fake',
       args: []
     }
-    expect(WorkerRunner).to receive(:new).with("#{job.to_json}\n")
-    job_id = app.worker.deploy
+    expect(WorkerRunner).to receive(:new).with("#{job.to_json}\n", 'controller').and_call_original
+    job_id = app.worker(block_until_complete:true).fake
     expect(job_id).to eq uuid
   end
 
@@ -34,7 +33,7 @@ describe ModelWorker, :with_worker do
       method: 'fake',
       id: app._id.to_s,
       args: ['argument', :more]
-    }.to_json)
+    }.to_json, 'controller')
   end
 
   it 'should wait for a worker to finish and then execute a given callback' do
@@ -44,9 +43,33 @@ describe ModelWorker, :with_worker do
     expect(@callback_fired).to eq true
   end
 
-  it 'should be able to send and run jobs to particular workers'
+  describe 'Sending jobs to particular workers' do
+    before :each do
+      expect(App).to receive(:find_by).with({_id: app.id.to_s}).and_return(app)
+      allow(app).to receive(:broadcast).and_call_original
+    end
 
-  it 'using :optimal_pod should find the least burdened pod and send a job to it'
+    it 'should send jobs to the controller worker' do
+      expect(app).to receive(:broadcast).with({run_by:'controller'})
+      app.worker(:controller, block_until_complete: true).fake
+    end
+
+    it 'should send jobs to the dockerless_pod worker' do
+      expect(app).to receive(:broadcast).with({run_by:'dockerless_pod'})
+      app.worker(:dockerless_pod, block_until_complete: true).fake
+    end
+
+    it 'using :optimal_pod should find the least burdened pod and send a job to it' do
+      dockerless_pod = Pod.find_by docker_id: 'dockerless_pod'
+      fab_pod = Fabricate :pod, docker_id: 'fab_pod'
+      4.times{Fabricate :pea, app: app, pod: dockerless_pod}
+      3.times{Fabricate :pea, app: app, pod: fab_pod}
+      WorkerReceiver.new 'fab_pod'
+      expect(app).to receive(:broadcast).with({run_by:'fab_pod'})
+      app.worker(:optimal_pod, block_until_complete: true).fake
+    end
+  end
+
 
   describe 'Broadcasting messages' do
     it 'should broadcast messages and preserve history' do
@@ -56,11 +79,12 @@ describe ModelWorker, :with_worker do
       progress = []
       while line = JSON.parse(job_listener.gets) do
         progress << line
-        break if line['status'] == 'complete'
+        break if line['status'] == 'failed' || line['status'] == 'complete'
       end
       expect(progress).to eq [
         {"status"=>"queued"},
         {"status"=>"working"},
+        {"run_by"=>"controller", "status"=>"working"},
         {"body"=>"carpe", "status"=>"working"},
         {"body"=>"diem", "status"=>"working"},
         {"status"=>"complete"}
@@ -105,7 +129,7 @@ describe ModelWorker, :with_worker do
 
     it 'should set the parent job id against the model instance if passed as an argument' do
       app.current_job = uuid
-      app.worker(parent_job_id: 'manualID').fake
+      app.worker(block_until_complete:true, parent_job_id: 'manualID').fake
       expect(app.parent_job).to eq 'manualID'
     end
 
@@ -121,29 +145,40 @@ describe ModelWorker, :with_worker do
 
   describe "Catching exceptions" do
     it 'should catch exceptions and broadcast them' do
-      allow(app).to receive(:broadcast)
-      allow(App).to receive(:find_by).with({_id: app.id.to_s}).and_return(app)
-      # expect(app).to receive(:broadcast).with(
-      #   /ERROR: undefined method `non_existent_method'/
-      # )
-      job = {
-        current_job: uuid,
-        model: 'App',
-        id: app.id.to_s,
-        method: :non_existent_method
-      }.to_json
+      class App; def badtimes; raise 'HELL!' end end
       expect {
-        WorkerRunner.new(job)
-      }.to raise_error NoMethodError
+        app.worker(block_until_complete: true).badtimes
+      }.to raise_error Peas::ModelWorkerError
+      job_listener = client_connection
+      job_listener.puts "subscribe.job_progress.#{uuid} history"
+      progress = []
+      while line = JSON.parse(job_listener.gets) do
+        progress << line
+        break if line['status'] == 'failed' || line['status'] == 'complete'
+      end
+      failure_message = progress.delete_if{|p| p['status'] != 'failed'}.first['body']
+      expect(failure_message).to match /HELL! @ .*model_worker_spec.rb.* `badtimes'/
     end
 
-    it 'should propagate exceptions in non development environments' do
-      expect_any_instance_of(App).to receive(:broadcast).with(
-        /ERROR: undefined method `non_existent_method'/
-      )
-      expect {
-        ModelWorker.new.perform 'App', app.id.to_s, :non_existent_method
-      }.to raise_error NoMethodError
+    it 'should propagate exceptions to parent jobs' do
+      class App
+        def parent_worker
+          worker(block_until_complete: true).child_worker
+        end
+        def child_worker
+          raise 'MOAR HELZ'
+        end
+      end
+      parent_job = app.worker.parent_worker
+      job_listener = client_connection
+      job_listener.puts "subscribe.job_progress.#{parent_job} history"
+      progress = []
+      while line = JSON.parse(job_listener.gets) do
+        progress << line
+        break if line['status'] == 'failed' || line['status'] == 'complete'
+      end
+      failure_message = progress.delete_if{|p| p['status'] != 'failed'}.first['body']
+      expect(failure_message).to match /MOAR HELZ @ .*model_worker_spec.rb.* `child_worker'/
     end
   end
 
@@ -153,12 +188,6 @@ describe ModelWorker, :with_worker do
       app.stream_sh 'echo -n "hi"'
     end
 
-    it 'should return the total accumulated output stipped()' do
-      app.current_job = uuid
-      output = app.stream_sh 'echo "line1\nline2"'
-      expect(output).to eq("line1\nline2")
-    end
-
     it 'should stream commands by broadcasting every new line' do
       expect(app).to receive(:broadcast).exactly(2).times
       app.stream_sh 'echo "hi" && echo "hi"'
@@ -166,12 +195,6 @@ describe ModelWorker, :with_worker do
 
     it 'should propagate errors' do
       expect { app.stream_sh 'exit 1' }.to raise_error
-    end
-
-    it 'should raise a custom error message' do
-      app.current_job = uuid
-      expect(app).to receive(:raise).with(/Peas does not have permission to use docker/)
-      app.stream_sh 'echo "docker.sock: permission denied" && exit 1'
     end
 
     it 'should not broadcast ouput when sh() is used' do

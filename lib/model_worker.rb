@@ -7,7 +7,7 @@
 #      different machine.
 #   2. It can accept jobs created by 1). Whereas as 1) is most likely to occur inside a web request or
 #      console or rake task, 2) is triggered by a worker manager job queue.
-module ModelWorker
+module Peas::ModelWorker
   # The parent job ID. Used when nested, jobs-within-jobs are a created. Child jobs can then
   # broadcast their progress to the parent job and so any listeners to the parent job can hear the
   # progress of all decedent jobs.
@@ -47,22 +47,28 @@ module ModelWorker
     def create_job method, args
       # UUID's are guaranteed to be practically unique, as in *extremely* unlikely to collide
       new_job_id = SecureRandom.uuid
-      # If this is a nested job (ie called by another worker process)
+      # @is_parent_caller differentiates the parent job as originally called (outside a worker process) and the parent
+      # job as run by a worker process.
+      @is_parent_caller = false
       if @instance.parent_job
-        # Inherit the parent_job to send progress details back to. No need to set
+        # We're in a child job created by a worker process.
+        # Inherit the parent_job to send progress details back to parent job. No need to set
         # @instance.current_job as that is set by WorkerRunner
-        inherited_parent_job = @instance.parent_job
+        @inheritable_parent_job = @instance.parent_job
       else
-        # This is a parent job (though that doesn't imply children will be created), so set the
-        # parent and current job values to be the same.
-        inherited_parent_job = @instance.current_job = new_job_id
+        # We're in a parent job, either being called here for the first time or starting the first child job
+        if !@instance.current_job
+          # This is just the first call to a parent job (though that doesn't imply children will be created)
+          @is_parent_caller = true
+        end
+        @inheritable_parent_job = @instance.current_job = new_job_id
       end
       # Open up a pubsub publisher to add a job to the worker queue
       socket = Peas::Switchboard.connection
       socket.puts "publish.jobs_for.#{@pod_id}"
       # Package up the job
       job = {
-        parent_job: inherited_parent_job,
+        parent_job: @inheritable_parent_job,
         current_job: new_job_id,
         model: @instance.class.name,
         id: @instance._id.to_s,
@@ -96,14 +102,20 @@ module ModelWorker
           break if status == 'complete' || status == 'failed'
         end
         if status == 'failed'
-          raise "Worker for #{@instance.class.name}.#{method} failed. Job aborted. " + progress['body']
+          if @is_parent_caller
+            # Only raise an error in the parent worker that started off the whole process
+            error_message = "Worker for #{@instance.class.name}.#{method} failed. Job aborted. " + progress['body']
+            raise Peas::ModelWorkerError, error_message
+          else
+            @instance.broadcast({status: 'failed', body: 'Child worker failed, so aborting parent worker.'})
+          end
         elsif status == 'complete'
           # Note that the `status` we're checking here was set by a worker process, so it's not within the same scope
           # (or even the same machine!), so we need to set the status here for any broadcasts that occur in the `yield`
           @instance.worker_status = 'callback'
           yield if block_given?
         else
-          raise "Unexpected status (#{status}) received from job_progress channel"
+          raise Peas::ModelWorkerError, "Unexpected status (#{status}) received from job_progress channel"
         end
       end
       new_job_id
@@ -152,10 +164,10 @@ module ModelWorker
       next if !job
       socket = Peas::Switchboard.connection
       socket.puts "publish.job_progress.#{job} history"
-      # Don't update the parent job's status with the current job's status.
-      # All we want to do is make sure that parent job gets progress details from child jobs and nothing more.
-      if (job == @parent_job) && (@parent_job != @current_job)
-          message.delete :status
+      # Don't update the parent job's status with the current job's status, unless it's to notify of failure.
+      # All we want to do is make sure that parent job gets human-readable progress details from child jobs.
+      if (job == @parent_job) && (@current_job != @parent_job)
+          message.delete :status if message[:status] != 'failed'
       end
       socket.puts message.to_json.force_encoding("UTF-8") if message != {}
       socket.close
@@ -192,29 +204,18 @@ module ModelWorker
     # Redirects STDOUT and STDERR to STDOUT
     IO.popen("#{command} 2>&1", chdir: Peas.root) do |data|
       while line = data.gets
-        if line =~ /docker.sock: permission denied/
-          broadcastable = true
-          @custom_error = "The user running Peas does not have permission to use docker. You most" +
-            "likely need to add your user to the docker group, eg: \`gpasswd -a <username> " +
-            "docker\`. And remember to log in and out to enable the new group."
-        end
-        accumulated += line
         broadcast line if broadcastable
       end
       data.close
       if $?.to_i > 0
-        if @custom_error
-          raise @custom_error
-        else
-          broadcast accumulated
-          raise "#{command} exited with non-zero status"
-        end
+        broadcast accumulated
+        raise Peas::ShellError, "#{command} exited with non-zero status"
       end
     end
     return accumulated.strip
   end
 
-  # Same as stream_sh but doesn't broadcast the ouput to Sidekiq::Status
+  # Same as stream_sh but doesn't broadcast the ouput
   def sh command
     stream_sh command, false
   end
