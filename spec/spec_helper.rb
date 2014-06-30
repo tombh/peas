@@ -13,18 +13,21 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Mongoid.default_session.drop
-    Pod.create docker_id: Peas.current_docker_host_id
   end
 
   config.before(:each) do
+    Mongoid.default_session.drop
     allow(Docker).to receive(:version).and_return({'Version' => Peas::DOCKER_VERSION})
     Pod.destroy_all
     Pod.create docker_id: Peas.current_docker_host_id
   end
 
-  config.after(:each) do
-    Mongoid.default_session.drop
-  end
+  # config.after(:each) do
+  #   begin
+  #   rescue => e
+  #     puts e.backtrace
+  #   end
+  # end
 
   config.before(:each, :with_worker) do
     Celluloid.boot
@@ -38,9 +41,16 @@ RSpec.configure do |config|
 
   config.after(:each, :with_worker) do
     @server.terminate
-    # @controller_worker.terminate
-    # @pod_worker.terminate
     Celluloid::Actor.clear_registry
+    Celluloid.shutdown_timeout = 0.02
+    Celluloid.shutdown
+  end
+
+  config.before(:each, :celluloid) do
+    Celluloid.boot
+  end
+
+  config.after(:each, :celluloid) do
     Celluloid.shutdown_timeout = 0.02
     Celluloid.shutdown
   end
@@ -100,7 +110,7 @@ Dir["#{Peas.root}/switchboard/**/*.rb"].each { |f| require f }
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
 SWITCHBOARD_TEST_PORT = 79345
 
-Celluloid.logger = nil
+# Celluloid.logger = nil
 # Celluloid.shutdown_timeout = 2
 
 def client_connection

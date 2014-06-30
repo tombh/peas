@@ -1,26 +1,17 @@
 require 'spec_helper'
 require 'switchboard/server/lib/switchboard_server'
 
-describe 'Switchboard' do
-
-  before :each do
-    Celluloid.boot
-  end
-
-  after :each do
-    Celluloid.shutdown
-  end
+describe 'Switchboard', :celluloid do
 
   describe SwitchboardServer do
     before :each do
-      @server = SwitchboardServer.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
+      @server = switchboard_server
       sleep 0.05
       @client = client_connection
     end
 
     after :each do
-      @client.close
-      @server.terminate
+      # @server.terminate
     end
 
     it 'should accept a basic connection' do
@@ -98,7 +89,7 @@ describe 'Switchboard' do
     describe 'Watching and responding to activity/inactivity' do
       it 'should close a long running connection after an inactivity timeout' do
         module Commands
-          def dose; sleep @header[1].to_i / 1000; end
+          def dose; sleep @command[1].to_i / 1000; end
         end
         with_socket_pair do |client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)

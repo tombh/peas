@@ -58,7 +58,7 @@ describe App do
 
     it "should broadcast the app's URI for a custom domain" do
       Fabricate :setting, key: 'domain', value: 'custom-domain.com'
-      expect(app).to receive(:broadcast).at_least(:once).with(no_args()).and_call_original
+      allow(app).to receive(:broadcast).and_call_original
       expect(app).to receive(:broadcast).with(
         /       Deployed to http:\/\/#{app.name}\.custom-domain\.com/
       )

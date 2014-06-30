@@ -19,7 +19,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
       - '90'
       Connection:
@@ -27,12 +27,12 @@ http_interactions:
     body:
       encoding: UTF-8
       string: |
-        {"Id":"a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a","Warnings":null}
+        {"Id":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Warnings":null}
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/start
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/start
     body:
       encoding: UTF-8
       string: '{"PublishAllPorts":"true"}'
@@ -47,7 +47,7 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
       - '0'
       Content-Type:
@@ -58,10 +58,10 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -78,21 +78,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1872'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a","Created":"2014-06-08T01:13:16.34895828Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"a69c4c32f99e","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12618,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.451650132Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.18","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49259"}]}},"ResolvConfPath":"/var/lib/docker/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/resolv.conf","HostnamePath":"/var/lib/docker/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/hostname","HostsPath":"/var/lib/docker/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/hosts","Name":"/backstabbing_lumiere","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/921b83bbf5b74768bca0a23e8739334b36c2c95ca16b912002bec12850c59679"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -109,80 +109,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1872'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a","Created":"2014-06-08T01:13:16.34895828Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"a69c4c32f99e","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12618,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.451650132Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.18","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49259"}]}},"ResolvConfPath":"/var/lib/docker/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/resolv.conf","HostnamePath":"/var/lib/docker/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/hostname","HostsPath":"/var/lib/docker/containers/a69c4c32f99eba099123101a06f2295d052420628a2d6f0640c63fa02367d66a/hosts","Name":"/backstabbing_lumiere","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/921b83bbf5b74768bca0a23e8739334b36c2c95ca16b912002bec12850c59679"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
-- request:
-    method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/create
-    body:
-      encoding: UTF-8
-      string: '{"Cmd":["/bin/bash","-c","/start web"],"Image":"node-js-sample","Env":["PORT=5000"],"ExposedPorts":{"5000":{}}}'
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.11.0
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 201
-      message: 
-    headers:
-      Content-Type:
-      - application/json
-      Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
-      Content-Length:
-      - '90'
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: |
-        {"Id":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Warnings":null}
-    http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
-- request:
-    method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/start
-    body:
-      encoding: UTF-8
-      string: '{"PublishAllPorts":"true"}'
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.11.0
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 204
-      message: 
-    headers:
-      Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
-      Content-Length:
-      - '0'
-      Content-Type:
-      - text/plain; charset=utf-8
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: ''
-    http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -199,21 +140,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1866'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -230,21 +171,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1866'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -261,21 +202,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1866'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -292,21 +233,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1866'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -323,21 +264,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1866'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -354,21 +295,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1866'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -385,21 +326,21 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1866'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/json
     body:
       encoding: US-ASCII
       string: ''
@@ -416,78 +357,16 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
+      - Mon, 30 Jun 2014 20:08:52 GMT
       Content-Length:
-      - '1866'
+      - '1853'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: '{"ID":"c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04","Created":"2014-06-30T20:08:51.902325551Z","Path":"/bin/bash","Args":["-c","/start
+        web"],"Config":{"Hostname":"c9670044ba23","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
+        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":18104,"ExitCode":0,"StartedAt":"2014-06-30T20:08:52.172581539Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"6aa9911dbfbccf4cb5aef6338c3550e5ad5fe61ce77fc4668e9b12e21edf5e07","NetworkSettings":{"IPAddress":"172.17.0.2","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49153"}]}},"ResolvConfPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/resolv.conf","HostnamePath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hostname","HostsPath":"/var/lib/docker/containers/c9670044ba23d4415a81ea22459fb2be14bb8e3eb90c2b4bec4dc46644b84c04/hosts","Name":"/silly_tesla","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/27fe6a2d9734cf69f2fc7ce924ea0d8d2ce26352f1ab50f15c973ce85d55f950"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
-- request:
-    method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.11.0
-      Content-Type:
-      - text/plain
-  response:
-    status:
-      code: 200
-      message: 
-    headers:
-      Content-Type:
-      - application/json
-      Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
-      Content-Length:
-      - '1866'
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
-    http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
-- request:
-    method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/json
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.11.0
-      Content-Type:
-      - text/plain
-  response:
-    status:
-      code: 200
-      message: 
-    headers:
-      Content-Type:
-      - application/json
-      Date:
-      - Sun, 08 Jun 2014 01:13:16 GMT
-      Content-Length:
-      - '1866'
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: '{"ID":"2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9","Created":"2014-06-08T01:13:16.477306846Z","Path":"/bin/bash","Args":["-c","/start
-        web"],"Config":{"Hostname":"2b4474f2468c","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":{"5000":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PORT=5000","FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","/start
-        web"],"Image":"node-js-sample","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":true,"Pid":12663,"ExitCode":0,"StartedAt":"2014-06-08T01:13:16.556191803Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"011240b0d57f30b61365d0d8c168a2fe4a6d8395d41ef92d8a46eb6a7a715eed","NetworkSettings":{"IPAddress":"172.17.0.19","IPPrefixLen":16,"Gateway":"172.17.42.1","Bridge":"docker0","PortMapping":null,"Ports":{"5000":[{"HostIp":"0.0.0.0","HostPort":"49260"}]}},"ResolvConfPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/resolv.conf","HostnamePath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hostname","HostsPath":"/var/lib/docker/containers/2b4474f2468c373f88cd0c8b0bbc8bdf49c26406c496032eddde1a93a34bf8a9/hosts","Name":"/cranky_turing","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/var/lib/docker/vfs/dir/ae9989e685ca3bc0747d961f8a9633d89248352f5afe217dd3b9b7bdfb6123e3"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":null,"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":true,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
-    http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:13:16 GMT
+  recorded_at: Mon, 30 Jun 2014 20:08:52 GMT
 recorded_with: VCR 2.9.2

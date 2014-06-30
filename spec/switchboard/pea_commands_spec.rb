@@ -3,19 +3,10 @@ require 'switchboard/server/lib/connection'
 
 Dir["#{Peas.root}/switchboard/clients/**/*.rb"].each { |f| require f }
 
-describe 'Switchboard Pea Commands' do
-
-  before :each do
-    Celluloid.boot
-  end
-
-  after :each do
-    Celluloid.shutdown
-  end
+describe 'Switchboard Pea Commands', :celluloid do
 
   describe 'Server Commands' do
     describe 'Logs' do
-      include_context :docker_creation_mock
 
       it 'should receive and write log lines to DB' do
         app = Fabricate :app

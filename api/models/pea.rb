@@ -68,12 +68,12 @@ class Pea
   end
 
   # Creates a docker container and the pea DB record representing it. Use instead of Pea.create()
-  def self.spawn properties, block_until_complete: true, parent_job: nil, &block
+  def self.spawn properties, block_until_complete: true, parent_job_id: nil, &block
     pea = Pea.create!(properties)
     pea.worker(
       :optimal_pod,
       block_until_complete: block_until_complete,
-      parent_job: parent_job,
+      parent_job_id: parent_job_id,
       &block
     ).spawn_container
   end
