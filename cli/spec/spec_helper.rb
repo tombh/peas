@@ -9,10 +9,21 @@ ENV['GLI_ENV'] = 'test'
 ROOT = File.join(File.expand_path(File.dirname(__FILE__)), '..')
 $LOAD_PATH.unshift(File.join(ROOT, 'lib'))
 TEST_DOMAIN = 'http://localhost:4000'
+SWITCHBOARD_TEST_PORT = 79345
 
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
+
+  config.before(:each) do
+    stub_const('Peas::SWITCHBOARD_PORT', SWITCHBOARD_TEST_PORT)
+  end
+
+  config.before(:each, :with_socket) do
+    @socket = double 'TCPSocket'
+    expect(@socket).to receive(:puts).with('subscribe.job_progress.123')
+    allow(TCPSocket).to receive(:new).and_return(@socket)
+  end
 end
 
 # Execute a block that triggers STDOUT and test output

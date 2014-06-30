@@ -25,7 +25,7 @@ class API
     # Successful responses
     if json.has_key? 'job'
       # Long-running jobs need to stream from the Switchboard server
-      stream_output "subscribe.job_progress.#{json['job']}"
+      API.stream_output "subscribe.job_progress.#{json['job']}"
     else
       # Check CLI client is up to date.
       # Only check major and minor versions
@@ -54,7 +54,7 @@ class API
   end
 
   # Stream data from the Switchboard server, usually the progress of a worker job
-  def stream_output switchboard_command
+  def self.stream_output switchboard_command
     socket = API.switchboard_connection
     socket.puts switchboard_command
     begin

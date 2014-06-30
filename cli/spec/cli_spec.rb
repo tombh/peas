@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe 'Peas CLI' do
   before :each do
-    Git.stub(:sh).and_return(nil)
-    Git.stub(:remote).and_return('git@github.com:test/test.git')
-    Git.stub(:first_sha).and_return('fakesha')
-    API.any_instance.stub(:sleep).and_return(nil)
-    Peas.stub(:config_file).and_return('/tmp/.peas')
+    allow(Git).to receive(:sh).and_return(nil)
+    allow(Git).to receive(:remote).and_return('git@github.com:test/test.git')
+    allow(Git).to receive(:first_sha).and_return('fakesha')
+    allow_any_instance_of(API).to receive(:sleep).and_return(nil)
+    allow(Peas).to receive(:config_file).and_return('/tmp/.peas')
     File.delete '/tmp/.peas' if File.exists? '/tmp/.peas'
   end
 
@@ -36,23 +36,19 @@ describe 'Peas CLI' do
       expect(output).to eq "App 'test' successfully created\n"
     end
 
-    it 'should deploy an app' do
+    it 'should deploy an app', :with_socket do
       stub_request(:get, /deploy/).to_return(body: '{"job": "123"}')
-      stub_request(:get, /status/).to_return(
-        {body: '{"status": "working", "output": "deploying\n"}'}
-      )
-      output = cli ['deploy']
-      expect(output).to eq "deploying\n"
+      allow(@socket).to receive(:gets).and_return("doing", "something", "done", false)
+      output = cli %w(deploy)
+      expect(output).to eq "doing\nsomething\ndone\n"
     end
 
-    it 'should scale an app' do
+    it 'should scale an app', :with_socket do
       stub_request(
         :put,
         TEST_DOMAIN + '/app/fakesha/scale?scaling_hash=%7B%22web%22:%223%22,%22worker%22:%222%22%7D'
       ).to_return(body: '{"job": "123"}')
-      stub_request(:get, /status/).to_return(
-        {body: '{"status": "working", "output": "scaling\n"}'}
-      )
+      allow(@socket).to receive(:gets).and_return('scaling', false)
       output = cli %w(scale web=3 worker=2)
       expect(output).to eq "scaling\n"
     end
@@ -93,15 +89,14 @@ describe 'Peas CLI' do
   end
 
   it 'should retrieve and output a long-running command' do
-    stub_request(:get, /deploy/).to_return(body: '{"job": "123"}')
-    stub_request(:get, /status/).to_return(
-      {body: '{"status": "working", "output": "doing\n"}'},
-      {body: '{"status": "working", "output": "doing\nsomething\n"}'},
-      {body: '{"status": "working", "output": "doing\nsomething\n"}'},
-      {body: '{"status": "complete", "output": "doing\nsomething\ndone\n"}'}
-    )
-    output = cli ['deploy']
-    expect(output).to eq "doing\nsomething\ndone\n"
+    socket = double 'TCPSocket'
+    expect(socket).to receive(:puts).with('subscribe.job_progress.123')
+    allow(socket).to receive(:gets).and_return("doing", "something", "done", false)
+    allow(TCPSocket).to receive(:new).and_return(socket)
+    expect(API).to receive(:puts).with "doing"
+    expect(API).to receive(:puts).with "something"
+    expect(API).to receive(:puts).with "done"
+    API.stream_output "subscribe.job_progress.123"
   end
 
   it 'should show a warning when there is a version mismatch' do
