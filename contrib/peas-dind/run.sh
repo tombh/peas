@@ -20,8 +20,9 @@ fi
 docker run \
   -it \
   --privileged \
+  --rm=true \
   --volumes-from peas-data \
-  -v $PEAS_ROOT:/home/peas \
+  -v $PEAS_ROOT:/home/peas/repo \
   -p $PORT:4000 \
   -p 9345:9345 \
   tombh/peas

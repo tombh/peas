@@ -11,7 +11,7 @@ cannot be set in a Dockerfile. 2) AUF mounts cannot be created inside an existin
 `/vare/lib/docker` has to exist as a Docker volume (which basically means that any files in that folder cannot be
 committed to new images). Therefore `progrium/buildstep` is installed via `wrapdocker` when `peas-dind` is first run.
 
-To build goto the project root and issue: `docker build -t tombh/peas .`
+To build go to the project root and issue: `docker build -t tombh/peas .`
 
 ##Running
 If you just want to run the image and don't care what's going on under the hood then run;

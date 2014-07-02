@@ -1,9 +1,10 @@
 # Inspired by @jpetazzo's Docker in Docker: https://github.com/jpetazzo/dind
 
-FROM ubuntu:raring
+FROM ubuntu:14.04
 MAINTAINER tom@tombh.co.uk
 
 # General Peas deps
+RUN apt-get update
 RUN apt-get install -qqy software-properties-common
 RUN apt-add-repository ppa:brightbox/ruby-ng -y
 RUN apt-get update
@@ -23,13 +24,16 @@ RUN mkdir -p /data/db
 
 # Peas-specific deps
 RUN mkdir /root/.ssh -p && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
-ADD ./ /home/peas
+ADD ./ /home/peas/repo
 RUN gem install bundler
-RUN cd /home/peas && bundle install
 
 # DinD magic
-RUN apt-get install -qqy iptables ca-certificates lxc aufs-tools
-ADD https://get.docker.io/builds/Linux/x86_64/docker-0.9.0 /usr/local/bin/docker
-RUN chmod +x /usr/local/bin/docker
+RUN apt-get install -qqy iptables ca-certificates lxc
+RUN apt-get install -qqy apt-transport-https
+RUN echo deb https://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+RUN apt-get update -qq
+RUN apt-get install -qqy lxc-docker-1.0.1
+
 VOLUME /var/lib/docker
-CMD /home/peas/contrib/peas-dind/wrapdocker
+CMD ["/home/peas/repo/contrib/peas-dind/wrapdocker"]
