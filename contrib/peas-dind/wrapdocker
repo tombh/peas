@@ -107,7 +107,8 @@ fi
 
 cd /home/peas/repo
 bundle install --binstubs /var/lib/gems/binstubs
-bundle exec /var/lib/gems/binstubs/foreman start -f ./Procfile &
+PATH=$PATH:/var/lib/gems/binstubs
+bundle exec foreman start -f ./Procfile &
 
 sleep 5
 exec bash

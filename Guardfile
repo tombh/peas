@@ -56,7 +56,7 @@ end
 module ::Guard
   class SwitchboardServer < BaseGuard
     def command
-      'bundle exec ./switchboard/bin/server'
+      'bundle exec ./bin/switchboard'
     end
   end
 end
@@ -67,7 +67,7 @@ end
 module ::Guard
   class SwitchboardClients < BaseGuard
     def command
-      'bundle exec ./switchboard/bin/clients'
+      'bundle exec ./bin/gardener'
     end
   end
 end

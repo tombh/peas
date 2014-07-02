@@ -29,5 +29,5 @@ task :console do |t, args|
   exec "pry -r ./config/boot"
 end
 
-require 'rubocop/rake_task'
-Rubocop::RakeTask.new(:rubocop)
+# require 'rubocop/rake_task'
+# Rubocop::RakeTask.new(:rubocop)
