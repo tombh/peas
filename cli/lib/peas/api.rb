@@ -58,8 +58,15 @@ class API
     socket = API.switchboard_connection
     socket.puts switchboard_command
     begin
-      while line = socket.gets
-        puts line
+      while line = JSON.parse(socket.gets)
+        if line.has_key? 'status'
+          if line['status'] == 'failed'
+            raise line['body']
+          elsif line['status'] == 'complete'
+            break
+          end
+        end
+        puts line['body']
       end
     rescue Interrupt, Errno::ECONNRESET
     end
