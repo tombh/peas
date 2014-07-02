@@ -9,12 +9,11 @@ Gem::Specification.new do |s|
   s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.require_paths = ["lib"]
   s.authors = ["Tom Buckley-Houston"]
-  s.date = "2014-06-14"
+  s.date = "2014-07-02"
   s.description = "Peas is an open source Heroku-style PaaS written in Ruby and using Docker"
   s.email = "tom@tombh.co.uk"
-  s.executables = ["peas", "peas-dev"]
+  s.executables = ["peas"]
   s.extra_rdoc_files = [
     "README.md"
   ]
@@ -41,7 +40,8 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/tombh/peas"
   s.licenses = ["GPL v2"]
-  s.rubygems_version = "2.2.2"
+  s.require_paths = ["lib"]
+  s.rubygems_version = "2.1.9"
   s.summary = "CLI client for Peas"
 
   if s.respond_to? :specification_version then
