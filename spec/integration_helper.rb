@@ -129,6 +129,7 @@ RSpec.configure do |config|
         --privileged \
         -i \
         --name peas-test \
+        --rm=true \
         --volumes-from peas-data-test \
         -v #{Peas.root}:/home/peas \
         -p 4004:4000 \
