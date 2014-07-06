@@ -117,6 +117,29 @@ describe Peas::ModelWorker, :with_worker do
       end
       expect(progress).to include({"body"=>"it's a long way down"})
     end
+
+    it 'should broadcast to the parent when child is created with a manually set parent job id' do
+      pea = Fabricate :pea, app: app
+      class App
+        def parent_worker
+          Pea.first.worker(block_until_complete: true, parent_job_id: self.parent_job).child_worker
+        end
+      end
+      class Pea
+        def child_worker
+          broadcast "I was told by the programmer who my parent is"
+        end
+      end
+      parent_job = app.worker(block_until_complete: true).parent_worker
+      job_listener = client_connection
+      job_listener.puts "subscribe.job_progress.#{parent_job} history"
+      progress = []
+      while line = JSON.parse(job_listener.gets) do
+        progress << line
+        break if line['status'] == 'complete'
+      end
+      expect(progress).to include({"body"=>"I was told by the programmer who my parent is"})
+    end
   end
 
   describe 'Setting the job id' do

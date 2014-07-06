@@ -9,7 +9,6 @@ cache: bundler
 
 services:
   - mongodb
-  - redis-server
 
 install:
   - export BUNDLE_GEMFILE=$PWD/Gemfile

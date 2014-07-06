@@ -36,7 +36,8 @@ class PeaLogsWatcher
       stderr: true,
     ) do |stream, chunk|
       chunk.lines.each do |line|
-        socket.puts line.strip!
+        line = line.strip!
+        socket.puts line if !line.empty?
       end
     end
 

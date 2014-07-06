@@ -27,12 +27,8 @@ Vagrant.configure('2') do |config|
       git \
       lxc-docker \
       mongodb \
-      redis-server \
       ruby1.9.1-dev \
       libssl-dev
-    # Redis might boot before networking, so get it to start later during boot
-    sudo update-rc.d redis-server remove
-    sudo update-rc.d redis-server start 80 2 3 4 5 . stop 20 0 1 6 .
     sudo gpasswd -a vagrant docker
     sudo su - vagrant
     docker pull progrium/buildstep

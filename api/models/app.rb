@@ -73,6 +73,7 @@ class App
   # Fetch the latest code, create an image and fire up the necessary containers to make an app
   # pubicly accessible
   def deploy
+    broadcast "Deploying #{name}" if @current_job
     worker.build do
       if peas.count == 0
         scaling_profile = {web: 1}
@@ -92,7 +93,6 @@ class App
   # process types.
   # To find out more about Buildstep see: https://github.com/progrium/buildstep
   def build
-
     # Prepare the repo for Buildstep. Keeping it in a separate function keeps build() simpler and
     # helps with testing
     _fetch_and_tar_repo
@@ -101,7 +101,7 @@ class App
     # There's an issue with Excon's buffer so we need to manually lower the size of the chunks to
     # get a more interactive-style attachment.
     # Follow the issue here: https://github.com/swipely/docker-api/issues/77
-    conn_interactive = Docker::Connection.new(Peas::DOCKER_SOCKET, {:chunk_size => 1})
+    conn_interactive = Docker::Connection.new(Peas::DOCKER_SOCKET, {:chunk_size => 1, :read_timeout => 1000000})
     builder = Docker::Container.create(
       {
         'Image' => 'progrium/buildstep',
@@ -129,7 +129,7 @@ class App
       # Save the error for later, because we still need to clean up the container
       build_error = chunk if stream == :stderr
       last_message = chunk # In case error isn't sent through :stderr
-      broadcast chunk
+      broadcast chunk.encode('utf-8', :invalid => :replace, :undef => :replace, :replace => '')
     end
 
     # Commit the container with the newly built app as a new image named after the app

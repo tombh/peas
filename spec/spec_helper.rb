@@ -110,7 +110,7 @@ Dir["#{Peas.root}/switchboard/**/*.rb"].each { |f| require f }
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
 SWITCHBOARD_TEST_PORT = 79345
 
-Celluloid.logger = nil
+# Celluloid.logger = nil
 # Celluloid.shutdown_timeout = 2
 
 def client_connection

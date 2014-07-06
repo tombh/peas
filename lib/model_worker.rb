@@ -61,8 +61,9 @@ module Peas::ModelWorker
           # This is just the first call to a parent job (though that doesn't imply children will be created)
           @is_parent_caller = true
         end
-        @inheritable_parent_job = @instance.current_job = new_job_id
+        @inheritable_parent_job = new_job_id
       end
+      @instance.current_job = new_job_id
       # Open up a pubsub publisher to add a job to the worker queue
       socket = Peas::Switchboard.connection
       socket.puts "publish.jobs_for.#{@pod_id}"
@@ -149,27 +150,24 @@ module Peas::ModelWorker
   # Returns a job ID
   def worker pod_id = :controller, block_until_complete: false, parent_job_id: nil
     pod_id = Pod.optimal_pod if pod_id == :optimal_pod
-    self.parent_job = parent_job_id if parent_job_id
+    @parent_job = parent_job_id if parent_job_id
     # ModelProxy exposes a method_missing() method to catch the chained methods
     ModelProxy.new pod_id, block_until_complete, self
   end
 
   # Send status updates for the current and pareant jobs, so that other processes can listen to progress
   def broadcasters message
-    jobs = []
-    jobs << @current_job
-    # No point broadcasting to both jobs if they're actually the same job
-    jobs << @parent_job if @parent_job != @current_job
-    jobs.each do |job|
+    # Broadcast to current and parent. But only both if they're actually different jobs
+    [@current_job, @parent_job].uniq.each do |job|
       next if !job
       socket = Peas::Switchboard.connection
       socket.puts "publish.job_progress.#{job} history"
       # Don't update the parent job's status with the current job's status, unless it's to notify of failure.
       # All we want to do is make sure that parent job gets human-readable progress details from child jobs.
       if (job == @parent_job) && (@current_job != @parent_job)
-          message.delete :status if message[:status] != 'failed'
+        message.delete :status if message[:status] != 'failed'
       end
-      socket.puts message.to_json.force_encoding("UTF-8") if message != {}
+      socket.puts message.to_json if message != {}
       socket.close
     end
   end

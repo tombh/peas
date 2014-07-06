@@ -6,7 +6,9 @@ module Commands
     app = pea.app
     info "Request to archive logs for #{pea.name}@#{app.name}"
     loop do
-      app.log read_line.to_s.chomp.strip, pea.name
+      line = read_line.to_s.chomp.strip
+      app.log(line, pea.name) if !line.empty?
+      sleep 0.01
     end
   end
 end

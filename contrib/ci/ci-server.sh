@@ -10,8 +10,8 @@ trap finish EXIT
 # Don't forget to setup the Peas repo with:
 # git config --add remote.origin.fetch '+refs/pull/*/head:refs/pull/origin/*'
 # It brings down pull requests.
-# And install tombh/peas, bundler, mongodb and redis-server too.
-# And give the ci user the docker group: `gpasswd -a ci docker`
+# And installs tombh/peas, bundler and mongodb.
+# And gives the ci user the docker group: `gpasswd -a ci docker`
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )/ci-server.sh
 PEAS_ROOT="$(dirname $SCRIPTPATH)/../.."

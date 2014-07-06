@@ -85,6 +85,7 @@ class Pea
       # The base Docker image to use. In this case the prebuilt image created by the buildstep
       # process
       'Image' => self.app.name,
+      'Name' => "pea::#{full_name}",
       # Global environment variables to pass and make available to the app
       'Env' => ['PORT=5000'].concat(self.app.config_for_docker),
       # Expose port 5000 from inside the container to the host machine

@@ -66,7 +66,7 @@ class API
             break
           end
         end
-        puts line['body']
+        puts line['body'] if line['body']
       end
     rescue Interrupt, Errno::ECONNRESET
     end

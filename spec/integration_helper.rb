@@ -79,7 +79,6 @@ class ContainerConnection
   def env_reset
     # TODO: need a way to check if these commands were successful
     bash "mongo peas --eval 'db.dropDatabase();'"
-    bash "redis-cli FLUSHALL"
     bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
     sleep 2
     # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
@@ -129,9 +128,8 @@ RSpec.configure do |config|
         --privileged \
         -i \
         --name peas-test \
-        --rm=true \
         --volumes-from peas-data-test \
-        -v #{Peas.root}:/home/peas \
+        -v #{Peas.root}:/home/peas/repo \
         -p 4004:4000 \
         -p 7345:9345 \
         -e RACK_ENV=production \
