@@ -62,8 +62,8 @@ describe Peas::ModelWorker, :with_worker do
     it 'using :optimal_pod should find the least burdened pod and send a job to it' do
       dockerless_pod = Pod.find_by docker_id: 'dockerless_pod'
       fab_pod = Fabricate :pod, docker_id: 'fab_pod'
-      4.times{Fabricate :pea, app: app, pod: dockerless_pod}
-      3.times{Fabricate :pea, app: app, pod: fab_pod}
+      4.times{|i| Fabricate :pea, app: app, pod: dockerless_pod, docker_id: "dp#{i}"}
+      3.times{|i| Fabricate :pea, app: app, pod: fab_pod, docker_id: "fp#{i}"}
       WorkerReceiver.new 'fab_pod'
       expect(app).to receive(:broadcast).with({run_by:'fab_pod'})
       app.worker(:optimal_pod, block_until_complete: true).fake

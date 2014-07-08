@@ -45,7 +45,7 @@ Peas is at a very early stage and has only been tested in development environmen
 for installing on cloud services such as EC2 and Digital Ocean will come soon. Meanwhile you can try
 using the Docker method of installation on cloud servers.
 
-##Local
+**Local development environment**    
 This is the preferred method for local development, but note that local development is also possible
 with the Docker installation method.
 You will need;
@@ -61,7 +61,7 @@ bundle exec guard
 
 The Peas API will be available at `vcap.me:4000`.
 
-##Docker
+**Docker**    
 This installation method will work anywhere that Docker can be installed, so both locally and on
 remote servers like AWS and Digital Ocean (though this hasn't been tested yet, please let us know if
 you have success installing Peas on a remote server).
@@ -71,7 +71,7 @@ To install and boot just use `./contrib/peas-dind/run.sh`. For a detailed explan
 
 The Peas API will be available at `vcap.me:4000`.
 
-##Vagrant
+**Vagrant**    
 Most likely useful to you if you are on Windows. There is a Vagrantfile in the root that attempts to
 get most of the setup done for you:
 ```bash
@@ -83,7 +83,7 @@ foreman start
 
 The Peas API will be available at `peas.local:4000`.
 
-##CLI client
+**CLI client**    
 To interact with the Peas API you will need to install the command line client:
 `gem install peas-cli`
 
@@ -132,3 +132,9 @@ settings - Set Peas global settings
   * Installation for production environments like AWS and Digital Ocean.
   * Users. Peas currently has absolutely no concept of users :/
   * Nodes, or 'pods' if we're keeping with the 'pea' theme. Therefore distributing containers over multiple servers.
+
+##Video Presentation (1h16m)
+Given at Bristol Ruby User Group on June 26th 2014    
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=Y5vb5YEatnw
+" target="_blank"><img src="http://img.youtube.com/vi/Y5vb5YEatnw/0.jpg"
+alt="Peas presentation" width="480" border="10" /></a>

@@ -57,10 +57,9 @@ describe 'Switchboard Pea Commands', :celluloid do
           expect(fresh).to include 'app[testing]: New logs!'
         end
       end
-
-      it 'should pubsub'
-
     end
+
+    it 'should pubsub'
   end
 
   describe 'Client Commands' do

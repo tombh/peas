@@ -66,8 +66,8 @@ describe App do
     end
 
     it "should rescale processes to the app's existing scaling profile" do
-      3.times { Fabricate :pea, app: app, process_type: 'web' }
-      2.times { Fabricate :pea, app: app, process_type: 'worker' }
+      3.times{|i| Fabricate :pea, app: app, process_type: 'web', docker_id: "web#{i}" }
+      2.times{|i| Fabricate :pea, app: app, process_type: 'worker', docker_id: "worker#{i}" }
       expect(app).to receive(:scale).with(
         { 'web' => 3, 'worker' => 2 }, 'deploy'
       )
