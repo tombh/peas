@@ -20,7 +20,11 @@ class LogsArchiver
       docker_ids.each do |id|
         # If the pea is not being watched then start a new thread to watch it and stream to the DB
         if !id.in? @watched
-          pea = Pea.find_by docker_id: id
+          begin
+            pea = Pea.find_by docker_id: id
+          rescue Mongoid::Errors::DocumentNotFound
+            warn "Couldn't find a corresponding DB record for Docker container #{id}"
+          end
           watch pea
         end
       end

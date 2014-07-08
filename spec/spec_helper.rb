@@ -47,7 +47,7 @@ RSpec.configure do |config|
   config.before(:each) do
     allow(Docker).to receive(:version).and_return({'Version' => Peas::DOCKER_VERSION})
     Pod.destroy_all
-    Pod.create docker_id: Peas.current_docker_host_id
+    Pod.create_stub
   end
 
   config.after(:each) do

@@ -37,10 +37,6 @@ class Pea
   # The identifying number for a process_type, eg; web.2 or worker.3
   field :process_number, type: Integer
 
-  # The hostname of the machine upon which the Docker container resides. This allows peas to be
-  # arbitrarily distributed across multiple machines in a cluster. WOW SUCH ELASTIC
-  field :host, type: String
-
   # A pea must belong to an app
   belongs_to :app
 
@@ -48,6 +44,7 @@ class Pea
   belongs_to :pod
 
   validates_presence_of :app
+  validates_uniqueness_of :docker_id
 
   def initialize(attrs = nil)
     super

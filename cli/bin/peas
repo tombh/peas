@@ -36,7 +36,7 @@ on_error do |exception|
   # Show a custom error message with backtrace if it's not a GLI error
   if exception.class.to_s.split('::').first != 'GLI'
     if exception.class == Errno::ECONNREFUSED
-      Peas.error_message "Couldn't connect to the Peas API. The current endpoint is '#{Peas.config['domain']}', make " +
+      Peas.error_message "Couldn't connect to the Peas API. The current endpoint is '#{Peas.api_domain}', make " +
         "sure it is up and accessible."
     else
       Peas.error_message "Unexpected error: #{exception.class}"

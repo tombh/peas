@@ -25,7 +25,7 @@ class API
     # Successful responses
     if json.has_key? 'job'
       # Long-running jobs need to stream from the Switchboard server
-      API.stream_output "subscribe.job_progress.#{json['job']}"
+      API.stream_job json['job']
     else
       # Check CLI client is up to date.
       # Only check major and minor versions
@@ -53,20 +53,31 @@ class API
     TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
   end
 
-  # Stream data from the Switchboard server, usually the progress of a worker job
+  # Stream the output of a Switchboard job
+  def self.stream_job job
+    API.stream_output "subscribe.job_progress.#{job}" do |line|
+      if line.has_key? 'status'
+        if line['status'] == 'failed'
+          raise line['body']
+        elsif line['status'] == 'complete'
+          break
+        end
+      end
+      puts line['body'] if line['body']
+    end
+  end
+
+  # Stream data from the Switchboard server
   def self.stream_output switchboard_command
     socket = API.switchboard_connection
     socket.puts switchboard_command
     begin
-      while line = JSON.parse(socket.gets)
-        if line.has_key? 'status'
-          if line['status'] == 'failed'
-            raise line['body']
-          elsif line['status'] == 'complete'
-            break
-          end
+      while line = socket.gets
+        if block_given?
+          yield JSON.parse line
+        else
+          puts line
         end
-        puts line['body'] if line['body']
       end
     rescue Interrupt, Errno::ECONNRESET
     end
