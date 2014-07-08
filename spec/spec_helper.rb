@@ -1,4 +1,4 @@
-ENV["RACK_ENV"] ||= ENV["PEAS_ENV"] ||= 'test'
+ENV["RACK_ENV"] = ENV["PEAS_ENV"] = 'test'
 
 require File.expand_path("../../config/boot", __FILE__)
 Bundler.require :test
