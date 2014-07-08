@@ -1,9 +1,7 @@
-require 'rubygems'
-
 ENV["RACK_ENV"] ||= ENV["PEAS_ENV"] ||= 'test'
 
 require File.expand_path("../../config/boot", __FILE__)
-require 'vcr'
+Bundler.require :test
 require 'rack/test'
 require 'celluloid/test'
 require 'docker_creation_mock.rb'
