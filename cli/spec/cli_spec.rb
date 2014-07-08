@@ -38,7 +38,12 @@ describe 'Peas CLI' do
 
     it 'should deploy an app', :with_socket do
       stub_request(:get, /deploy/).to_return(body: '{"job": "123"}')
-      allow(@socket).to receive(:gets).and_return("doing", "something", "done", false)
+      allow(@socket).to receive(:gets).and_return(
+        '{"body":"doing"}',
+        '{"body":"something"}',
+        '{"body":"done"}',
+        '{"status":"complete"}'
+      )
       output = cli %w(deploy)
       expect(output).to eq "doing\nsomething\ndone\n"
     end
@@ -48,7 +53,10 @@ describe 'Peas CLI' do
         :put,
         TEST_DOMAIN + '/app/fakesha/scale?scaling_hash=%7B%22web%22:%223%22,%22worker%22:%222%22%7D'
       ).to_return(body: '{"job": "123"}')
-      allow(@socket).to receive(:gets).and_return('scaling', false)
+      allow(@socket).to receive(:gets).and_return(
+        '{"body":"scaling"}',
+        '{"status":"complete"}'
+      )
       output = cli %w(scale web=3 worker=2)
       expect(output).to eq "scaling\n"
     end
