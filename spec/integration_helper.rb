@@ -80,7 +80,7 @@ class ContainerConnection
     # TODO: need a way to check if these commands were successful
     bash "mongo peas --eval 'db.dropDatabase();'"
     bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
-    sleep 4
+    sleep 5
     # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
     console 'Setting.create(key: "domain", value: "vcap.me:4004")'
     # Create a pod stub for the controller-pod combined setup
