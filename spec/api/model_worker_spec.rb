@@ -76,19 +76,15 @@ describe Peas::ModelWorker, :with_worker do
       job_listener = client_connection
       job_listener.puts "subscribe.job_progress.#{uuid} history"
       app.worker.fake
-      progress = []
+      statuses = []
+      bodies = []
       while line = JSON.parse(job_listener.gets) do
-        progress << line
+        statuses << line['status']
+        bodies << line['body']
         break if line['status'] == 'failed' || line['status'] == 'complete'
       end
-      expect(progress).to eq [
-        {"status"=>"queued"},
-        {"status"=>"working"},
-        {"run_by"=>"controller", "status"=>"working"},
-        {"body"=>"carpe", "status"=>"working"},
-        {"body"=>"diem", "status"=>"working"},
-        {"status"=>"complete"}
-      ]
+      expect(statuses.uniq).to eq ['queued', 'working', 'complete']
+      expect(bodies.compact.uniq).to eq ['carpe', 'diem']
     end
 
     it 'should log activity to app logs if the job is on an App model' do
@@ -115,7 +111,10 @@ describe Peas::ModelWorker, :with_worker do
         progress << line
         break if line['status'] == 'complete'
       end
-      expect(progress).to include({"body"=>"it's a long way down"})
+      expect(progress).to include({
+        "body"=>"it's a long way down",
+        "job_id"=>"b8d2cdbd6-d3d4-4d2f-8f48-96325a4f2cd6"}
+      )
     end
 
     it 'should broadcast to the parent when child is created with a manually set parent job id' do
@@ -138,14 +137,17 @@ describe Peas::ModelWorker, :with_worker do
         progress << line
         break if line['status'] == 'complete'
       end
-      expect(progress).to include({"body"=>"I was told by the programmer who my parent is"})
+      expect(progress).to include({
+        "body"=>"I was told by the programmer who my parent is",
+        "job_id"=>"b8d2cdbd6-d3d4-4d2f-8f48-96325a4f2cd6"}
+      )
     end
   end
 
   describe 'Setting the job id' do
     it 'should set parent and current IDs to be the same for first jobs' do
       job_id = app.worker(block_until_complete:true).fake
-      expect(app.parent_job).to eq nil
+      expect(app.parent_job).to eq uuid
       expect(app.current_job).to eq uuid
       expect(job_id).to eq uuid
     end

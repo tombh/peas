@@ -73,4 +73,5 @@ module ::Guard
 end
 guard 'switchboard_clients' do
   watch(%r{switchboard/clients/.*})
+  watch(%r{^(lib/worker|api/models)/.*})
 end

@@ -30,12 +30,15 @@ module Peas::ModelWorker
       # for listeners to keep track of all subsequent child jobs.
       if !@instance.parent_job
         @instance.parent_job = new_job_id
-        if !@instance.current_job
-          # We know this is the parent caller process because @instance.current_job is only set by WorkerRunner
-          @is_parent_caller = true
-        end
+        # We know this is the parent caller process because @instance.current_job is only set below and by WorkerRunner
+        @is_parent_caller = true if !@instance.current_job
       end
-      @instance.current_job = new_job_id
+      # Need to be very careful about setting the current_job. Mainly you need to remember that a job begins in one
+      # place (ie the caller process), but is run in another (ie the worker process), but the code is the same :/
+      # And to add to that confusion a worker process can *also* be a caller to create a new child job! So current_job
+      # needs to be strictly maintained. A worker process should never start life with one job ID and then change job ID
+      # just because it's created a child job.
+      @instance.current_job = new_job_id if !@instance.current_job
       # Open up a pubsub publisher to add a job to the worker queue
       socket = Peas::Switchboard.connection
       socket.puts "publish.jobs_for.#{@pod_id}"
@@ -51,8 +54,14 @@ module Peas::ModelWorker
       # Place the job on the queue
       socket.puts job
       socket.close
-      # Broadcast the fact that the job is now queued and waiting to be run
-      @instance.worker_status = 'queued'
+      # Broadcast the fact that the job is now queued and waiting to be run. Not that we can't use
+      # @instance.worker_status because this status refers to a new job.
+      socket = Peas::Switchboard.connection
+      socket.puts "publish.job_progress.#{new_job_id} history"
+      socket.puts({
+        status: 'queued',
+        job_id: new_job_id
+      }.to_json)
       # Return the job for those interested in its progress
       new_job_id
     end

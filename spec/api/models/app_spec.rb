@@ -128,14 +128,6 @@ describe App do
         app.build
       end
 
-      it 'should build an app', :docker, :with_worker do
-        # Use the nodejs example just because it builds so quickly
-        app = Fabricate :app,
-          remote: 'https://github.com/heroku/node-js-sample.git',
-          name: 'node-js-sample'
-        app.deploy
-      end
-
       it "should include the ENV vars saved in the app's config", :docker do
         app = Fabricate :app,
           remote: 'https://github.com/heroku/node-js-sample.git',
