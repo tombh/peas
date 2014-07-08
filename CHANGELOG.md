@@ -1,3 +1,11 @@
+###0.1.2
+**8th July 2014**    
+**Features**:
+  * Removal of Redis and Sidekiq.
+  * Switchboard-based workers
+  * Pubsub commands in Switchboard
+  * Upgrade Docker-in-Docker version to v1.0.1
+
 ###0.1.1
 **14th June 2014**    
 **Features**:
