@@ -106,7 +106,7 @@ if [ `ls -1A /var/lib/gems | wc -l` -eq 0 ]; then
 fi
 
 cd /home/peas/repo
-bundle install --binstubs /var/lib/gems/binstubs
+BUNDLE_BIN=/var/lib/gems/binstubs bundle install
 PATH=$PATH:/var/lib/gems/binstubs
 bundle exec foreman start -f ./Procfile &
 
