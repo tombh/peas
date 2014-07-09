@@ -94,7 +94,7 @@ describe 'Switchboard', :celluloid do
         with_socket_pair do |client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
           connection = Connection.new(peer)
-          expect(connection.wrapped_object).to receive(:terminate)
+          expect(connection.wrapped_object).to receive(:terminate).at_least(:once)
           client.puts 'dose.1000' # Sleep for 1 second
           connection.dispatch
           sleep 0.01
@@ -108,7 +108,7 @@ describe 'Switchboard', :celluloid do
         with_socket_pair do |client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
           connection = Connection.new(peer)
-          expect(connection.wrapped_object).to_not receive(:terminate)
+          expect(connection.wrapped_object).to_not receive(:terminate).at_least(:once)
           client.puts 'keep_awake'
           connection.dispatch
         end
