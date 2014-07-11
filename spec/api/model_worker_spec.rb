@@ -72,9 +72,9 @@ describe Peas::ModelWorker, :with_worker do
 
 
   describe 'Broadcasting messages' do
-    it 'should broadcast messages and preserve history' do
+    it 'should broadcast messages' do
       job_listener = client_connection
-      job_listener.puts "subscribe.job_progress.#{uuid} history"
+      job_listener.puts "subscribe.job_progress.#{uuid}"
       app.worker.fake
       statuses = []
       bodies = []
