@@ -21,7 +21,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:11:57 GMT
+      - Fri, 11 Jul 2014 11:43:51 GMT
       Content-Length:
       - '90'
       Connection:
@@ -29,12 +29,12 @@ http_interactions:
     body:
       encoding: UTF-8
       string: |
-        {"Id":"b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208","Warnings":null}
+        {"Id":"10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7","Warnings":null}
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:11:57 GMT
+  recorded_at: Fri, 11 Jul 2014 11:43:51 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/start
+    uri: unix:///var/run/docker.sock/v1.10/containers/10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7/start
     body:
       encoding: UTF-8
       string: '{"Binds":["/tmp:/tmp"]}'
@@ -49,7 +49,7 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Sun, 08 Jun 2014 01:11:57 GMT
+      - Fri, 11 Jul 2014 11:43:51 GMT
       Content-Length:
       - '0'
       Content-Type:
@@ -60,10 +60,10 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:11:57 GMT
+  recorded_at: Fri, 11 Jul 2014 11:43:51 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/attach?stderr=true&stdout=true&stream=true
+    uri: unix:///var/run/docker.sock/v1.10/containers/10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7/attach?stderr=true&stdout=true&stream=true
     body:
       encoding: US-ASCII
       string: ''
@@ -84,10 +84,10 @@ http_interactions:
       string: !binary |-
         AQAAAAAAACQgICAgICAgVW5hYmxlIHRvIHNlbGVjdCBhIGJ1aWxkcGFjawo=
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:11:57 GMT
+  recorded_at: Fri, 11 Jul 2014 11:43:51 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/wait
+    uri: unix:///var/run/docker.sock/v1.10/containers/10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7/wait
     body:
       encoding: US-ASCII
       string: ''
@@ -104,7 +104,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:11:57 GMT
+      - Fri, 11 Jul 2014 11:43:51 GMT
       Content-Length:
       - '17'
       Connection:
@@ -114,10 +114,10 @@ http_interactions:
       string: |
         {"StatusCode":1}
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:11:57 GMT
+  recorded_at: Fri, 11 Jul 2014 11:43:51 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/json
+    uri: unix:///var/run/docker.sock/v1.10/containers/10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7/json
     body:
       encoding: US-ASCII
       string: ''
@@ -134,23 +134,23 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 08 Jun 2014 01:11:57 GMT
+      - Fri, 11 Jul 2014 11:43:51 GMT
       Content-Length:
-      - '1900'
+      - '1838'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208","Created":"2014-06-08T01:11:57.798322518Z","Path":"/bin/bash","Args":["-c","mkdir
+      string: '{"ID":"10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7","Created":"2014-07-11T11:43:51.181941707Z","Path":"/bin/bash","Args":["-c","mkdir
         -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/hello-world-cpp.tgz -C /app
-        \u0026\u0026 /build/builder"],"Config":{"Hostname":"b359bf8516df","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":null,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","mkdir
+        \u0026\u0026 /build/builder"],"Config":{"Hostname":"10341af8b2b3","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"Cpuset":"","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":null,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","mkdir
         -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/hello-world-cpp.tgz -C /app
-        \u0026\u0026 /build/builder"],"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":false,"Pid":0,"ExitCode":1,"StartedAt":"2014-06-08T01:11:57.852336925Z","FinishedAt":"2014-06-08T01:11:57.979654491Z"},"Image":"117ea5403f840e36f71bfed079c16f31bb1731d6e28d68cf51293a9de3d98ae7","NetworkSettings":{"IPAddress":"","IPPrefixLen":0,"Gateway":"","Bridge":"","PortMapping":null,"Ports":null},"ResolvConfPath":"/var/lib/docker/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/resolv.conf","HostnamePath":"/var/lib/docker/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/hostname","HostsPath":"/var/lib/docker/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/hosts","Name":"/sleepy_lovelace","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/tmp"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":["/tmp:/tmp"],"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":false,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+        \u0026\u0026 /build/builder"],"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":false,"Paused":false,"Pid":0,"ExitCode":1,"StartedAt":"2014-07-11T11:43:51.229437415Z","FinishedAt":"2014-07-11T11:43:51.313871485Z"},"Image":"117ea5403f840e36f71bfed079c16f31bb1731d6e28d68cf51293a9de3d98ae7","NetworkSettings":{"IPAddress":"","IPPrefixLen":0,"Gateway":"","Bridge":"","PortMapping":null,"Ports":null},"ResolvConfPath":"/etc/resolv.conf","HostnamePath":"/var/lib/docker/containers/10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7/hostname","HostsPath":"/var/lib/docker/containers/10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7/hosts","Name":"/grave_davinci","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/tmp"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":["/tmp:/tmp"],"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":false,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:11:58 GMT
+  recorded_at: Fri, 11 Jul 2014 11:43:51 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/b359bf8516df35b9fb8df5a613ada0c014abd948ee7f3b1b6c0dec2cd296c208/kill
+    uri: unix:///var/run/docker.sock/v1.10/containers/10341af8b2b364f4219d3f6fff1e76d6944fa0ddb0274c95041198a7723ecfc7/kill
     body:
       encoding: UTF-8
       string: "{}"
@@ -165,7 +165,7 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Sun, 08 Jun 2014 01:11:58 GMT
+      - Fri, 11 Jul 2014 11:43:51 GMT
       Content-Length:
       - '0'
       Content-Type:
@@ -176,5 +176,5 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Sun, 08 Jun 2014 01:11:58 GMT
+  recorded_at: Fri, 11 Jul 2014 11:43:51 GMT
 recorded_with: VCR 2.9.2
