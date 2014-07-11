@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/create
+    uri: unix:///var/run/docker.sock/v1.12/containers/create
     body:
       encoding: UTF-8
       string: '{"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"Env":["FOO=BAR"],"Cmd":["/bin/bash","-c","mkdir
@@ -10,7 +10,7 @@ http_interactions:
         \u0026\u0026 /build/builder"]}'
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.11.0
+      - Swipely/Docker-API 1.13.1
       Content-Type:
       - application/json
   response:
@@ -21,7 +21,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 11 Jul 2014 11:43:38 GMT
+      - Fri, 11 Jul 2014 12:21:08 GMT
       Content-Length:
       - '90'
       Connection:
@@ -29,18 +29,18 @@ http_interactions:
     body:
       encoding: UTF-8
       string: |
-        {"Id":"7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18","Warnings":null}
+        {"Id":"8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c","Warnings":null}
     http_version: 
-  recorded_at: Fri, 11 Jul 2014 11:43:38 GMT
+  recorded_at: Fri, 11 Jul 2014 12:21:08 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18/start
+    uri: unix:///var/run/docker.sock/v1.12/containers/8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c/start
     body:
       encoding: UTF-8
       string: '{"Binds":["/tmp:/tmp"]}'
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.11.0
+      - Swipely/Docker-API 1.13.1
       Content-Type:
       - application/json
   response:
@@ -49,7 +49,7 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Fri, 11 Jul 2014 11:43:38 GMT
+      - Fri, 11 Jul 2014 12:21:08 GMT
       Content-Length:
       - '0'
       Content-Type:
@@ -60,16 +60,16 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Fri, 11 Jul 2014 11:43:38 GMT
+  recorded_at: Fri, 11 Jul 2014 12:21:08 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18/attach?stderr=true&stdout=true&stream=true
+    uri: unix:///var/run/docker.sock/v1.12/containers/8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c/attach?stderr=true&stdout=true&stream=true
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.11.0
+      - Swipely/Docker-API 1.13.1
       Content-Type:
       - text/plain
   response:
@@ -83,50 +83,50 @@ http_interactions:
       encoding: ASCII-8BIT
       string: !binary |-
         AQAAAAAAABwgICAgICAgTm9kZS5qcyBhcHAgZGV0ZWN0ZWQKAQAAAAAAACUt
-        LS0tLT4gUmVxdWVzdGVkIG5vZGUgcmFuZ2U6ICAwLjEwLngKAQAAAAAAAE0t
-        LS0tLT4gUmVzb2x2ZWQgbm9kZSB2ZXJzaW9uOiAwLjEwLjI5Ci0tLS0tPiBE
-        b3dubG9hZGluZyBhbmQgaW5zdGFsbGluZyBub2RlCgEAAAAAAAA2LS0tLS0+
-        IFdyaXRpbmcgYSBjdXN0b20gLm5wbXJjIHRvIGNpcmN1bXZlbnQgbnBtIGJ1
-        Z3MKAQAAAAAAAB8tLS0tLT4gSW5zdGFsbGluZyBkZXBlbmRlbmNpZXMKAQAA
-        AAAAACogICAgICAgZXhwcmVzc0A0LjUuMSBub2RlX21vZHVsZXMvZXhwcmVz
-        cwoBAAAAAAADYyAgICAgICDilJzilIDilIAgcGFyc2V1cmxAMS4wLjEKICAg
+        LS0tLT4gUmVxdWVzdGVkIG5vZGUgcmFuZ2U6ICAwLjEwLngKAQAAAAAAACYt
+        LS0tLT4gUmVzb2x2ZWQgbm9kZSB2ZXJzaW9uOiAwLjEwLjI5CgEAAAAAAAAn
+        LS0tLS0+IERvd25sb2FkaW5nIGFuZCBpbnN0YWxsaW5nIG5vZGUKAQAAAAAA
+        ADYtLS0tLT4gV3JpdGluZyBhIGN1c3RvbSAubnBtcmMgdG8gY2lyY3VtdmVu
+        dCBucG0gYnVncwoBAAAAAAAAHy0tLS0tPiBJbnN0YWxsaW5nIGRlcGVuZGVu
+        Y2llcwoBAAAAAAAAtCAgICAgICBleHByZXNzQDQuNS4xIG5vZGVfbW9kdWxl
+        cy9leHByZXNzCiAgICAgICDilJzilIDilIAgcGFyc2V1cmxAMS4wLjEKICAg
         ICAgIOKUnOKUgOKUgCBtZXJnZS1kZXNjcmlwdG9yc0AwLjAuMgogICAgICAg
         4pSc4pSA4pSAIHV0aWxzLW1lcmdlQDEuMC4wCiAgICAgICDilJzilIDilIAg
-        Y29va2llQDAuMS4yCiAgICAgICDilJzilIDilIAgZXNjYXBlLWh0bWxAMS4w
-        LjEKICAgICAgIOKUnOKUgOKUgCBmaW5hbGhhbmRsZXJAMC4wLjIKICAgICAg
-        IOKUnOKUgOKUgCBjb29raWUtc2lnbmF0dXJlQDEuMC40CiAgICAgICDilJzi
-        lIDilIAgcmFuZ2UtcGFyc2VyQDEuMC4wCiAgICAgICDilJzilIDilIAgZnJl
-        c2hAMC4yLjIKICAgICAgIOKUnOKUgOKUgCB2YXJ5QDAuMS4wCiAgICAgICDi
-        lJzilIDilIAgcXNAMC42LjYKICAgICAgIOKUnOKUgOKUgCBtZWRpYS10eXBl
-        ckAwLjIuMAogICAgICAg4pSc4pSA4pSAIG1ldGhvZHNAMS4wLjEKICAgICAg
-        IOKUnOKUgOKUgCBidWZmZXItY3JjMzJAMC4yLjMKICAgICAgIOKUnOKUgOKU
-        gCBkZXBkQDAuMy4wCiAgICAgICDilJzilIDilIAgcGF0aC10by1yZWdleHBA
-        MC4xLjIKICAgICAgIOKUnOKUgOKUgCBzZXJ2ZS1zdGF0aWNAMS4zLjEgKHBh
-        cnNldXJsQDEuMS4zKQogICAgICAg4pSc4pSA4pSAIHByb3h5LWFkZHJAMS4w
-        LjEgKGlwYWRkci5qc0AwLjEuMikKICAgICAgIOKUnOKUgOKUgCB0eXBlLWlz
-        QDEuMy4yIChtaW1lLXR5cGVzQDEuMC4xKQogICAgICAg4pSc4pSA4pSAIGFj
-        Y2VwdHNAMS4wLjcgKG5lZ290aWF0b3JAMC40LjcsIG1pbWUtdHlwZXNAMS4w
-        LjEpCiAgICAgICDilJzilIDilIAgZGVidWdAMS4wLjIgKG1zQDAuNi4yKQog
-        ICAgICAg4pSU4pSA4pSAIHNlbmRAMC41LjAgKG1zQDAuNi4yLCBtaW1lQDEu
-        Mi4xMSwgZmluaXNoZWRAMS4yLjIpCgEAAAAAAAA4LS0tLS0+IENhY2hpbmcg
-        bm9kZV9tb2R1bGVzIGRpcmVjdG9yeSBmb3IgZnV0dXJlIGJ1aWxkcwoBAAAA
-        AAAALi0tLS0tPiBDbGVhbmluZyB1cCBub2RlLWd5cCBhbmQgbnBtIGFydGlm
-        YWN0cwoBAAAAAAAAOy0tLS0tPiBObyBQcm9jZmlsZSBmb3VuZDsgQWRkaW5n
-        IG5wbSBzdGFydCB0byBuZXcgUHJvY2ZpbGUKAQAAAAAAACQtLS0tLT4gQnVp
-        bGRpbmcgcnVudGltZSBlbnZpcm9ubWVudAoBAAAAAAAAIS0tLS0tPiBEaXNj
-        b3ZlcmluZyBwcm9jZXNzIHR5cGVzCgEAAAAAAAAmICAgICAgIFByb2NmaWxl
-        IGRlY2xhcmVzIHR5cGVzIC0+IHdlYgo=
+        Y29va2llQDAuMS4yCgEAAAAAAALZICAgICAgIOKUnOKUgOKUgCBlc2NhcGUt
+        aHRtbEAxLjAuMQogICAgICAg4pSc4pSA4pSAIGZpbmFsaGFuZGxlckAwLjAu
+        MgogICAgICAg4pSc4pSA4pSAIGNvb2tpZS1zaWduYXR1cmVAMS4wLjQKICAg
+        ICAgIOKUnOKUgOKUgCByYW5nZS1wYXJzZXJAMS4wLjAKICAgICAgIOKUnOKU
+        gOKUgCBmcmVzaEAwLjIuMgogICAgICAg4pSc4pSA4pSAIHZhcnlAMC4xLjAK
+        ICAgICAgIOKUnOKUgOKUgCBxc0AwLjYuNgogICAgICAg4pSc4pSA4pSAIG1l
+        ZGlhLXR5cGVyQDAuMi4wCiAgICAgICDilJzilIDilIAgbWV0aG9kc0AxLjAu
+        MQogICAgICAg4pSc4pSA4pSAIGJ1ZmZlci1jcmMzMkAwLjIuMwogICAgICAg
+        4pSc4pSA4pSAIGRlcGRAMC4zLjAKICAgICAgIOKUnOKUgOKUgCBwYXRoLXRv
+        LXJlZ2V4cEAwLjEuMgogICAgICAg4pSc4pSA4pSAIHNlcnZlLXN0YXRpY0Ax
+        LjMuMSAocGFyc2V1cmxAMS4xLjMpCiAgICAgICDilJzilIDilIAgcHJveHkt
+        YWRkckAxLjAuMSAoaXBhZGRyLmpzQDAuMS4yKQogICAgICAg4pSc4pSA4pSA
+        IHR5cGUtaXNAMS4zLjIgKG1pbWUtdHlwZXNAMS4wLjEpCiAgICAgICDilJzi
+        lIDilIAgYWNjZXB0c0AxLjAuNyAobmVnb3RpYXRvckAwLjQuNywgbWltZS10
+        eXBlc0AxLjAuMSkKICAgICAgIOKUnOKUgOKUgCBkZWJ1Z0AxLjAuMiAobXNA
+        MC42LjIpCiAgICAgICDilJTilIDilIAgc2VuZEAwLjUuMCAobXNAMC42LjIs
+        IG1pbWVAMS4yLjExLCBmaW5pc2hlZEAxLjIuMikKAQAAAAAAADgtLS0tLT4g
+        Q2FjaGluZyBub2RlX21vZHVsZXMgZGlyZWN0b3J5IGZvciBmdXR1cmUgYnVp
+        bGRzCgEAAAAAAAAuLS0tLS0+IENsZWFuaW5nIHVwIG5vZGUtZ3lwIGFuZCBu
+        cG0gYXJ0aWZhY3RzCgEAAAAAAAA7LS0tLS0+IE5vIFByb2NmaWxlIGZvdW5k
+        OyBBZGRpbmcgbnBtIHN0YXJ0IHRvIG5ldyBQcm9jZmlsZQoBAAAAAAAAJC0t
+        LS0tPiBCdWlsZGluZyBydW50aW1lIGVudmlyb25tZW50CgEAAAAAAAAhLS0t
+        LS0+IERpc2NvdmVyaW5nIHByb2Nlc3MgdHlwZXMKAQAAAAAAACYgICAgICAg
+        UHJvY2ZpbGUgZGVjbGFyZXMgdHlwZXMgLT4gd2ViCg==
     http_version: 
-  recorded_at: Fri, 11 Jul 2014 11:43:49 GMT
+  recorded_at: Fri, 11 Jul 2014 12:21:18 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18/wait
+    uri: unix:///var/run/docker.sock/v1.12/containers/8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c/wait
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.11.0
+      - Swipely/Docker-API 1.13.1
       Content-Type:
       - text/plain
   response:
@@ -137,7 +137,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 11 Jul 2014 11:43:49 GMT
+      - Fri, 11 Jul 2014 12:21:18 GMT
       Content-Length:
       - '17'
       Connection:
@@ -147,16 +147,16 @@ http_interactions:
       string: |
         {"StatusCode":0}
     http_version: 
-  recorded_at: Fri, 11 Jul 2014 11:43:49 GMT
+  recorded_at: Fri, 11 Jul 2014 12:21:18 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/commit?container=7baa0090&repo=node-js-sample
+    uri: unix:///var/run/docker.sock/v1.12/commit?container=8cf47ae1&repo=node-js-sample
     body:
       encoding: UTF-8
       string: 'null'
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.11.0
+      - Swipely/Docker-API 1.13.1
       Content-Type:
       - application/json
   response:
@@ -167,7 +167,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 11 Jul 2014 11:43:49 GMT
+      - Fri, 11 Jul 2014 12:21:19 GMT
       Content-Length:
       - '74'
       Connection:
@@ -175,18 +175,18 @@ http_interactions:
     body:
       encoding: UTF-8
       string: |
-        {"Id":"a7a5cd2ed4c8bf9c08d81839be67ee683a0b48f081d5263fe3c706e3a7ab2ef3"}
+        {"Id":"119009ec7492659a30fca8658090a3ca1ac45ab14bde8fe0a6e741a1ae4d0b66"}
     http_version: 
-  recorded_at: Fri, 11 Jul 2014 11:43:49 GMT
+  recorded_at: Fri, 11 Jul 2014 12:21:19 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.10/containers/7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18/json
+    uri: unix:///var/run/docker.sock/v1.12/containers/8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c/json
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.11.0
+      - Swipely/Docker-API 1.13.1
       Content-Type:
       - text/plain
   response:
@@ -197,58 +197,26 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 11 Jul 2014 11:43:49 GMT
+      - Fri, 11 Jul 2014 12:21:19 GMT
       Content-Length:
-      - '1849'
+      - '1847'
       Connection:
       - close
     body:
       encoding: UTF-8
-      string: '{"ID":"7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18","Created":"2014-07-11T11:43:38.921833597Z","Path":"/bin/bash","Args":["-c","mkdir
-        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/node-js-sample.tgz -C /app
-        \u0026\u0026 /build/builder"],"Config":{"Hostname":"7baa0090ed4b","Domainname":"","User":"","Memory":0,"MemorySwap":0,"CpuShares":0,"Cpuset":"","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"PortSpecs":null,"ExposedPorts":null,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"Cmd":["/bin/bash","-c","mkdir
-        -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/node-js-sample.tgz -C /app
-        \u0026\u0026 /build/builder"],"Image":"progrium/buildstep","Volumes":{"/tmp":{}},"WorkingDir":"","Entrypoint":null,"NetworkDisabled":false,"OnBuild":null},"State":{"Running":false,"Paused":false,"Pid":0,"ExitCode":0,"StartedAt":"2014-07-11T11:43:38.980549062Z","FinishedAt":"2014-07-11T11:43:49.366003884Z"},"Image":"117ea5403f840e36f71bfed079c16f31bb1731d6e28d68cf51293a9de3d98ae7","NetworkSettings":{"IPAddress":"","IPPrefixLen":0,"Gateway":"","Bridge":"","PortMapping":null,"Ports":null},"ResolvConfPath":"/etc/resolv.conf","HostnamePath":"/var/lib/docker/containers/7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18/hostname","HostsPath":"/var/lib/docker/containers/7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18/hosts","Name":"/determined_brown","Driver":"aufs","ExecDriver":"native-0.2","MountLabel":"","ProcessLabel":"","Volumes":{"/tmp":"/tmp"},"VolumesRW":{"/tmp":true},"HostConfig":{"Binds":["/tmp:/tmp"],"ContainerIDFile":"","LxcConf":null,"Privileged":false,"PortBindings":null,"Links":null,"PublishAllPorts":false,"Dns":null,"DnsSearch":null,"VolumesFrom":null,"NetworkMode":""}}'
+      string: |
+        {"Args":["-c","mkdir -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/node-js-sample.tgz -C /app \u0026\u0026 /build/builder"],"Config":{"AttachStderr":false,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","mkdir -p /app \u0026\u0026 tar -xf /tmp/peas/test/tars/node-js-sample.tgz -C /app \u0026\u0026 /build/builder"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","HOME=/","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"8cf47ae12a10","Image":"progrium/buildstep","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":false,"PortSpecs":null,"StdinOnce":false,"Tty":false,"User":"","Volumes":{"/tmp":{}},"WorkingDir":""},"Created":"2014-07-11T12:21:08.207030396Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":["/tmp:/tmp"],"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c/hostname","HostsPath":"/var/lib/docker/containers/8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c/hosts","Id":"8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c","Image":"117ea5403f840e36f71bfed079c16f31bb1731d6e28d68cf51293a9de3d98ae7","MountLabel":"","Name":"/goofy_meitner","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/etc/resolv.conf","State":{"ExitCode":0,"FinishedAt":"2014-07-11T12:21:18.697814464Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"2014-07-11T12:21:08.269501904Z"},"Volumes":{"/tmp":"/tmp"},"VolumesRW":{"/tmp":true}}
     http_version: 
-  recorded_at: Fri, 11 Jul 2014 11:43:49 GMT
+  recorded_at: Fri, 11 Jul 2014 12:21:19 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.10/containers/7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18/kill
-    body:
-      encoding: UTF-8
-      string: "{}"
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.11.0
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 204
-      message: 
-    headers:
-      Date:
-      - Fri, 11 Jul 2014 11:43:49 GMT
-      Content-Length:
-      - '0'
-      Content-Type:
-      - text/plain; charset=utf-8
-      Connection:
-      - close
-    body:
-      encoding: UTF-8
-      string: ''
-    http_version: 
-  recorded_at: Fri, 11 Jul 2014 11:43:49 GMT
-- request:
-    method: delete
-    uri: unix:///var/run/docker.sock/v1.10/containers/7baa0090ed4baf91b1509c454aab1d6c8238d395165bf4ad5d832d5ee75e9f18?force=true
+    uri: unix:///var/run/docker.sock/v1.12/containers/8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c/kill
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.11.0
+      - Swipely/Docker-API 1.13.1
       Content-Type:
       - text/plain
   response:
@@ -257,7 +225,7 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Fri, 11 Jul 2014 11:43:49 GMT
+      - Fri, 11 Jul 2014 12:21:19 GMT
       Content-Length:
       - '0'
       Content-Type:
@@ -268,5 +236,34 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Fri, 11 Jul 2014 11:43:49 GMT
+  recorded_at: Fri, 11 Jul 2014 12:21:19 GMT
+- request:
+    method: delete
+    uri: unix:///var/run/docker.sock/v1.12/containers/8cf47ae12a10cbcb134742ff799929963f1ff6738540e1e2246785b793f0569c?force=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.1
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Fri, 11 Jul 2014 12:21:19 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Fri, 11 Jul 2014 12:21:19 GMT
 recorded_with: VCR 2.9.2
