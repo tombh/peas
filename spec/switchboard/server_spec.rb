@@ -27,23 +27,26 @@ describe 'Switchboard', :celluloid do
     end
 
     describe 'Pubsub' do
+      # A little word about these sleeps, they're bad m'kay
+      # I suspect what's happending is that because the subscribe and publish processes are
+      # are running as separate celluloid threads they need to be forced to execute in the order
+      # that is implied in this spec. The order isn't always honoured otherwise. Worth considering
+      # the implications of this for production code.
+
       it 'should publish and broadcast to 2 subscribers' do
         listener1 = client_connection
         listener2 = client_connection
         listener1.puts 'subscribe.test'
         listener2.puts 'subscribe.test'
+        sleep 0.05
         @client.puts 'publish.test'
         @client.puts 'foo'
+        sleep 0.05
         expect(listener1.gets.strip).to eq 'foo'
         expect(listener2.gets.strip).to eq 'foo'
       end
 
       it "should not keep history when history isn't specified" do
-        # A little word about these sleeps, they're bad m'kay
-        # I suspect what's happending is that because the subscribe and publish processes are
-        # are running as separate celluloid threads they need to be forced to execute in the order
-        # that is implied in this spec. The order isn't always honoured otherwise. Worth considering
-        # the implications of this for production code.
         @client.puts 'publish.test'
         @client.puts 'forgetme'
         sleep 0.05
