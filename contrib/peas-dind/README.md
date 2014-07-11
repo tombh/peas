@@ -15,7 +15,7 @@ To build go to the project root and issue: `docker build -t tombh/peas .`
 
 ##Running
 If you just want to run the image and don't care what's going on under the hood then run;
-`./run.sh` in this directory. Otherwise read for a detailed description...
+`./run.sh [API port, defaults to 4000]` in this directory. Otherwise read for a detailed description...
 
 There are 2 things to bear in mind when running Peas' Docker image. Firstly, that because Peas
 creates Docker containers inside a parent Docker container you must remember to always

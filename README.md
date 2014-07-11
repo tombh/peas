@@ -48,10 +48,10 @@ using the Docker method of installation on cloud servers.
 **Local development environment**    
 This is the preferred method for local development, but note that local development is also possible
 with the Docker installation method.
-You will need;
+All you will need is; Ruby 2.1,
 [Docker](https://www.docker.io/gettingstarted/)
 and [Mongo DB](http://docs.mongodb.org/manual/installation/).
-Both of these are generally installable via your system's package manager, no compiling should be necessary.
+All of these are generally installable via your system's package manager, no compiling should be necessary.
 ```bash
 docker pull progrium/buildstep # This runs Heroku buildpacks against repos to create deployable app images
 git clone https://github.com/tombh/peas.git
@@ -63,23 +63,17 @@ The Peas API will be available at `vcap.me:4000`.
 
 **Docker**    
 This installation method will work anywhere that Docker can be installed, so both locally and on
-remote servers like AWS and Digital Ocean (though this hasn't been tested yet, please let us know if
-you have success installing Peas on a remote server).
+remote servers like AWS and Digital Ocean.
 
-To install and boot just use `./contrib/peas-dind/run.sh`. For a detailed explanation read
+To install and boot just use `./contrib/peas-dind/run.sh` (ie. you will need to have cloned the repo
+first). For a detailed explanation read    
 `contrib/peas-dind/README.md`.
 
 The Peas API will be available at `vcap.me:4000`.
 
 **Vagrant**    
-Most likely useful to you if you are on Windows. There is a Vagrantfile in the root that attempts to
-get most of the setup done for you:
-```bash
-vagrant up # Takes a long time first time
-vagrant ssh
-cd peas
-foreman start
-```
+Most likely useful to you if you are on Windows. There is a Vagrantfile in the root of the project.
+All it does is boot a recent VM of Ubuntu and then installs Peas using the Docker method above.
 
 The Peas API will be available at `peas.local:4000`.
 

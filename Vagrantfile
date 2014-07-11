@@ -22,18 +22,10 @@ Vagrant.configure('2') do |config|
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
     sudo sh -c "echo deb http://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list"
     sudo apt-get update && sudo apt-get upgrade
-    sudo apt-get install -yq \
-      avahi-daemon \
-      git \
-      lxc-docker \
-      mongodb \
-      ruby1.9.1-dev \
-      libssl-dev
-    sudo gpasswd -a vagrant docker
+    sudo apt-get install -yq avahi-daemon lxc-docker
     sudo su - vagrant
-    docker pull progrium/buildstep
-    gem install bundler
     git clone https://github.com/tombh/peas.git
-    cd peas && bundle install
+    cd peas
+    ./contrib/peas-dind/run.sh
   SCRIPT
 end
