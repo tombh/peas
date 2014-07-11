@@ -1,3 +1,9 @@
+###0.1.3
+**11th July 2014**    
+**Features**:
+  * Upgrade gems
+  * Upgrade Docker-in-Docker version to v1.1.1
+
 ###0.1.2
 **8th July 2014**    
 **Features**:

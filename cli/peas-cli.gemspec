@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Tom Buckley-Houston"]
-  s.date = "2014-07-08"
+  s.date = "2014-07-11"
   s.description = "Peas is an open source Heroku-style PaaS written in Ruby and using Docker"
   s.email = "tom@tombh.co.uk"
   s.executables = ["peas"]
@@ -48,20 +48,21 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency('gli', [">= 0"])
-      s.add_runtime_dependency('httparty', [">= 0"])
-      s.add_runtime_dependency('rainbow', [">= 0"])
-      s.add_development_dependency('jeweler', [">= 0"])
+      s.add_runtime_dependency(%q<gli>, [">= 0"])
+      s.add_runtime_dependency(%q<httparty>, [">= 0"])
+      s.add_runtime_dependency(%q<rainbow>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
-      s.add_dependency('gli', [">= 0"])
-      s.add_dependency('httparty', [">= 0"])
-      s.add_dependency('rainbow', [">= 0"])
-      s.add_dependency('jeweler', [">= 0"])
+      s.add_dependency(%q<gli>, [">= 0"])
+      s.add_dependency(%q<httparty>, [">= 0"])
+      s.add_dependency(%q<rainbow>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
     end
   else
-    s.add_dependency('gli', [">= 0"])
-    s.add_dependency('httparty', [">= 0"])
-    s.add_dependency('rainbow', [">= 0"])
-    s.add_dependency('jeweler', [">= 0"])
+    s.add_dependency(%q<gli>, [">= 0"])
+    s.add_dependency(%q<httparty>, [">= 0"])
+    s.add_dependency(%q<rainbow>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
   end
 end
+
