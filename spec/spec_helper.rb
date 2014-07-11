@@ -109,7 +109,7 @@ Dir["#{Peas.root}/switchboard/**/*.rb"].each { |f| require f }
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
 SWITCHBOARD_TEST_PORT = 79345
 
-Celluloid.logger = nil
+Celluloid.logger = nil if !ENV['CELLULOID_LOGS']
 
 def client_connection
   TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT

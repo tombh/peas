@@ -59,7 +59,6 @@ describe 'Switchboard Pea Commands', :celluloid do
       end
     end
 
-    it 'should pubsub'
   end
 
   describe 'Client Commands' do

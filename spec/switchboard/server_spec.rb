@@ -10,10 +10,6 @@ describe 'Switchboard', :celluloid do
       @client = client_connection
     end
 
-    after :each do
-      # @server.terminate
-    end
-
     it 'should accept a basic connection' do
       @client.puts 'ping'
       expect(@client.gets.strip).to eq 'pong'
@@ -28,6 +24,45 @@ describe 'Switchboard', :celluloid do
       second.puts 'bar'
       expect(second.gets.strip).to eq 'bar'
       second.close
+    end
+
+    describe 'Pubsub' do
+      it 'should publish and broadcast to 2 subscribers' do
+        listener1 = client_connection
+        listener2 = client_connection
+        listener1.puts 'subscribe.test'
+        listener2.puts 'subscribe.test'
+        @client.puts 'publish.test'
+        @client.puts 'foo'
+        expect(listener1.gets.strip).to eq 'foo'
+        expect(listener2.gets.strip).to eq 'foo'
+      end
+
+      it "should not keep history when history isn't specified" do
+        # A little word about these sleeps, they're bad m'kay
+        # I suspect what's happending is that because the subscribe and publish processes are
+        # are running as separate celluloid threads they need to be forced to execute in the order
+        # that is implied in this spec. The order isn't always honoured otherwise. Worth considering
+        # the implications of this for production code.
+        @client.puts 'publish.test'
+        @client.puts 'forgetme'
+        sleep 0.05
+        listener = client_connection
+        listener.puts 'subscribe.test'
+        sleep 0.05
+        @client.puts 'foo'
+        expect(listener.gets.strip).to eq 'foo'
+      end
+
+      it 'should keep history when history is specified' do
+        @client.puts 'publish.test history'
+        @client.puts 'rememberme'
+        @client.puts 'foo'
+        listener = client_connection
+        listener.puts 'subscribe.test history'
+        expect(listener.gets.strip).to eq 'rememberme'
+        expect(listener.gets.strip).to eq 'foo'
+      end
     end
 
     context 'should not leak tasks' do
