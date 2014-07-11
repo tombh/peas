@@ -1,7 +1,6 @@
 AllCops:
   Excludes:
-    - vendor/**
-    - bin/**
+    - cli/peas-cli.gemspec
 
 LineLength:
   Enabled: false
