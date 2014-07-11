@@ -13,7 +13,7 @@ class Pod
 
   # Find the best pod to add a container to
   def self.optimal_pod
-    Pod.all.sort_by{|pod| pod.peas.count}.first.docker_id
+    Pod.all.sort_by { |pod| pod.peas.count }.first.docker_id
   end
 
   # If this is a default standalone instance of Peas (where it functions as both the controller and a pod), then make

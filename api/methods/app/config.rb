@@ -11,7 +11,7 @@ module Peas
         # Merge the new vars with a hashed version of the existing config
         new_config = app.config_hash.merge! vars
         # Convert the new config hash into an array
-        app.config = new_config.map{|key, value| {key => value}}
+        app.config = new_config.map { |key, value| { key => value } }
         app.save!
         app.restart
         respond app.config
@@ -29,7 +29,7 @@ module Peas
         new_config = []
         app.config_hash.each do |key, value|
           # Only reinsert the key if it's not marked for deletion
-          new_config << {key => value} if !key.in? keys
+          new_config << { key => value } unless key.in? keys
         end
         app.config = new_config
         app.save!

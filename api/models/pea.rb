@@ -65,7 +65,7 @@ class Pea
   end
 
   # Creates a docker container and the pea DB record representing it. Use instead of Pea.create()
-  def self.spawn properties, block_until_complete: true, parent_job_id: nil, &block
+  def self.spawn(properties, block_until_complete: true, parent_job_id: nil, &block)
     pea = Pea.create!(properties)
     pea.worker(
       :optimal_pod,
@@ -78,13 +78,13 @@ class Pea
   def spawn_container
     container = Docker::Container.create(
       # `/start` is unique to progrium/buildstep, it brings a process type, such as 'web', to life
-      'Cmd' => ['/bin/bash', '-c', "/start #{self.process_type}"],
+      'Cmd' => ['/bin/bash', '-c', "/start #{process_type}"],
       # The base Docker image to use. In this case the prebuilt image created by the buildstep
       # process
-      'Image' => self.app.name,
+      'Image' => app.name,
       'Name' => "pea::#{full_name}",
       # Global environment variables to pass and make available to the app
-      'Env' => ['PORT=5000'].concat(self.app.config_for_docker),
+      'Env' => ['PORT=5000'].concat(app.config_for_docker),
       # Expose port 5000 from inside the container to the host machine
       'ExposedPorts' => {
         '5000' => {}
@@ -99,7 +99,7 @@ class Pea
     self.docker_id = container.info['id']
     # Find the randomly created external port that forwards to the internal 5000 port
     self.port = container.json['NetworkSettings']['Ports']['5000'].first['HostPort']
-    self.save! if !new_record?
+    self.save! unless new_record?
     get_docker_container
   end
 
@@ -108,7 +108,7 @@ class Pea
   # host machine upon which the pea lives.
   def ensure_correct_host
     if Peas.current_docker_host_id != pod.docker_id
-      raise "Attempt to interact with a pea (belonging to '#{pod.docker_id}') " +
+      raise "Attempt to interact with a pea (belonging to '#{pod.docker_id}') " \
         "not located in the current pod ('#{Peas.current_docker_host_id}')."
     end
   end
@@ -131,7 +131,7 @@ class Pea
 
   def get_docker_container
     # There'll certainly be no container if this pea hasn't even been saved to the DB yet
-    return false if !persisted?
+    return false unless persisted?
 
     ensure_correct_host
     begin
@@ -148,7 +148,7 @@ class Pea
 
   # Return whether an app container is running or not
   def running?
-    return false if !docker
+    return false unless docker
     docker.json['State']['Running']
   end
 

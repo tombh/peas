@@ -47,7 +47,7 @@ module Peas::ModelWorker
   #   been created in another model.
   #
   # Returns a job ID
-  def worker pod_id = :controller, block_until_complete: false, parent_job_id: nil
+  def worker(pod_id = :controller, block_until_complete: false, parent_job_id: nil)
     pod_id = Pod.optimal_pod if pod_id == :optimal_pod
     @parent_job = parent_job_id if parent_job_id
     # ModelProxy exposes a method_missing() method to catch the chained methods
@@ -55,7 +55,7 @@ module Peas::ModelWorker
   end
 
   # Send status updates for the current and pareant jobs, so that other processes can listen to progress
-  def broadcasters message
+  def broadcasters(message)
     # Broadcast to current and parent. But only both if they're actually different jobs
     [@current_job, @parent_job].uniq.each do |job|
       socket = Peas::Switchboard.connection
@@ -71,9 +71,9 @@ module Peas::ModelWorker
   end
 
   # Convenience function for updating a job status and logging from within the models.
-  def broadcast message = {}
-    raise 'broadcast() can only be used if method is part of a running job.' if !@current_job
-    message = message.to_s if !message.is_a?(Hash)
+  def broadcast(message = {})
+    raise 'broadcast() can only be used if method is part of a running job.' unless @current_job
+    message = message.to_s unless message.is_a?(Hash)
     if message.is_a? String
       tmp_msg = message
       message = {}
@@ -90,13 +90,13 @@ module Peas::ModelWorker
   end
 
   # Broadcast the status every time it is set
-  def worker_status= status
+  def worker_status=(status)
     @worker_status = status
-    broadcast({status: status})
+    broadcast(status: status)
   end
 
   # Stream shell output
-  def stream_sh command, broadcastable = true
+  def stream_sh(command, broadcastable = true)
     accumulated = ''
     # Redirects STDOUT and STDERR to STDOUT
     IO.popen("#{command} 2>&1", chdir: Peas.root) do |data|
@@ -104,17 +104,16 @@ module Peas::ModelWorker
         broadcast line if broadcastable
       end
       data.close
-      if $?.to_i > 0
+      if $CHILD_STATUS.to_i > 0
         broadcast accumulated
         raise Peas::ShellError, "#{command} exited with non-zero status"
       end
     end
-    return accumulated.strip
+    accumulated.strip
   end
 
   # Same as stream_sh but doesn't broadcast the ouput
-  def sh command
+  def sh(command)
     stream_sh command, false
   end
-
 end

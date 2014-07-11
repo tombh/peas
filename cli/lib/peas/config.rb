@@ -1,5 +1,4 @@
 module Peas
-
   # The port for Peas' Switchboard socket server
   SWITCHBOARD_PORT = ENV['SWITCHBOARD_PORT'] || 9345
 
@@ -18,9 +17,9 @@ module Peas
   # Hierarchy of sources for the Peas API domain
   def self.api_domain
     domain = if ENV['PEAS_API_ENDPOINT']
-      ENV['PEAS_API_ENDPOINT']
+               ENV['PEAS_API_ENDPOINT']
     elsif Peas.config['domain']
-      Peas.config['domain']
+               Peas.config['domain']
     else
       'localhost:4000'
     end
@@ -35,12 +34,11 @@ module Peas
     URI.parse(Peas.api_domain).host
   end
 
-  def self.error_message string
+  def self.error_message(string)
     puts string.color(:red)
   end
 
-  def self.warning_message string
+  def self.warning_message(string)
     puts string.color(:magenta)
   end
-
 end

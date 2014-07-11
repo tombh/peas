@@ -44,7 +44,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    allow(Docker).to receive(:version).and_return({'Version' => Peas::DOCKER_VERSION})
+    allow(Docker).to receive(:version).and_return('Version' => Peas::DOCKER_VERSION)
     Pod.destroy_all
     Pod.create_stub
   end
@@ -61,7 +61,7 @@ DOCKER_API_FIXTURES_BASE = 'spec/fixtures/docker_api'
 
 VCR.configure do |c|
   c.hook_into :excon
-  c.default_cassette_options = { :record => :new_episodes }
+  c.default_cassette_options = { record: :new_episodes }
 end
 
 # Run an example against multiple versions of a mocked Docker API.
@@ -83,7 +83,7 @@ RSpec.configure do |config|
           @docker_version = Docker.version['Version']
         end
         if version != @docker_version
-          puts "WARNING: Preventing the creation of fixtures for Docker #{@docker_version} in a " +
+          puts "WARNING: Preventing the creation of fixtures for Docker #{@docker_version} in a " \
             "folder labelled #{version}"
           next
         end
@@ -101,15 +101,14 @@ RSpec.configure do |config|
   end
 end
 
-
 # SWITCHBOARD
 
 Dir["#{Peas.root}/switchboard/**/*.rb"].each { |f| require f }
 
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
-SWITCHBOARD_TEST_PORT = 79345
+SWITCHBOARD_TEST_PORT = 79_345
 
-Celluloid.logger = nil if !ENV['CELLULOID_LOGS']
+Celluloid.logger = nil unless ENV['CELLULOID_LOGS']
 
 def client_connection
   TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
@@ -138,5 +137,8 @@ end
 # Some extra Switchboard commands specifically for use in testing
 module Commands
   def fake; end
-  def raise_exception; raise; end
+
+  def raise_exception
+    raise
+  end
 end

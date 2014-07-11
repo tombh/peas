@@ -18,7 +18,7 @@ class App
   field :config, type: Array, default: []
 
   # Peas are needed to actually run the app, such as web and worker processes
-  has_many :peas, :dependent => :destroy
+  has_many :peas, dependent: :destroy
 
   # Validations
   validates_presence_of :first_sha, :remote, :name
@@ -31,7 +31,7 @@ class App
     Mongoid::Sessions.default.command(
       create: "#{app._id}_logs",
       capped: true,
-      size: 1000000, # max physical size of 1MB
+      size: 1_000_000, # max physical size of 1MB
       max: 2000 # max number of docuemnts
     )
   end
@@ -48,7 +48,7 @@ class App
 
   # Convert a Git remote URI to an app name usable in subdomains and by docker.
   # Eg; 'git@github.com:owner/repo_name.git' becomes 'repo_name'
-  def self.remote_to_name remote
+  def self.remote_to_name(remote)
     URI.parse(remote.gsub(':', '/')).path.split('/')[-1].gsub('.git', '')
   end
 
@@ -56,7 +56,7 @@ class App
   def process_types
     profile = {}
     peas.each do |pea|
-      if profile.has_key? pea.process_type
+      if profile.key? pea.process_type
         profile[pea.process_type] += 1
       else
         profile[pea.process_type] = 1
@@ -76,7 +76,7 @@ class App
     broadcast "Deploying #{name}" if @current_job
     worker.build do
       if peas.count == 0
-        scaling_profile = {web: 1}
+        scaling_profile = { web: 1 }
       else
         scaling_profile = process_types
       end
@@ -101,7 +101,7 @@ class App
     # There's an issue with Excon's buffer so we need to manually lower the size of the chunks to
     # get a more interactive-style attachment.
     # Follow the issue here: https://github.com/swipely/docker-api/issues/77
-    conn_interactive = Docker::Connection.new(Peas::DOCKER_SOCKET, {:chunk_size => 1, :read_timeout => 1000000})
+    conn_interactive = Docker::Connection.new(Peas::DOCKER_SOCKET, chunk_size: 1, read_timeout: 1_000_000)
     builder = Docker::Container.create(
       {
         'Image' => 'progrium/buildstep',
@@ -129,15 +129,15 @@ class App
       # Save the error for later, because we still need to clean up the container
       build_error = chunk if stream == :stderr
       last_message = chunk # In case error isn't sent through :stderr
-      broadcast chunk.encode('utf-8', :invalid => :replace, :undef => :replace, :replace => '')
+      broadcast chunk.encode('utf-8', invalid: :replace, undef: :replace, replace: '')
     end
 
     # Commit the container with the newly built app as a new image named after the app
     if builder.wait['StatusCode'] == 0
       builder.commit 'repo' => name
     else
-      build_error = "Buildstep failed with non-zero exit status. " +
-        "Error message was: '#{build_error}'. " +
+      build_error = "Buildstep failed with non-zero exit status. " \
+        "Error message was: '#{build_error}'. " \
         "Last message was: '#{last_message}'."
     end
 
@@ -181,13 +181,13 @@ class App
   # containers.
   # TODO: when not part of a deployment calculate the differences rather than blanket destroy
   # everything!
-  def scale processes, deploy = false
+  def scale(processes, deploy = false)
     # Destroy all existing containers
     peas.destroy_all
     # Respawn all needed containers
     processes.each do |process_type, quantity|
       quantity.to_i.times do |i|
-        broadcast "#{arrow if deploy}Scaling process '#{process_type}:#{i+1}'"
+        broadcast "#{arrow if deploy}Scaling process '#{process_type}:#{i + 1}'"
         Pea.spawn(
           {
             app: self,
@@ -203,8 +203,8 @@ class App
   # Represent the app's config as a hash
   def config_hash
     hashed_config = {}
-    config.map{|c| hashed_config.merge! c}
-    return hashed_config
+    config.map { |c| hashed_config.merge! c }
+    hashed_config
   end
 
   def config_for_docker
@@ -221,14 +221,13 @@ class App
   end
 
   # Log any activity for this app
-  def log logs, from = 'general', level = :info
+  def log(logs, from = 'general', _level = :info)
     logs = logs.to_s
     logs.lines.each do |line|
       line.strip!
       next if line =~ /^\s*$/ # Is nothing but whitespace
       line = "#{DateTime.now} app[#{from}]: #{line}"
-      logs_collection.insert({line: line})
+      logs_collection.insert(line: line)
     end
   end
-
 end

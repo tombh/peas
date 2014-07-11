@@ -1,15 +1,15 @@
 desc 'Create an app'
 command :create do |c|
-  c.action do |global_options, options, args|
-    @api.request :post, "/app/#{Git.first_sha}", {
-      remote: Git.remote
-    }
+  c.action do |_global_options, _options, _args|
+    @api.request :post, "/app/#{Git.first_sha}",
+                 remote: Git.remote
+
   end
 end
 
 desc 'Deploy an app'
 command :deploy do |c|
-  c.action do |global_options, options, args|
+  c.action do |_global_options, _options, _args|
     @api.request :get, "/app/#{Git.first_sha}/deploy"
   end
 end
@@ -19,7 +19,7 @@ long_desc <<-EOF
 For example: peas scale web=3 worker=2
 EOF
 command :scale do |c|
-  c.action do |global_options, options, args|
+  c.action do |_global_options, _options, args|
     if args.length == 0
       exit_now! "Please provide scaling arguments in the form: web=3 worker=2"
     end
@@ -30,8 +30,8 @@ command :scale do |c|
       quantity = parts[1]
       scaling_hash[process_type] = quantity
     end
-    @api.request :put, "/app/#{Git.first_sha}/scale", {
-      scaling_hash: scaling_hash.to_json
-    }
+    @api.request :put, "/app/#{Git.first_sha}/scale",
+                 scaling_hash: scaling_hash.to_json
+
   end
 end

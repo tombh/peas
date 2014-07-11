@@ -93,7 +93,7 @@ describe 'Switchboard Pea Commands', :celluloid do
         allow(TCPSocket).to receive(:new).and_return(@socket)
         allow(@socket).to receive(:close)
         allow(@socket).to receive(:puts).with('')
-        allow(@socket).to receive(:puts).with(any_args())
+        allow(@socket).to receive(:puts).with(any_args)
         @app = Fabricate :app, name: 'node-js-sample'
         @pea = Fabricate :pea, app: @app, port: nil, docker_id: nil
         @pea.spawn_container
@@ -109,7 +109,7 @@ describe 'Switchboard Pea Commands', :celluloid do
         allow(@pea).to receive(:running?).and_return(false, true)
         allow_any_instance_of(PeaLogsWatcher).to receive(:info).with(/Starting to watch/)
         expect_any_instance_of(PeaLogsWatcher).to receive(:info).with(/Waiting for/)
-        allow(@socket).to receive(:puts).with(any_args())
+        allow(@socket).to receive(:puts).with(any_args)
         expect(@socket).to receive(:puts).with('Node app is running at localhost:5000')
         PeaLogsWatcher.new @pea
       end

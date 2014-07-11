@@ -52,7 +52,7 @@ describe App do
     end
 
     it 'should scale web process to 1 if there are no existing containers for the app' do
-      expect(app).to receive(:scale).with({'web' => 1}, 'deploy')
+      expect(app).to receive(:scale).with({ 'web' => 1 }, 'deploy')
       app.deploy
     end
 
@@ -66,8 +66,8 @@ describe App do
     end
 
     it "should rescale processes to the app's existing scaling profile" do
-      3.times{|i| Fabricate :pea, app: app, process_type: 'web', docker_id: "web#{i}" }
-      2.times{|i| Fabricate :pea, app: app, process_type: 'worker', docker_id: "worker#{i}" }
+      3.times { |i| Fabricate :pea, app: app, process_type: 'web', docker_id: "web#{i}" }
+      2.times { |i| Fabricate :pea, app: app, process_type: 'worker', docker_id: "worker#{i}" }
       expect(app).to receive(:scale).with(
         { 'web' => 3, 'worker' => 2 }, 'deploy'
       )
@@ -97,13 +97,13 @@ describe App do
       end
 
       it "should clone the app when the repo doesn't exist locally" do
-        expect(app).to receive(:sh).with(%r(git clone .* #{Peas::TMP_REPOS}/#{app.name}))
+        expect(app).to receive(:sh).with(%r{git clone .* #{Peas::TMP_REPOS}/#{app.name}})
         app._fetch_and_tar_repo
       end
 
       it 'should only pull updates when the repo already exists locally' do
         FileUtils.mkdir_p "#{Peas::TMP_REPOS}/fabricated"
-        expect(app).to receive(:sh).with(%r(cd #{Peas::TMP_REPOS}/#{app.name} .* git pull))
+        expect(app).to receive(:sh).with(%r{cd #{Peas::TMP_REPOS}/#{app.name} .* git pull})
         app._fetch_and_tar_repo
       end
     end
@@ -113,10 +113,10 @@ describe App do
       it 'should build an app resulting in a new Docker image', :docker do
         # Use the nodejs example just because it builds so quickly
         app = Fabricate :app,
-          remote: 'https://github.com/heroku/node-js-sample.git',
-          name: 'node-js-sample'
+                        remote: 'https://github.com/heroku/node-js-sample.git',
+                        name: 'node-js-sample'
         # Hack to detect whether this is being recorded for the first time or not
-        if !VCR.current_cassette.originally_recorded_at.nil?
+        unless VCR.current_cassette.originally_recorded_at.nil?
           allow(app).to receive(:_fetch_and_tar_repo)
         end
         allow(app).to receive(:broadcast)
@@ -130,9 +130,9 @@ describe App do
 
       it "should include the ENV vars saved in the app's config", :docker do
         app = Fabricate :app,
-          remote: 'https://github.com/heroku/node-js-sample.git',
-          name: 'node-js-sample',
-          config: [{'FOO' => 'BAR'}]
+                        remote: 'https://github.com/heroku/node-js-sample.git',
+                        name: 'node-js-sample',
+                        config: [{ 'FOO' => 'BAR' }]
         allow(app).to receive(:broadcast)
         details = app.build
         expect(details['Config']['Env']).to include("FOO=BAR")
@@ -140,10 +140,10 @@ describe App do
 
       it 'should deal with a failed build', :docker do
         app = Fabricate :app,
-          remote: 'https://github.com/saddleback/hello-world-cpp.git',
-          name: 'hello-world-cpp'
+                        remote: 'https://github.com/saddleback/hello-world-cpp.git',
+                        name: 'hello-world-cpp'
         # Hack to detect whether this is being recorded for the first time or not
-        if !VCR.current_cassette.originally_recorded_at.nil?
+        unless VCR.current_cassette.originally_recorded_at.nil?
           allow(app).to receive(:_fetch_and_tar_repo)
         end
         allow(app).to receive(:broadcast)
@@ -161,7 +161,7 @@ describe App do
 
     it 'should create peas' do
       allow(app).to receive(:broadcast)
-      app.scale({web: 3, worker: 2})
+      app.scale(web: 3, worker: 2)
       expect(Pea.where(app: app).where(process_type: 'web').count).to eq 3
       expect(Pea.where(app: app).where(process_type: 'worker').count).to eq 2
     end
@@ -172,7 +172,7 @@ describe App do
 
     it 'should restart all peas belonging to an app' do
       allow(app).to receive(:broadcast)
-      app.scale({web: 3, worker: 2})
+      app.scale(web: 3, worker: 2)
       expect(app.peas).to receive(:destroy_all).and_call_original
       expect(Pea).to receive(:create!).exactly(5).times.and_call_original
       app.restart

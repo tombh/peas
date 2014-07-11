@@ -1,5 +1,5 @@
 module Peas
-  def self.proxy request
+  def self.proxy(request)
     domain = Peas.host
     if request.host =~ %r{\.#{domain.gsub('.', '\.')}$}
       app_name = request.host.split('.').first

@@ -6,4 +6,3 @@ require 'peas/git'
 require 'peas/api'
 require 'rainbow'
 require 'rainbow/ext/string'
-

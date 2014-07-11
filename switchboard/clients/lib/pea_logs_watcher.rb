@@ -4,18 +4,18 @@ class PeaLogsWatcher
   include Celluloid::IO
   include Celluloid::Logger
 
-  READ_TIMEOUT = 52*7*24*60*60 # One year
+  READ_TIMEOUT = 52 * 7 * 24 * 60 * 60 # One year
 
-  def initialize pea
+  def initialize(pea)
     info "Starting to watch #{pea.full_name}'s logs for archiving"
     socket = Peas::Switchboard.connection
     socket.puts "app_logs.#{pea._id}"
 
     # Just make sure the pea's container has booted up first
-    if !pea.running?
+    unless pea.running?
       Timeout.timeout 60 do
         info "Waiting for #{pea.full_name} to be up and running..."
-        while !pea.running? do
+        until pea.running?
           sleep 1
         end
       end
@@ -26,7 +26,7 @@ class PeaLogsWatcher
     conn_no_timeout = Docker::Connection.new(
       Peas::DOCKER_SOCKET,
       # Surely there's a better way than just specifying a really long time?
-      {:read_timeout => READ_TIMEOUT}
+      read_timeout: READ_TIMEOUT
     )
     docker = Docker::Container.get pea.docker_id, {}, conn_no_timeout
     docker.attach(
@@ -34,10 +34,10 @@ class PeaLogsWatcher
       logs: true,
       stdout: true,
       stderr: true,
-    ) do |stream, chunk|
+    ) do |_stream, chunk|
       chunk.lines.each do |line|
         line = line.strip!
-        socket.puts line if !line.empty?
+        socket.puts line unless line.empty?
       end
     end
 

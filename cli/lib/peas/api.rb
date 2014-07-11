@@ -13,17 +13,17 @@ class API
   end
 
   # Generic wrapper to the Peas API
-  def request verb, method, params = nil
-    response = self.class.send(verb, "#{method}", {query: params}).body
+  def request(verb, method, params = nil)
+    response = self.class.send(verb, "#{method}", query: params).body
     if response
       json = JSON.parse(response)
     else
       json = {}
     end
     # If there was an HTTP-level error
-    raise json['error'].color(:red) if json.has_key? 'error'
+    raise json['error'].color(:red) if json.key? 'error'
     # Successful responses
-    if json.has_key? 'job'
+    if json.key? 'job'
       # Long-running jobs need to stream from the Switchboard server
       API.stream_job json['job']
     else
@@ -40,8 +40,8 @@ class API
         end
       end
       if version_mismatch
-        Peas.warning_message "Your version of the CLI client is out of date " +
-          "(Client: #{Peas::VERSION}, API: #{json['version']}). " +
+        Peas.warning_message "Your version of the CLI client is out of date " \
+          "(Client: #{Peas::VERSION}, API: #{json['version']}). " \
           "Please update using `gem install peas-cli`."
       end
       # Normal API response
@@ -54,9 +54,9 @@ class API
   end
 
   # Stream the output of a Switchboard job
-  def self.stream_job job
+  def self.stream_job(job)
     API.stream_output "subscribe.job_progress.#{job}" do |line|
-      if line.has_key? 'status'
+      if line.key? 'status'
         if line['status'] == 'failed'
           raise line['body']
         elsif line['status'] == 'complete'
@@ -68,7 +68,7 @@ class API
   end
 
   # Stream data from the Switchboard server
-  def self.stream_output switchboard_command
+  def self.stream_output(switchboard_command)
     socket = API.switchboard_connection
     socket.puts switchboard_command
     begin
@@ -82,5 +82,4 @@ class API
     rescue Interrupt, Errno::ECONNRESET
     end
   end
-
 end

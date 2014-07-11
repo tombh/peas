@@ -18,14 +18,14 @@ task :boot do
 end
 
 desc "List all Grape API routes"
-task :routes => :boot do
+task routes: :boot do
   Peas::API.routes.each do |route|
     puts route
   end
 end
 
 desc "Run pry console"
-task :console do |t, args|
+task :console do |_t, _args|
   exec "pry -r ./config/boot"
 end
 

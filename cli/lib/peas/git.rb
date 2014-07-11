@@ -1,5 +1,5 @@
 class Git
-  def self.sh cmd
+  def self.sh(cmd)
     `#{cmd}`.strip
   end
 

@@ -10,9 +10,9 @@ class Connection
   include Commands # user-added commands
 
   # Amount of time to pass without any socket activity before terminating the thread
-  INACTIVITY_TIMEOUT = 30*60
+  INACTIVITY_TIMEOUT = 30 * 60
 
-  def initialize socket
+  def initialize(socket)
     @socket = socket
     # Safety measure to kill the thread if nothing happens for a while.
     # You can reset the timer by calling activity()
@@ -66,8 +66,8 @@ class Connection
   end
 
   # Centralised means of closing the connection so it can be consistently logged.
-  def close type = :normal
-    if !@socket.closed?
+  def close(type = :normal)
+    unless @socket.closed?
       info "Closing connection (ID: #{@socket.object_id}) #{'(closed via client)' if type == :detected}"
     end
     @socket.close
@@ -75,8 +75,8 @@ class Connection
   end
 
   # Read a fixed number of bytes from the incoming connection
-  def read_partial bytes = 1
-    data = io{ @socket.recv bytes }
+  def read_partial(bytes = 1)
+    data = io { @socket.recv bytes }
     if data
       yield data if block_given?
       return data
@@ -85,7 +85,7 @@ class Connection
 
   # Read a line from the incoming connection
   def read_line
-    line = io{ @socket.gets }
+    line = io { @socket.gets }
     if line
       yield line if block_given?
       return line
@@ -93,19 +93,17 @@ class Connection
   end
 
   # Write a line to the incoming connection
-  def write_line line
-    io{ @socket.puts line }
+  def write_line(line)
+    io { @socket.puts line }
   end
 
   # Centralised means of carrying out IO on the socket. Useful for keeping behaviour in one place.
-  def io &block
-    begin
-      response = yield
-      activity
-      return response
-    rescue EOFError, Errno::EPIPE, IOError, Errno::EBADF
-      close :detected
-      return false
-    end
+  def io(&_block)
+    response = yield
+    activity
+    return response
+  rescue EOFError, Errno::EPIPE, IOError, Errno::EBADF
+    close :detected
+    return false
   end
 end

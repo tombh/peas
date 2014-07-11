@@ -3,9 +3,8 @@ require 'socket'
 # General Peas-specific code for working with Switchboard
 module Peas
   class Switchboard
-
     def initialize
-      @socket = self.connection
+      @socket = connection
       @socket
     end
 
@@ -30,6 +29,5 @@ module Peas
         "Couldn't connect to the Peas Switchboard at #{Peas.host}:#{Peas::SWITCHBOARD_PORT}"
       )
     end
-
   end
 end

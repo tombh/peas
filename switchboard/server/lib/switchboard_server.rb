@@ -10,7 +10,7 @@ class SwitchboardServer
   # TODO: Garbage collect contents, perhaps by deleting channel key 30 mins after last activity?
   attr_accessor :channel_history
 
-  def initialize host, port
+  def initialize(host, port)
     info "Starting Peas Switchboard Server on #{Peas.switchboard_server_uri}"
 
     # This allows us to do `Celluloid::Actor[:switchboard_server].channel_history[:channel_name]`
@@ -32,7 +32,7 @@ class SwitchboardServer
     loop { async.handle_connection @server.accept }
   end
 
-  def handle_connection socket
+  def handle_connection(socket)
     debug "Current number of tasks: #{tasks.count}"
     connection = Connection.new socket
     # Because the connection actor isn't linked we don't have to worry about it crashing the server.

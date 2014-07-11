@@ -19,8 +19,8 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/tombh/peas"
   gem.license = "GPL v2"
   gem.version = Peas::VERSION
-  gem.summary = %Q{CLI client for Peas}
-  gem.description = %Q{Peas is an open source Heroku-style PaaS written in Ruby and using Docker}
+  gem.summary = "CLI client for Peas"
+  gem.description = "Peas is an open source Heroku-style PaaS written in Ruby and using Docker"
   gem.email = "tom@tombh.co.uk"
   gem.authors = ["Tom Buckley-Houston"]
   gem.files.include 'VERSION'

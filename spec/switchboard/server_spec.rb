@@ -124,7 +124,9 @@ describe 'Switchboard', :celluloid do
     describe 'Watching and responding to activity/inactivity' do
       it 'should close a long running connection after an inactivity timeout' do
         module Commands
-          def dose; sleep @command[1].to_i / 1000; end
+          def dose
+            sleep @command[1].to_i / 1000
+          end
         end
         with_socket_pair do |client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
@@ -138,7 +140,9 @@ describe 'Switchboard', :celluloid do
 
       it 'io activity prevents timeout' do
         module Commands
-          def keep_awake; 10.times{ write_line 'foo'; sleep 0.0005 }; end
+          def keep_awake
+            10.times { write_line 'foo'; sleep 0.0005 }
+          end
         end
         with_socket_pair do |client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)

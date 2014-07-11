@@ -27,7 +27,7 @@ describe Pea do
     expect(pea.running?).to eq true
     docker_id = pea.docker_id
     pea.destroy
-    expect{
+    expect {
       Docker::Container.get(docker_id)
     }.to raise_error(Docker::Error::NotFoundError)
     expect(Pea.where(docker_id: docker_id).count).to eq 0

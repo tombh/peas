@@ -20,13 +20,13 @@ module Peas
       # also follows any breaking changes to the Docker Remote API.
       def docker_version_check
         if Gem::Version.new(Docker.version['Version']) > Gem::Version.new(Peas::DOCKER_VERSION)
-          API.logger.warn "Using version #{Docker.version['Version']} of Docker " +
-            'which is newer than the latest version Peas has been tested with ' +
+          API.logger.warn "Using version #{Docker.version['Version']} of Docker " \
+            'which is newer than the latest version Peas has been tested with ' \
             "(#{Peas::DOCKER_VERSION})"
         end
       end
 
-      def respond response, key=:message
+      def respond(response, key = :message)
         {
           version: Peas::VERSION,
           key => response
@@ -37,13 +37,12 @@ module Peas
     rescue_from :all do |e|
       API.logger.error e
       if Peas.environment == 'development'
-        error_response({ message: "#{e.message} @ #{e.backtrace[0]}" })
+        error_response(message: "#{e.message} @ #{e.backtrace[0]}")
       end
     end if Peas.environment != 'test'
 
     before do
       docker_version_check
     end
-
   end
 end

@@ -1,7 +1,6 @@
 require 'switchboard/server/lib/log_cursor'
 
 module Commands
-
   # Stream and tail logs for an app
   def stream_logs
     app = App.find_by(first_sha: @command[1])
@@ -15,9 +14,8 @@ module Commands
 
     # Wait for more logs to be added to the DB and stream them back when they are
     loop do
-      logs.more{ |line| write_line line }
+      logs.more { |line| write_line line }
       sleep 0.01 # Needed to allow Celluloid to pass flow control elsewhere
     end
   end
-
 end

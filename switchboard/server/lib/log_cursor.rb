@@ -6,7 +6,7 @@
 class LogsCursor
   include Celluloid::IO
 
-  def initialize app
+  def initialize(app)
     @app = app
   end
 
@@ -38,5 +38,4 @@ class LogsCursor
       end
     end
   end
-
 end

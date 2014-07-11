@@ -2,12 +2,12 @@ class WorkerRunner
   include Celluloid::IO
   include Celluloid::Logger
 
-  def initialize job, queue_name
+  def initialize(job, queue_name)
     @queue_name = queue_name
     async.perform JSON.parse(job)
   end
 
-  def perform job
+  def perform(job)
     model = job['model'] # eg; App
     id = job['id'] # eg; App._id
     method = job['method'] # eg; App.scale
@@ -23,15 +23,15 @@ class WorkerRunner
     # The actual work to do
     instance.worker_status = 'working'
     # The worker running this job
-    instance.broadcast({run_by: @queue_name})
+    instance.broadcast(run_by: @queue_name)
     begin
       instance.send(method, *args)
       instance.worker_status = 'complete'
     rescue => e
-      instance.broadcast({
+      instance.broadcast(
         status: 'failed',
         body: "#{e.message} @ #{e.backtrace[0]}"
-      })
+      )
       raise Peas::ModelWorkerError, e
     end
   end

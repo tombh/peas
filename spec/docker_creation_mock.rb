@@ -1,12 +1,12 @@
 def image
   double(
     start: double(
-      info: {'id' => rand(10000000000000).to_s },
+      info: { 'id' => rand(10_000_000_000_000).to_s },
       json: {
         'NetworkSettings' => {
           'Ports' =>  {
             '5000' => [{
-              'HostPort' => rand(10000).to_s
+              'HostPort' => rand(10_000).to_s
             }]
           }
         }

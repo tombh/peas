@@ -16,10 +16,10 @@ class LogsArchiver
   def run
     loop do
       # Fetch all the running docker containers on the current host
-      docker_ids = Docker::Container.all.map{|c| c.id}
+      docker_ids = Docker::Container.all.map { |c| c.id }
       docker_ids.each do |id|
         # If the pea is not being watched then start a new thread to watch it and stream to the DB
-        if !id.in? @watched
+        unless id.in? @watched
           begin
             pea = Pea.find_by docker_id: id
           rescue Mongoid::Errors::DocumentNotFound
@@ -38,7 +38,7 @@ class LogsArchiver
   end
 
   # Start a separate thread to watch an individual pea's docker container for its log output
-  def watch pea
+  def watch(pea)
     @watched << pea.docker_id
     PeaLogsWatcher.new(pea) do
       @watched.delete pea.docker_id # Delete this pea from the watch list

@@ -1,11 +1,11 @@
 desc 'Set Peas global settings'
 command :settings do |c|
   c.flag 'domain',
-    type: String,
-    desc: 'The FQDN for the Peas server'
-  c.action do |global_options, options, args|
+         type: String,
+         desc: 'The FQDN for the Peas server'
+  c.action do |_global_options, options, _args|
     if options['domain']
-      if !options['domain'].start_with? 'http://'
+      unless options['domain'].start_with? 'http://'
         options['domain'] = "http://#{options['domain']}"
       end
     end
@@ -17,7 +17,7 @@ command :settings do |c|
     end
     # Merge existing settings with current settings
     content = Peas.config.merge(deduped).to_json
-    File.open(Peas.config_file, 'w+'){|f| f.write(content) }
+    File.open(Peas.config_file, 'w+') { |f| f.write(content) }
     # Save the settings on the server as well
     @api = API.new # Refresh settings from file
     @api.request :put, '/admin/settings', options
@@ -26,7 +26,7 @@ command :settings do |c|
   end
   desc 'Display the current settings'
   c.command :display do |c|
-    c.action do |global_options, options, args|
+    c.action do |_global_options, _options, _args|
       puts JSON.pretty_generate(Peas.config)
     end
   end

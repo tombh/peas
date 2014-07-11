@@ -92,5 +92,4 @@ module Peas
   def self.is_pod?
     ENV['PEAS_POD'] ||= 'true'
   end
-
 end

@@ -7,7 +7,7 @@ describe 'Peas CLI' do
     allow(Git).to receive(:first_sha).and_return('fakesha')
     allow_any_instance_of(API).to receive(:sleep).and_return(nil)
     allow(Peas).to receive(:config_file).and_return('/tmp/.peas')
-    File.delete '/tmp/.peas' if File.exists? '/tmp/.peas'
+    File.delete '/tmp/.peas' if File.exist? '/tmp/.peas'
   end
 
   describe 'Settings' do
@@ -17,11 +17,11 @@ describe 'Peas CLI' do
       output = cli %w(settings --domain=new-domain.com:4000)
       expect(output).to eq "\nNew settings:\n{\n  \"domain\": \"http://new-domain.com:4000\"\n}\n"
       config = JSON.parse File.open('/tmp/.peas').read
-      expect(config).to eq({"domain"=>"http://new-domain.com:4000"})
+      expect(config).to eq("domain" => "http://new-domain.com:4000")
     end
 
     it 'should use the domain setting' do
-      File.open('/tmp/.peas', 'w'){|f| f.write('{"domain":"test.com"}') }
+      File.open('/tmp/.peas', 'w') { |f| f.write('{"domain":"test.com"}') }
       stub_request(:get, /test.com/)
         .to_return(body: response_mock(nil))
       cli %w(deploy)

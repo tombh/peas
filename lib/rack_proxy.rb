@@ -31,7 +31,7 @@ class Rack::Proxy
     end
 
     headers = {}
-    sub_response.each_header do |k,v|
+    sub_response.each_header do |k, v|
       headers[k] = v unless k.to_s =~ /cookie|content-length|transfer-encoding/i
     end
 

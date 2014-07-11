@@ -1,5 +1,4 @@
 module Commands
-
   # Subscribe to a pubsub channel
   # Using 'history' means that all existing publishe data on the channel is sent back with the first
   # request.s
@@ -14,7 +13,7 @@ module Commands
     if @options.include? 'history'
       # Send first time subscribers a copy of everything that's already happened
       channel_history = Celluloid::Actor[:switchboard_server].channel_history
-      if channel_history.has_key? channel
+      if channel_history.key? channel
         channel_history[channel].each do |line|
           write_line line
         end
@@ -24,9 +23,8 @@ module Commands
     super channel, :subscriber_callback
   end
 
-  def subscriber_callback topic, message
+  def subscriber_callback(topic, message)
     debug "SUB BROADCAST :: #{topic} - #{message}"
     write_line message
   end
-
 end

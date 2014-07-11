@@ -13,13 +13,13 @@ puts "\nRun `docker logs -f peas-test` to tail integration test activity\n\n"
 
 # Convenience wrapper for the command line. Kills commands if they run too long
 # Note that `curl` seems to behave oddly with this -  it doesn't output anything
-def sh command, timeout = 60
+def sh(command, timeout = 60)
   output = ''
   pid = nil
-  PTY.spawn(command  + ' 2>&1') do |stdout, stdin, pid_local|
+  PTY.spawn(command  + ' 2>&1') do |stdout, _stdin, pid_local|
     pid = pid_local
     begin
-      Timeout::timeout(timeout) do
+      Timeout.timeout(timeout) do
         stdout.each do |line|
           output += line
         end
@@ -31,13 +31,13 @@ def sh command, timeout = 60
     end
   end
   status = PTY.check(pid)
-  if !status.nil?
+  unless status.nil?
     if status.exitstatus != 0
       raise "`#{command}` failed with: \n--- \n #{output} \n---"
     end
   end
   output.strip! if output.lines.count == 1
-  return output
+  output
 end
 
 # Find the test-specific data volume
@@ -64,15 +64,15 @@ end
 
 # Helper to run commands *inside* the running Peas test container
 class ContainerConnection
-  def initialize container_id
+  def initialize(container_id)
     @io = IO.popen "docker attach #{container_id} > /dev/null 2>&1", 'r+'
   end
   # Run a BASH command
-  def bash cmd
+  def bash(cmd)
     @io.puts cmd
   end
   # Run a command that you would normally run with the `rake console` IRB
-  def console cmd
+  def console(cmd)
     bash "cd /home/peas/repo && echo '#{cmd}' | bundle exec rake console"
   end
   # Reset DBs and docker ready for new tests
@@ -92,7 +92,7 @@ class ContainerConnection
   end
 end
 
-def http_get uri
+def http_get(uri)
   unless uri[/\Ahttp:\/\//] || uri[/\Ahttps:\/\//]
     uri = "http://#{uri}"
   end
@@ -100,16 +100,16 @@ def http_get uri
 end
 
 class Cli
-  def initialize path
+  def initialize(path)
     @path = path
   end
 
   # Helper to call Peas CLI
-  def run cmd, timeout = 60
-    cmd = "cd #{@path} && " +
-      "HOME=/tmp/peas " +
-      "PEAS_API_ENDPOINT=localhost:4004 " +
-      "SWITCHBOARD_PORT=7345 " +
+  def run(cmd, timeout = 60)
+    cmd = "cd #{@path} && " \
+      "HOME=/tmp/peas " \
+      "PEAS_API_ENDPOINT=localhost:4004 " \
+      "SWITCHBOARD_PORT=7345 " \
       "#{Peas.root}cli/bin/peas-dev #{cmd}"
     sh cmd, timeout
   end
@@ -118,7 +118,7 @@ end
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
-  config.filter_run_excluding :integration => true unless ENV['ONE']
+  config.filter_run_excluding integration: true unless ENV['ONE']
 
   # Create the Peas container against which the CLI client will interact
   config.before(:all, :integration) do
@@ -138,9 +138,9 @@ RSpec.configure do |config|
         tombh/peas"
     )
     # Wait until the container has completely booted
-    Timeout::timeout(4*60) do
+    Timeout.timeout(4 * 60) do
       result = `bash -c 'until [ "$(curl -s localhost:4004)" == "Not Found" ]; do sleep 1; done' 2>&1`
-      raise result if $?.to_i != 0
+      raise result if $CHILD_STATUS.to_i != 0
     end
     # Open an IO pipe to the launched container
     @peas_io = ContainerConnection.new @peas_container_id
@@ -156,7 +156,7 @@ RSpec.configure do |config|
 
   config.before(:each, :integration) do |example|
     # Don't reset state between specs if explicitly told not to
-    if !example.metadata.has_key? :maintain_test_env
+    unless example.metadata.key? :maintain_test_env
       # Reset state after each spec
       @peas_io.env_reset
     end
