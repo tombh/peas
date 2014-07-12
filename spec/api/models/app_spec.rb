@@ -60,7 +60,7 @@ describe App do
       Fabricate :setting, key: 'domain', value: 'custom-domain.com'
       allow(app).to receive(:broadcast).and_call_original
       expect(app).to receive(:broadcast).with(
-        /       Deployed to http:\/\/#{app.name}\.custom-domain\.com/
+        %r{       Deployed to http:\/\/#{app.name}\.custom-domain\.com}
       )
       app.deploy
     end
@@ -97,13 +97,13 @@ describe App do
       end
 
       it "should clone the app when the repo doesn't exist locally" do
-        expect(app).to receive(:sh).with(%r{git clone .* #{Peas::TMP_REPOS}/#{app.name}})
+        expect(app).to receive(:sh).with(/git clone .* #{Peas::TMP_REPOS}\/#{app.name}/)
         app._fetch_and_tar_repo
       end
 
       it 'should only pull updates when the repo already exists locally' do
         FileUtils.mkdir_p "#{Peas::TMP_REPOS}/fabricated"
-        expect(app).to receive(:sh).with(%r{cd #{Peas::TMP_REPOS}/#{app.name} .* git pull})
+        expect(app).to receive(:sh).with(/cd #{Peas::TMP_REPOS}\/#{app.name} .* git pull/)
         app._fetch_and_tar_repo
       end
     end
@@ -132,7 +132,7 @@ describe App do
         app = Fabricate :app,
                         remote: 'https://github.com/heroku/node-js-sample.git',
                         name: 'node-js-sample',
-                        config: [{ 'FOO' => 'BAR' }]
+                        config: { 'FOO' => 'BAR' }
         allow(app).to receive(:broadcast)
         details = app.build
         expect(details['Config']['Env']).to include("FOO=BAR")

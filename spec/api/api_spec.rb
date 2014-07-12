@@ -71,6 +71,13 @@ describe Peas::API do
     end
 
     describe 'Settings' do
+      it 'should list available services' do
+        get '/admin/settings'
+        response = JSON.parse(last_response.body)['message']
+        expect(response['defaults']).to eq Setting.all.to_a
+        expect(response['services']).to eq Peas.available_services
+      end
+
       it "should create a new setting" do
         put '/admin/settings', domain: 'test.com'
         expect(Setting.count).to eq 1
@@ -90,15 +97,15 @@ describe Peas::API do
         put "/app/#{peas_app.first_sha}/config", vars: { 'foo' => 'bar' }.to_json
         expect(last_response.status).to eq 200
         message = JSON.parse(last_response.body)['message']
-        expect(message).to eq [{ 'foo' => 'bar' }]
+        expect(message).to eq('foo' => 'bar')
       end
 
       context "for app's with existing config" do
         before :each do
-          peas_app.config = [
-            { 'foo' => 'bar' },
-            { 'mange' => 'tout' }
-          ]
+          peas_app.config = {
+            'foo' => 'bar',
+            'mange' => 'tout'
+          }
           peas_app.save!
         end
 
@@ -106,21 +113,21 @@ describe Peas::API do
           get "/app/#{peas_app.first_sha}/config"
           expect(last_response.status).to eq 200
           message = JSON.parse(last_response.body)['message']
-          expect(message).to eq [{ 'foo' => 'bar' }, { 'mange' => 'tout' }]
+          expect(message).to eq('foo' => 'bar', 'mange' => 'tout')
         end
 
         it 'should update an existing config var' do
           put "/app/#{peas_app.first_sha}/config", vars: { 'foo' => 'peas' }.to_json
           expect(last_response.status).to eq 200
           message = JSON.parse(last_response.body)['message']
-          expect(message).to eq [{ 'foo' => 'peas' }, { 'mange' => 'tout' }]
+          expect(message).to eq('foo' => 'peas', 'mange' => 'tout')
         end
 
         it 'should delete existing config var' do
           delete "/app/#{peas_app.first_sha}/config", keys: ['foo'].to_json
           expect(last_response.status).to eq 200
           message = JSON.parse(last_response.body)['message']
-          expect(message).to eq [{ 'mange' => 'tout' }]
+          expect(message).to eq('mange' => 'tout')
         end
       end
     end

@@ -14,8 +14,8 @@ Peas::Switchboard.wait_for_connection
 
 clients = [
   {client: LogsArchiver},
-  Peas.is_controller? ? {client: WorkerReceiver, args: 'controller'} : {},
-  Peas.is_pod? ? {client: WorkerReceiver, args: Peas.current_docker_host_id} : {},
+  Peas.controller? ? {client: WorkerReceiver, args: 'controller'} : {},
+  Peas.pod? ? {client: WorkerReceiver, args: Peas.current_docker_host_id} : {},
 ]
 running = []
 

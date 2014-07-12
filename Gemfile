@@ -11,6 +11,9 @@ gem 'celluloid-io'
 gem 'docker-api', :require => 'docker'
 gem 'rake'
 
+# Services
+gem 'pg'
+
 group :development do
   gem 'guard'
   gem 'guard-bundler'

@@ -12,6 +12,7 @@ require 'docker_creation_mock.rb'
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
+  config.filter_run_excluding :integration, :service
 
   config.before(:suite) do
     Mongoid.default_session.drop
@@ -99,6 +100,10 @@ RSpec.configure do |config|
       end
     end
   end
+end
+
+def list_mongo_dbs
+  Moped::Session.new(['localhost:27017']).databases['databases'].map { |d| d['name'] }
 end
 
 # SWITCHBOARD

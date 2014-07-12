@@ -3,13 +3,10 @@ module Peas
   class API < Grape::API
     helpers do
       # Convenience method to find and load the specified Peas app
-      def get_app
-        begin
-          app = App.find_by(first_sha: params[:first_sha])
-        rescue Mongoid::Errors::DocumentNotFound
-          error! "App does not exist", 404 unless app
-        end
-        app
+      def load_app
+        App.find_by(first_sha: params[:first_sha])
+      rescue Mongoid::Errors::DocumentNotFound
+        error! "App does not exist", 404
       end
     end
 

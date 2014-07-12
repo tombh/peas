@@ -65,7 +65,7 @@ if [ "$1" == "--run-tests" ]; then
   echo "Installing API dependencies"
   bundle install
   echo "Running integration tests"
-  bundle exec rspec spec/integration --tag integration
+  bundle exec rspec spec/integration --tag integration --tag service
 
 # Run the CI server
 elif [ "$1" == "--server" ]; then

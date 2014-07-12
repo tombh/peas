@@ -62,8 +62,8 @@ describe 'The Peas PaaS Integration Tests', :integration do
         expect(response).to eq ''
       end
       it 'should list config for an app' do
-        response = @cli.run 'config set FOO=BAR'
-        response = @cli.run 'config set MOO=CAR'
+        @cli.run 'config set FOO=BAR'
+        @cli.run 'config set MOO=CAR'
         response = @cli.run 'config'
         expect(response).to eq "{\"FOO\"=>\"BAR\"}\r\n{\"MOO\"=>\"CAR\"}\r\n"
       end
@@ -75,7 +75,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       @cli = Cli.new REPO_PATH
       response = @cli.run 'create'
       expect(response).to eq "App 'node-js-sample' successfully created"
-      response = @cli.run 'deploy'
+      @cli.run 'deploy'
       sleep 5
       response = http_get 'node-js-sample.vcap.me:4004'
       expect(response).to eq 'Hello World!'

@@ -15,30 +15,50 @@ class App
   field :name, type: String
 
   # Environment variables such as a database URI, etc
-  field :config, type: Array, default: []
+  field :config, type: Hash, default: {}
 
   # Peas are needed to actually run the app, such as web and worker processes
   has_many :peas, dependent: :destroy
+
+  # Addons are instantances of services like redis, postgres, etc
+  has_many :addons, dependent: :destroy
 
   # Validations
   validates_presence_of :first_sha, :remote, :name
   validates_uniqueness_of :first_sha, :name
 
+  after_create do |app|
+    app.create_capped_collection
+    app.create_addons
+  end
+
   # Create a capped collection for the logs.
   # Capped collections are of a fixed size (both by rows and memory) and circular, ie; old rows
   # are deleted to make place for new rows when the collection reaches any of its limits.
-  after_create do |app|
+  def create_capped_collection
     Mongoid::Sessions.default.command(
-      create: "#{app._id}_logs",
+      create: "#{_id}_logs",
       capped: true,
       size: 1_000_000, # max physical size of 1MB
       max: 2000 # max number of docuemnts
     )
   end
 
-  # Remove the capped collection containing the app's logs
-  after_destroy do |app|
+  # Create instances of the available services (like redis or postgres) for the app to use
+  def create_addons
+    Peas.enabled_services.each do |service|
+      "Peas::Services::#{service.capitalize}".constantize.new(self).create_instance
+    end
+  end
+
+  before_destroy do |app|
+    # Remove the capped collection containing the app's logs
     app.logs_collection.drop
+
+    # Destroy any services being used by the app
+    app.addons.each do |addon|
+      "Peas::Services::#{addon.type.capitalize}".constantize.new(app).destroy_instance
+    end
   end
 
   # Pretty arrow. Same as used in Heroku buildpacks
@@ -115,7 +135,7 @@ class App
           "mkdir -p /app && tar -xf #{@tmp_tar_path} -C /app && /build/builder"
         ]
       },
-      conn_interactive,
+      conn_interactive
     )
     building = builder.start(
       # Mount the host filesystem's /tmp folder to the same place on Buildstep
@@ -200,19 +220,34 @@ class App
     end
   end
 
-  # Represent the app's config as a hash
-  def config_hash
-    hashed_config = {}
-    config.map { |c| hashed_config.merge! c }
-    hashed_config
-  end
-
+  # Convert config into a string with equals signs between keys and values.
+  # Eg; { 'foo': 'bar' } => 'foo=bar'
   def config_for_docker
     result = []
-    config_hash.each do |k, v|
+    config.each do |k, v|
       result << "#{k}=#{v}"
     end
     result
+  end
+
+  # Update config variables
+  def config_update(hash)
+    # Merge the new config with a hashed version of the existing config
+    self.config = config.merge! hash
+    save!
+    restart
+    config
+  end
+
+  # Delete config variables
+  def config_delete(keys)
+    keys = [keys] unless keys.is_a? Array
+    keys.each do |key|
+      config.delete key
+    end
+    save!
+    restart
+    config
   end
 
   # Return a connection to the capped collection that stores all the logs for this app

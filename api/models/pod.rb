@@ -20,7 +20,7 @@ class Pod
   # sure a pod model object exists to represent the default pod. A pod stub. This could be a 'dockerless_pod' if running
   # without Docker-in-Docker in dev environment.
   def self.create_stub
-    if Peas.is_controller? && Peas.is_pod?
+    if Peas.controller? && Peas.pod?
       if Pod.count == 0
         Pod.create docker_id: Peas.current_docker_host_id, hostname: 'localhost'
       end

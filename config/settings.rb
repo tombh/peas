@@ -84,12 +84,30 @@ module Peas
 
   # Is this instance of Peas functioning as a controller?
   # Unless otherwise stated, Peas will function in a standalone state of being both the controller and a pod.
-  def self.is_controller?
+  def self.controller?
     ENV['PEAS_CONTROLLER'] ||= 'true'
   end
 
   # Is this instance of Peas functioning as a pod?
-  def self.is_pod?
+  def self.pod?
     ENV['PEAS_POD'] ||= 'true'
   end
+
+  # Introspect the lib/services folder to find the available classes that allow the management
+  # of services like redis, memcached, etc
+  def self.available_services
+    Peas::Services.constants.select { |c|
+      Peas::Services.const_get(c).is_a? Class
+    }.map { |s|
+      s.to_s.downcase
+    }
+  end
+
+  # Available services that also have an admin connection URI set
+  def self.enabled_services
+    Peas.available_services.select { |service|
+      Setting.where(key: service).count == 1
+    }
+  end
+
 end
