@@ -44,13 +44,7 @@ module Peas
   # 4) By builder to create the FQDN for an app; eg http://mycoolapp.peasserver.com
   # Note that only 4) is effected by changing the :domain key in the Setting model
   def self.domain
-    setting = Setting.where(key: 'domain')
-    if setting.count == 1
-      domain = setting.first.value
-    else
-      # Default
-      domain = "#{DEFAULT_CONTROLLER_DOMAIN}:#{DEFAULT_API_PORT}"
-    end
+    domain = Setting.retrieve 'peas.domain'
     # Make sure the domain always has a protocol at the beginning
     unless domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
       domain = "http://#{domain}"
@@ -97,7 +91,8 @@ module Peas
   # of services like redis, memcached, etc
   def self.available_services
     Peas::Services.constants.select { |c|
-      Peas::Services.const_get(c).is_a? Class
+      constant = Peas::Services.const_get(c)
+      constant.is_a?(Class) && constant != Peas::Services::ServicesBase
     }.map { |s|
       s.to_s.downcase
     }
@@ -106,7 +101,7 @@ module Peas
   # Available services that also have an admin connection URI set
   def self.enabled_services
     Peas.available_services.select { |service|
-      Setting.where(key: service).count == 1
+      Setting.where(key: "#{service}.uri").count == 1
     }
   end
 

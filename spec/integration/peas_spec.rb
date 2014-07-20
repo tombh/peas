@@ -7,10 +7,8 @@ describe 'The Peas PaaS Integration Tests', :integration do
 
   describe 'Settings' do
     it 'should update the domain' do
-      response = @cli.run 'settings --domain 127.0.0.1:4004'
-      expect(response).to eq(
-        "\r\nNew settings:\r\n{\r\n  \"domain\": \"http://127.0.0.1:4004\"\r\n}\r\n"
-      )
+      response = @cli.run 'admin settings peas.domain 127.0.0.1:4004'
+      expect(response).to match(/peas.domain 127\.0\.0\.1:4004/)
     end
   end
 
@@ -24,11 +22,11 @@ describe 'The Peas PaaS Integration Tests', :integration do
     describe 'Deploy' do
       it 'should deploy a basic nodejs app' do
         response = @cli.run 'deploy'
-        expect(response).to include '-----> Fetching https://github.com/tombh/node-js-sample.git'
-        expect(response).to include '-----> Installing dependencies'
-        expect(response).to include '-----> Discovering process types'
-        expect(response).to include "-----> Scaling process 'web:1'"
-        expect(response).to include "       Deployed to http://node-js-sample.vcap.me:4004"
+        expect(response).to match %r{-----> Fetching https:\/\/github.com\/tombh\/node-js-sample.git}
+        expect(response).to match(/-----> Installing dependencies/)
+        expect(response).to match(/-----> Discovering process types/)
+        expect(response).to match(/-----> Scaling process 'web:1'/)
+        expect(response).to match %r{       Deployed to http:\/\/node-js-sample.vcap.me:4004}
         expect(response.lines.length).to be > 30
         # The app should be accessible
         sleep 5
@@ -39,7 +37,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       it 'should use a custom buildpack proving build time env vars work' do
         @cli.run 'config set BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs.git'
         response = @cli.run 'deploy'
-        expect(response).to include 'Fetching custom buildpack'
+        expect(response).to match(/Fetching custom buildpack/)
         sleep 5
         response = http_get "node-js-sample.vcap.me:4004"
         expect(response).to eq 'Hello World!'
@@ -59,13 +57,13 @@ describe 'The Peas PaaS Integration Tests', :integration do
         response = @cli.run 'config set FOO=BAR'
         expect(response).to eq '{"FOO"=>"BAR"}'
         response = @cli.run 'config rm FOO'
-        expect(response).to eq ''
+        expect(response).to eq '{}'
       end
       it 'should list config for an app' do
         @cli.run 'config set FOO=BAR'
         @cli.run 'config set MOO=CAR'
         response = @cli.run 'config'
-        expect(response).to eq "{\"FOO\"=>\"BAR\"}\r\n{\"MOO\"=>\"CAR\"}\r\n"
+        expect(response).to eq "{\"FOO\"=>\"BAR\", \"MOO\"=>\"CAR\"}"
       end
     end
   end
@@ -75,15 +73,36 @@ describe 'The Peas PaaS Integration Tests', :integration do
       @cli = Cli.new REPO_PATH
       response = @cli.run 'create'
       expect(response).to eq "App 'node-js-sample' successfully created"
+      @cli.run 'config set MONGODB_URI=mongodb://172.17.42.1:27017'
       @cli.run 'deploy'
       sleep 5
       response = http_get 'node-js-sample.vcap.me:4004'
       expect(response).to eq 'Hello World!'
     end
-    describe 'Logs' do
-      it 'should stream logs' do
+    describe 'Config' do
+      it 'should set config and restart app' do
+        response = @cli.run 'config set SUCH=CONFIG'
+        expect(response).to match(/"SUCH"=>"CONFIG"}/)
         response = @cli.run 'logs', 5
-        expect(response).to include 'Node app is running at localhost:5000'
+        expect(response).to match(/app\[App.restart.worker\]: Restarting all processes.../)
+      end
+    end
+    describe 'Scaling' do
+      it 'should scale an app' do
+        response = @cli.run 'scale web=2'
+        expect(response).to match(/Scaling process 'web:2'/)
+        response = @cli.run 'logs', 5
+        expect(response).to match(/app\[web.1\]: Node app is running at localhost:5000/)
+      end
+    end
+    describe 'Addons' do
+      it 'should auto add an addon if a service URI is present' do
+        response = @cli.run 'config'
+        expect(response).to match %r{"MONGODB_URI"=>"mongodb://172.17.42.1:27017"}
+      end
+      it 'should enable an app to interact with a service' do
+        response = http_get 'node-js-sample.vcap.me:4004/mongo'
+        expect(response).to eq 'Barometer'
       end
     end
   end

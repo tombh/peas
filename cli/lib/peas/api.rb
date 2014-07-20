@@ -35,9 +35,7 @@ class API
       if api_version[0] != client_version[0]
         version_mismatch = true
       else
-        if api_version[1] != client_version[1]
-          version_mismatch = true
-        end
+        version_mismatch = true if api_version[1] != client_version[1]
       end
       if version_mismatch
         Peas.warning_message "Your version of the CLI client is out of date " \
@@ -45,7 +43,11 @@ class API
           "Please update using `gem install peas-cli`."
       end
       # Normal API response
-      puts json['message']
+      if block_given?
+        yield json['message']
+      else
+        puts json['message']
+      end
     end
   end
 

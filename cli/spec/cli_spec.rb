@@ -11,21 +11,27 @@ describe 'Peas CLI' do
   end
 
   describe 'Settings' do
-    it 'should set settings' do
-      stub_request(:put, 'http://new-domain.com:4000/admin/settings?domain=new-domain.com:4000')
-        .to_return(body: response_mock(nil))
-      output = cli %w(settings --domain=new-domain.com:4000)
-      expect(output).to eq "\nNew settings:\n{\n  \"domain\": \"http://new-domain.com:4000\"\n}\n"
+    it 'should set and use the domain setting' do
+      stub_request(:put, 'http://new-domain.com:4000/admin/settings?peas.domain=new-domain.com:4000')
+        .to_return(body: response_mock({}))
+      cli %w(admin settings peas.domain new-domain.com:4000)
       config = JSON.parse File.open('/tmp/.peas').read
       expect(config).to eq("domain" => "http://new-domain.com:4000")
     end
 
-    it 'should use the domain setting' do
-      File.open('/tmp/.peas', 'w') { |f| f.write('{"domain":"test.com"}') }
-      stub_request(:get, /test.com/)
-        .to_return(body: response_mock(nil))
-      cli %w(deploy)
+    it 'should set a normal setting' do
+      stub_request(:put, 'http://vcap.me:4000/admin/settings?mongodb.uri=mongodb://uri')
+        .to_return(body: response_mock(
+          defaults: ['peas.domain' => 'http://boss.com'],
+          services: [
+            { 'mongodb.uri' => 'mongodb://uri' },
+            { 'postgres.uri' => 'xsgfd' }
+          ]
+        ))
+      output = cli %w(admin settings mongodb.uri mongodb://uri)
+      expect(output).to eq("Available settings\n\nDefaults:\n  peas.domain http://boss.com\n\nServices:\n  mongodb.uri mongodb://uri\n  postgres.uri xsgfd\n\n")
     end
+
   end
 
   describe 'App methods' do

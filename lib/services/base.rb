@@ -14,7 +14,7 @@ module Peas
       # Get the admin connection URI for the service
       # Eg; 'postgresql://root:password@localhost:5432'
       def uri
-        Setting.find_by(key: type).value
+        Setting.retrieve("#{type}.uri")
       end
 
       def uri_parsed

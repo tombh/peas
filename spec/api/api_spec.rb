@@ -19,9 +19,7 @@ describe Peas::API do
 
   describe 'Apps' do
     it "should create an app" do
-      post '/app/5b',
-           remote: 'git@github.com:test/test.git'
-
+      post '/app/5b', remote: 'git@github.com:test/test.git'
       expect(last_response.status).to eq 201
       expect(App.count).to eq 1
       expect(App.first.first_sha).to eq "5b"
@@ -71,11 +69,12 @@ describe Peas::API do
     end
 
     describe 'Settings' do
-      it 'should list available services' do
+      it 'should list defaults and available services' do
+        Setting.create key: 'mongodb.uri', value: 'mongodb://uri'
         get '/admin/settings'
         response = JSON.parse(last_response.body)['message']
-        expect(response['defaults']).to eq Setting.all.to_a
-        expect(response['services']).to eq Peas.available_services
+        expect(response['defaults'].first['peas.domain']).to eq Setting.retrieve('peas.domain')
+        expect(response['services'].first['mongodb.uri']).to eq Setting.retrieve('mongodb.uri')
       end
 
       it "should create a new setting" do
@@ -92,8 +91,8 @@ describe Peas::API do
         expect(last_response.status).to eq 400
       end
 
-      it 'should create a new config hash for an existing app' do
-        expect_any_instance_of(App).to receive(:restart)
+      it 'should create a new config hash for an existing app', :mock_worker do
+        expect(@mock_worker).to receive(:restart)
         put "/app/#{peas_app.first_sha}/config", vars: { 'foo' => 'bar' }.to_json
         expect(last_response.status).to eq 200
         message = JSON.parse(last_response.body)['message']
@@ -116,7 +115,8 @@ describe Peas::API do
           expect(message).to eq('foo' => 'bar', 'mange' => 'tout')
         end
 
-        it 'should update an existing config var' do
+        it 'should update an existing config var', :mock_worker do
+          expect(@mock_worker).to receive(:restart)
           put "/app/#{peas_app.first_sha}/config", vars: { 'foo' => 'peas' }.to_json
           expect(last_response.status).to eq 200
           message = JSON.parse(last_response.body)['message']

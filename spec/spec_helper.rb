@@ -44,6 +44,11 @@ RSpec.configure do |config|
     Celluloid.shutdown
   end
 
+  config.before(:each, :mock_worker) do
+    @mock_worker = double
+    expect(Peas::ModelWorker::ModelProxy).to receive(:new).and_return(@mock_worker)
+  end
+
   config.before(:each) do
     allow(Docker).to receive(:version).and_return('Version' => Peas::DOCKER_VERSION)
     Pod.destroy_all

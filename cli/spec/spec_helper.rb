@@ -8,7 +8,7 @@ require 'lib/peas'
 ENV['GLI_ENV'] = 'test'
 ROOT = File.join(File.expand_path(File.dirname(__FILE__)), '..')
 $LOAD_PATH.unshift(File.join(ROOT, 'lib'))
-TEST_DOMAIN = 'http://localhost:4000'
+TEST_DOMAIN = 'http://vcap.me:4000'
 SWITCHBOARD_TEST_PORT = 79_345
 
 RSpec.configure do |config|

@@ -16,15 +16,16 @@ module Peas
 
   # Hierarchy of sources for the Peas API domain
   def self.api_domain
-    domain = if ENV['PEAS_API_ENDPOINT']
-               ENV['PEAS_API_ENDPOINT']
+    domain =
+    if ENV['PEAS_API_ENDPOINT']
+      ENV['PEAS_API_ENDPOINT']
     elsif Peas.config['domain']
-               Peas.config['domain']
+      Peas.config['domain']
     else
-      'localhost:4000'
+      'vcap.me:4000'
     end
     unless domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
-      domain = "http://#{domain}"
+      "http://#{domain}"
     else
       domain
     end

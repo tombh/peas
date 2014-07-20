@@ -13,7 +13,7 @@ describe Peas::Services::Postgres, :service do
       @admin_conn.exec "DROP DATABASE IF EXISTS #{@app.name}"
       @admin_conn.exec "DROP ROLE IF EXISTS #{@app.name}"
     end
-    Setting.create(key: 'postgres', value: 'postgresql://localhost:5432')
+    Setting.create(key: 'postgres.uri', value: 'postgresql://localhost:5432')
     uri = Peas::Services::Postgres.new(@app).create
     parsed = URI.parse uri
     @conn = PG.connect(

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Peas::Services::Mongodb, :service do
   before :each do
     @app = Fabricate :app
-    Setting.create(key: 'mongodb', value: 'mongodb://localhost:27017')
+    Setting.create(key: 'mongodb.uri', value: 'mongodb://localhost:27017')
   end
 
   it 'should create a usable mongo db instance' do

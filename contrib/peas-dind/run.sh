@@ -21,6 +21,7 @@ docker run \
   -it \
   --privileged \
   --rm=true \
+  --net host \
   --volumes-from peas-data \
   -v $PEAS_ROOT:/home/peas/repo \
   -p $PORT:4000 \

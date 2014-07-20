@@ -8,7 +8,7 @@ RUN apt-get update
 RUN apt-get install -qqy software-properties-common
 RUN apt-add-repository ppa:brightbox/ruby-ng -y
 RUN apt-get update
-RUN apt-get install -qqy ruby2.1 ruby2.1-dev build-essential libssl-dev
+RUN apt-get install -qqy ruby2.1 ruby2.1-dev build-essential libssl-dev libpq-dev
 
 # Mongo DB
 # Add 10gen official apt source to the sources list
@@ -23,7 +23,7 @@ RUN apt-get install mongodb-10gen
 RUN mkdir -p /data/db
 
 # Peas-specific deps
-RUN mkdir /root/.ssh -p && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
+RUN mkdir /root/.ssh -p && /bin/bash -c 'echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config'
 ADD ./ /home/peas/repo
 RUN gem install bundler
 

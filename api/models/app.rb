@@ -87,6 +87,7 @@ class App
 
   # Restart all the app's processes. Useful in cases such as updating environment variables
   def restart
+    broadcast "Restarting all processes..." if @current_job
     scale process_types
   end
 
@@ -235,7 +236,7 @@ class App
     # Merge the new config with a hashed version of the existing config
     self.config = config.merge! hash
     save!
-    restart
+    worker(block_until_complete: true).restart
     config
   end
 

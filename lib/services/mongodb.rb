@@ -10,7 +10,7 @@ module Peas
         command.gsub!(/\s+/, "")
         # Having to use command line at the moment because moped doesn't seem to be able to issue
         # db.addUser() and the mongo-ruby-driver has a dependency mismatch with mongoid's bson gem.
-        `mongo #{host_with_port}/#{instance_name} #{auth} --eval "#{command};"`
+        Peas.pty "mongo #{host_with_port}/#{instance_name} #{auth} --eval \"#{command};\""
       end
 
       def create

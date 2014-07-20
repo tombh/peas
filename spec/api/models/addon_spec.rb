@@ -1,9 +1,14 @@
 require 'spec_helper'
 
-describe Addon do
+describe Addon, :mock_worker do
+
   # Use the MongoDB service seeing as it's already a dependency of Peas
   before :each do
-    Setting.create(key: 'mongodb', value: 'mongodb://localhost:27017')
+    allow(@mock_worker).to receive(:restart)
+    session = Moped::Session.new(['localhost:27017'])
+    session.use :fabricated
+    session.drop
+    Setting.create(key: 'mongodb.uri', value: 'mongodb://localhost:27017')
     @app = Fabricate :app
   end
 

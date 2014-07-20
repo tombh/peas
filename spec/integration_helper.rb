@@ -1,6 +1,4 @@
 require 'rubygems'
-require 'timeout'
-require 'pty'
 require 'net/http'
 require 'webmock'
 require 'vcr'
@@ -11,38 +9,9 @@ FileUtils.mkdir_p TMP_PATH
 
 puts "\nRun `docker logs -f peas-test` to tail integration test activity\n\n"
 
-# Convenience wrapper for the command line. Kills commands if they run too long
-# Note that `curl` seems to behave oddly with this -  it doesn't output anything
-def sh(command, timeout = 60)
-  output = ''
-  pid = nil
-  PTY.spawn(command  + ' 2>&1') do |stdout, _stdin, pid_local|
-    pid = pid_local
-    begin
-      Timeout.timeout(timeout) do
-        stdout.each do |line|
-          output += line
-        end
-      end
-    rescue Timeout::Error
-      Process.kill('INT', pid)
-    rescue Errno::EIO
-      # Most likely means child has finished giving output
-    end
-  end
-  status = PTY.check(pid)
-  unless status.nil?
-    if status.exitstatus != 0
-      raise "`#{command}` failed with: \n--- \n #{output} \n---"
-    end
-  end
-  output.strip! if output.lines.count == 1
-  output
-end
-
 # Find the test-specific data volume
 def get_data_vol_id
-  output = sh "docker ps -a | grep 'busybox:.*peas-data-test' | awk '{print $1}'"
+  output = Peas.pty "docker ps -a | grep 'busybox:.*peas-data-test' | awk '{print $1}'"
   if output.length == 12 # Trivial sanity check
     output
   else
@@ -54,7 +23,7 @@ end
 def setup_data_volume
   return get_data_vol_id if get_data_vol_id
   # Name the volume differently from the one that may be used in dev/prod
-  sh "docker run -v /var/lib/docker -v /data/db -v /var/lib/gems --name peas-data-test busybox true"
+  Peas.pty "docker run -v /var/lib/docker -v /data/db -v /var/lib/gems --name peas-data-test busybox true"
   if !get_data_vol_id
     raise "Failed to create data volume. Aborting."
   else
@@ -82,7 +51,7 @@ class ContainerConnection
     bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
     sleep 5
     # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
-    console 'Setting.create(key: "domain", value: "vcap.me:4004")'
+    console 'Setting.create(key: "peas.domain", value: "vcap.me:4004")'
     # Create a pod stub for the controller-pod combined setup
     console "Pod.create_stub"
   end
@@ -111,7 +80,7 @@ class Cli
       "PEAS_API_ENDPOINT=localhost:4004 " \
       "SWITCHBOARD_PORT=7345 " \
       "#{Peas.root}cli/bin/peas-dev #{cmd}"
-    sh cmd, timeout
+    Peas.pty cmd, timeout
   end
 end
 
@@ -124,7 +93,7 @@ RSpec.configure do |config|
     WebMock.allow_net_connect!
     VCR.turn_off!
     setup_data_volume
-    @peas_container_id = sh(
+    @peas_container_id = Peas.pty(
       "docker run -d \
         --privileged \
         -i \
@@ -146,8 +115,8 @@ RSpec.configure do |config|
 
     # Clone a very basic NodeJS app
     REPO_PATH = TMP_PATH + '/node-js-sample'
-    sh "rm -rf #{REPO_PATH}"
-    sh "cd #{TMP_PATH} && git clone https://github.com/tombh/node-js-sample.git"
+    Peas.pty "rm -rf #{REPO_PATH}"
+    Peas.pty "cd #{TMP_PATH} && git clone https://github.com/tombh/node-js-sample.git"
 
     # Just to make sure everything is clean before we start
     @peas_io.env_reset
@@ -171,10 +140,10 @@ RSpec.configure do |config|
     @peas_io.bash "mongod --shutdown"
     @peas_io.close
     # Save logs before destroying
-    sh "docker logs #{@peas_container_id} > #{TMP_PATH}/integration-tests.log 2>&1"
+    Peas.pty "docker logs #{@peas_container_id} > #{TMP_PATH}/integration-tests.log 2>&1"
     # Remove the Peas test container. But the data container 'peas-data-test' still remains
-    sh "docker stop #{@peas_container_id}"
-    sh "docker rm -f #{@peas_container_id}"
+    Peas.pty "docker stop #{@peas_container_id}"
+    Peas.pty "docker rm -f #{@peas_container_id}"
     puts ""
     puts "Integration tests log available at #{TMP_PATH}/integration-tests.log"
     WebMock.disable_net_connect!

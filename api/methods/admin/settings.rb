@@ -2,11 +2,7 @@ module Peas
   class AdminMethods < Grape::API
     desc "Show all the available settings"
     get :settings do
-      settings = {
-        defaults: Setting.all,
-        services: Peas.available_services
-      }
-      respond settings
+      respond current_settings
     end
 
     desc "Update Peas' settings"
@@ -20,7 +16,7 @@ module Peas
           Setting.create(key: key, value: value)
         end
       end
-      respond nil
+      respond current_settings
     end
   end
 end
