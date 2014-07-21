@@ -1,5 +1,7 @@
 require 'lib/services/base'
 
+# Curtently depends on MongoDB >= 2.6.x
+
 module Peas
   module Services
     class Mongodb < ServicesBase
@@ -15,7 +17,7 @@ module Peas
 
       def create
         pass = SecureRandom.hex[0..10]
-        client "db.addUser({
+        client "db.createUser({
           user: '#{user_name}',
           pwd: '#{pass}',
           roles: ['readWrite']
@@ -24,6 +26,7 @@ module Peas
       end
 
       def destroy
+        client "db.dropUser('#{user_name}')"
         client "db.dropDatabase()"
       end
     end
