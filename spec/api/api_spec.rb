@@ -73,8 +73,8 @@ describe Peas::API do
         Setting.create key: 'mongodb.uri', value: 'mongodb://uri'
         get '/admin/settings'
         response = JSON.parse(last_response.body)['message']
-        expect(response['defaults'].first['peas.domain']).to eq Setting.retrieve('peas.domain')
-        expect(response['services'].first['mongodb.uri']).to eq Setting.retrieve('mongodb.uri')
+        expect(response['defaults']['peas.domain']).to eq Setting.retrieve('peas.domain')
+        expect(response['services']['mongodb.uri']).to eq Setting.retrieve('mongodb.uri')
       end
 
       it "should create a new setting" do

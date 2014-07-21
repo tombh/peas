@@ -3,9 +3,9 @@ def format_settings(hash)
   puts ''
   hash.each do |type, settings|
     puts "#{type.capitalize}:"
-    settings.each do |setting|
-      value = setting.values.first == '' ? '[unset]' : setting.values.first
-      puts "  #{setting.keys.first} #{value}"
+    settings.each do |setting, value|
+      value = '[unset]' if value == ''
+      puts "  #{setting} #{value}"
     end
     puts ''
   end

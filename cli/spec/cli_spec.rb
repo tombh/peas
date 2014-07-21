@@ -22,11 +22,11 @@ describe 'Peas CLI' do
     it 'should set a normal setting' do
       stub_request(:put, 'http://vcap.me:4000/admin/settings?mongodb.uri=mongodb://uri')
         .to_return(body: response_mock(
-          defaults: ['peas.domain' => 'http://boss.com'],
-          services: [
-            { 'mongodb.uri' => 'mongodb://uri' },
-            { 'postgres.uri' => 'xsgfd' }
-          ]
+          defaults: {'peas.domain' => 'http://boss.com'},
+          services: {
+            'mongodb.uri' => 'mongodb://uri',
+            'postgres.uri' => 'xsgfd'
+          }
         ))
       output = cli %w(admin settings mongodb.uri mongodb://uri)
       expect(output).to eq("Available settings\n\nDefaults:\n  peas.domain http://boss.com\n\nServices:\n  mongodb.uri mongodb://uri\n  postgres.uri xsgfd\n\n")

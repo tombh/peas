@@ -4,8 +4,12 @@ module Peas
     helpers do
       def current_settings
         {
-          defaults: Setting::DEFAULTS.keys.map { |s| { s => Setting.retrieve(s.to_s) } },
-          services: Peas.available_services.map { |s| { "#{s}.uri" => Setting.retrieve("#{s}.uri") } }
+          defaults: Setting::DEFAULTS.keys.map { |s|
+            { s => Setting.retrieve(s.to_s) }
+          }.reduce({}, :update),
+          services: Peas.available_services.map { |s|
+            { "#{s}.uri" => Setting.retrieve("#{s}.uri") }
+          }.reduce({}, :update)
         }
       end
     end
