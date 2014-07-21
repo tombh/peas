@@ -53,7 +53,7 @@ This is the preferred method for local development, but note that local developm
 with the Docker installation method.
 All you will need is; Ruby 2.1,
 [Docker](https://www.docker.io/gettingstarted/)
-and [Mongo DB](http://docs.mongodb.org/manual/installation/).
+and [Mongo DB](http://docs.mongodb.org/manual/installation/)(>= 2.6).
 All of these are generally installable via your system's package manager, no compiling should be necessary.
 ```bash
 docker pull progrium/buildstep # This runs Heroku buildpacks against repos to create deployable app images
