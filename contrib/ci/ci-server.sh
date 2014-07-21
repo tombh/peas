@@ -55,7 +55,7 @@ if [ "$1" == "--run-tests" ]; then
   fi
   # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
   echo "Rebuilding Dockerfile..."
-  docker build -t tombh/peas .
+  docker build --no-cache -t tombh/peas .
   # Install dependencies for the CLI client
   cd $PEAS_ROOT/cli
   echo "Installing CLI dependencies..."

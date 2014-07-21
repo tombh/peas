@@ -33,6 +33,9 @@ peas create
 peas deploy
 =>
 "-----> Installing dependencies
+.
+.
+.
  -----> Discovering process types
  -----> Scaling process 'web:1'
         Deployed to http://mycoolapp.vcap.me:4000"
@@ -82,11 +85,12 @@ To interact with the Peas API you will need to install the command line client:
 `gem install peas-cli`
 
 During development you will find it useful to use the `peas-dev` command. It uses the live code in
-your local repo as the CLI client. You can put it in your `$PATH` with something like;
+your local repo as the CLI client. You can put it in your `$PATH` with something like;    
 `sudo ln -s $(pwd)/peas-dev /usr/local/bin/peas-dev`
 
 #Usage
 
+**Setup**
 Peas aims to follow the conventions and philosophies of Heroku as closely as possible. So it is worth
 bearing in mind that a lot of the [Heroku documentation](https://devcenter.heroku.com/) is relevant to Peas.
 
@@ -97,6 +101,7 @@ to 127.0.0.1
 To use a different domain:
 `peas settings --domain customdomain.com`
 
+**Deploying**
 Next thing is to get into your app's directory. Peas approaches git repos for apps differently from
 other PaaS projects. It does not have a git server so requires app repos to be remotely accessible.
 At the moment this is only web accessible repos like on Github and Bitbucket. But the plan is to allow
@@ -111,15 +116,25 @@ peas deploy
 You can scale processes using:
 `peas scale web=3 worker=2`
 
-List of current commands;
+**Services**
+If a service URI is provided to Peas' admin settings then all subsequently created apps will be given an instance of
+that service. Therefore, by issuing somehting like;    
+`peas admin settings mongodb.uri mongodb://root:password@mongoservice.com`
+all new apps will get created with a config variable of something like;    
+'MONGDB_URI=mongodb://appname:2f7n87fr@mongoservice.com/appname'
+
+New services can be added by creating a new class in `lib/services`. You can use any of the existing service classes as
+a template.
+
+**All current CLI commands**
 ```
-config   - Add, remove and list config for an app
-create   - Create an app
-deploy   - Deploy an app
-help     - Shows a list of commands or help for one command
-logs     - Show logs for an app
-scale    - Scale an app
-settings - Set Peas global settings
+admin  - Admin commands
+config - Add, remove and list config for an app
+create - Create an app
+deploy - Deploy an app
+help   - Shows a list of commands or help for one command
+logs   - Show logs for an app
+scale  - Scale an app
 ```
 
 #Roadmap
@@ -127,8 +142,8 @@ settings - Set Peas global settings
   * Users. Peas currently has absolutely no concept of users :/
   * Nodes, or 'pods' if we're keeping with the 'pea' theme. Therefore distributing containers over multiple servers.
 
-##Video Presentation (1h16m)
-Given at Bristol Ruby User Group on June 26th 2014    
+##Video Presentation
+Given at Bristol Ruby User Group on June 26th 2014 (1h16m)    
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=Y5vb5YEatnw
 " target="_blank"><img src="http://img.youtube.com/vi/Y5vb5YEatnw/0.jpg"
 alt="Peas presentation" width="480" border="10" /></a>
