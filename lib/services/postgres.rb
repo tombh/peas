@@ -1,5 +1,7 @@
 require 'lib/services/base'
 
+# Currently only suppoort Postgres >= 9.3
+
 module Peas
   module Services
     class Postgres < ServicesBase
@@ -32,9 +34,9 @@ module Peas
         # First make sure all existing connections are closed
         c.exec "REVOKE CONNECT ON DATABASE #{instance_name} FROM public;"
         c.exec "
-          SELECT pg_terminate_backend (pg_stat_activity.pid)
-          FROM pg_stat_activity
-          WHERE pg_stat_activity.datname = '#{instance_name}';
+          SELECT pg_terminate_backend(procpid)
+          FROM pg_stat_get_activity(NULL::integer)
+          WHERE datid=(SELECT oid from pg_database where datname = '#{instance_name}');
         "
         # And now it's safe to do the dropping
         c.exec "DROP DATABASE IF EXISTS  #{instance_name}"

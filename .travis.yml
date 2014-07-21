@@ -8,6 +8,7 @@ cache: bundler
 
 services:
   - mongodb
+  - postgresql
 
 install:
   - export BUNDLE_GEMFILE=$PWD/Gemfile
