@@ -34,7 +34,7 @@ module Peas
         # First make sure all existing connections are closed
         c.exec "REVOKE CONNECT ON DATABASE #{instance_name} FROM public;"
         c.exec "
-          SELECT pg_terminate_backend(procpid)
+          SELECT pg_terminate_backend(pid)
           FROM pg_stat_get_activity(NULL::integer)
           WHERE datid=(SELECT oid from pg_database where datname = '#{instance_name}');
         "
