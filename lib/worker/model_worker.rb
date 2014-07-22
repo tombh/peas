@@ -57,17 +57,19 @@ module Peas
 
     # Send status updates for the current and pareant jobs, so that other processes can listen to progress
     def broadcasters(message)
+      @job_broadcasters ||= {}
       # Broadcast to current and parent. But only both if they're actually different jobs
       [@current_job, @parent_job].uniq.each do |job|
-        socket = Peas::Switchboard.connection
-        socket.puts "publish.job_progress.#{job} history"
+        unless @job_broadcasters.key? job
+          @job_broadcasters[job] = Peas::Switchboard.connection
+          @job_broadcasters[job].puts "publish.job_progress.#{job} history"
+        end
         # Don't update the parent job's status with the current job's status, unless it's to notify of failure.
         # All we want to do is make sure that parent job gets human-readable progress details from child jobs.
         if (job == @parent_job) && (@current_job != @parent_job)
           message.delete :status if message[:status] != 'failed'
         end
-        socket.puts message.to_json if message[:status] || message[:body]
-        socket.close
+        @job_broadcasters[job].puts message.to_json if message[:status] || message[:body]
       end
     end
 
