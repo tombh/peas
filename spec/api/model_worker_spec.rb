@@ -6,10 +6,7 @@ describe Peas::ModelWorker, :with_worker do
   let(:uuid2) { 'b8d2cdbd6-d3d4-4d2f-8f48-96325a4f2cd6' }
 
   before :each do
-    class App; def fake
-                 broadcast 'carpe'
-                 broadcast 'diem'
-               end end
+    class App; def fake; 100.times{ |i| broadcast i } end end
     allow(SecureRandom).to receive(:uuid).and_return(uuid, uuid2)
   end
 
@@ -86,9 +83,7 @@ describe Peas::ModelWorker, :with_worker do
         break if line['status'] == 'failed' || line['status'] == 'complete'
       end
       expect(statuses.uniq).to eq ['queued', 'working', 'complete']
-      # Note that the sort() here is sweeping a bug under the carpet. Namely that occasionally broadcast() doesn't
-      # emit to its subscribers in the same order that it received them.
-      expect(bodies.compact.uniq.sort).to eq ['carpe', 'diem']
+      expect(bodies.compact.uniq).to eq (0...100).map{|n| n.to_s}
     end
 
     it 'should log activity to app logs if the job is on an App model' do
