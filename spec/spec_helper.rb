@@ -7,6 +7,8 @@ require 'webmock/rspec'
 require 'celluloid/test'
 require 'docker_creation_mock.rb'
 
+ENV['PEAS_API_LISTENING'] = 'true'
+
 # Note: I've found that the ordering for the config hooks is important. Specifically that Mongoid's
 # session needs to be dropped before shutting down Celluloid. Specifying hooks first seems to mean
 # they are run last.
@@ -28,6 +30,22 @@ RSpec.configure do |config|
     Celluloid.shutdown
   end
 
+  config.before(:each, :mock_worker) do
+    @mock_worker = double
+    expect(Peas::ModelWorker::ModelProxy).to receive(:new).and_return(@mock_worker)
+  end
+
+  config.before(:each) do
+    allow(Docker).to receive(:version).and_return('Version' => Peas::DOCKER_VERSION)
+    Pod.destroy_all
+    Pod.create_stub
+    Pod.create_stub
+  end
+
+  config.after(:each) do
+    Mongoid.default_session.drop
+  end
+
   config.before(:each, :with_worker) do
     Celluloid.boot
     stub_const('Peas::SWITCHBOARD_HOST', SWITCHBOARD_TEST_HOST)
@@ -43,21 +61,6 @@ RSpec.configure do |config|
     Celluloid::Actor.clear_registry
     Celluloid.shutdown_timeout = 0.02
     Celluloid.shutdown
-  end
-
-  config.before(:each, :mock_worker) do
-    @mock_worker = double
-    expect(Peas::ModelWorker::ModelProxy).to receive(:new).and_return(@mock_worker)
-  end
-
-  config.before(:each) do
-    allow(Docker).to receive(:version).and_return('Version' => Peas::DOCKER_VERSION)
-    Pod.destroy_all
-    Pod.create_stub
-  end
-
-  config.after(:each) do
-    Mongoid.default_session.drop
   end
 end
 

@@ -34,7 +34,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         expect(response).to eq 'Hello World!'
       end
 
-      it 'should use a custom buildpack proving build time env vars work' do
+      it 'should deploy with a custom buildpack' do
         @cli.run 'config set BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs.git'
         response = @cli.run 'deploy'
         expect(response).to match(/Fetching custom buildpack/)
@@ -71,7 +71,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
   describe 'Features of deployed apps', :maintain_test_env do
     before :all do
       @cli = Cli.new REPO_PATH
-      @cli.run 'admin settings mongodb.uri mongodb://localhost:27017'
+      @cli.run 'admin settings mongodb.uri mongodb://10.0.42.1:27017'
       response = @cli.run 'create'
       expect(response).to eq "App 'node-js-sample' successfully created"
       @cli.run 'deploy'
@@ -98,8 +98,9 @@ describe 'The Peas PaaS Integration Tests', :integration do
     describe 'Addons' do
       it 'should auto add an addon if a service URI is present' do
         response = @cli.run 'config'
+        # 10.0.42.1 seems to be the default IP for the internal DinD interface
         expect(response).to match(
-          %r{"MONGODB_URI"=>"mongodb://node-js-sample:[a-z0-9]*@localhost:27017/node-js-sample"}
+          %r{"MONGODB_URI"=>"mongodb://node-js-sample:[a-z0-9]*@10.0.42.1:27017/node-js-sample"}
         )
       end
       it 'should enable an app to interact with a service' do

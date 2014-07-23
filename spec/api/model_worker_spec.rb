@@ -54,18 +54,18 @@ describe Peas::ModelWorker, :with_worker do
       app.worker(:controller, block_until_complete: true).fake
     end
 
-    it 'should send jobs to the dockerless_pod worker' do
+    it 'should send jobs to the default localhost_pod worker' do
       expect(app).to receive(:broadcast).with(run_by: 'localhost_pod')
-      app.worker(Pod.first, block_until_complete: true).fake
+      app.worker(:optimal_pod, block_until_complete: true).fake
     end
 
     it 'using :optimal_pod should find the least burdened pod and send a job to it' do
       dockerless_pod = Pod.find_by hostname: 'localhost'
-      fab_pod = Fabricate :pod, hostname: 'fab_pod'
+      fabwlus = Fabricate :pod, hostname: 'fabwlus'
       4.times { |i| Fabricate :pea, app: app, pod: dockerless_pod, docker_id: "dp#{i}" }
-      3.times { |i| Fabricate :pea, app: app, pod: fab_pod, docker_id: "fp#{i}" }
-      WorkerReceiver.new 'fab_pod'
-      expect(app).to receive(:broadcast).with(run_by: 'fab_pod')
+      3.times { |i| Fabricate :pea, app: app, pod: fabwlus, docker_id: "fp#{i}" }
+      WorkerReceiver.new 'fabwlus_pod'
+      expect(app).to receive(:broadcast).with(run_by: 'fabwlus_pod')
       app.worker(:optimal_pod, block_until_complete: true).fake
     end
   end

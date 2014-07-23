@@ -42,18 +42,20 @@ class ContainerConnection
   end
   # Run a command that you would normally run with the `rake console` IRB
   def console(cmd)
-    bash "cd /home/peas/repo && echo '#{cmd}' | bundle exec rake console"
+    bash 'cd /home/peas/repo && echo "%s" | bundle exec rake console' % cmd
   end
   # Reset DBs and docker ready for new tests
   def env_reset
     # TODO: need a way to check if these commands were successful
-    bash "mongo peas --eval 'db.dropDatabase();'"
+    bash "mongo peas --eval 'db.dropDatabase()'"
+    bash "mongo node-js-sample --eval 'db.dropDatabase()'"
+    bash "mongo node-js-sample --eval \"db.dropUser('node-js-sample')\""
     bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
     sleep 5
     # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
-    console 'Setting.create(key: "peas.domain", value: "vcap.me:4004")'
+    console "Setting.create(key: 'peas.domain', value: 'vcap.me:4004')"
     # Create a pod stub for the controller-pod combined setup
-    console "Pod.create_stub"
+    console "ENV['PEAS_API_LISTENING'] = 'true'; Pod.create_stub"
   end
   # Close the connection
   def close

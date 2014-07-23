@@ -8,6 +8,8 @@ class Pod
 
   has_many :peas
 
+  validates_presence_of :hostname
+
   # Find the best pod to add a container to
   def self.optimal_pod
     Pod.all.sort_by { |pod| pod.peas.count }.first
@@ -21,10 +23,9 @@ class Pod
   # sure a pod model object exists to represent the default pod. A pod stub. This could be a dockerless pod if running
   # without Docker-in-Docker in a dev environment.
   def self.create_stub
-    if ENV['PEAS_API'] == 'true' && Peas.controller? && Peas.pod?
-      if Pod.count == 0
-        Pod.create! hostname: 'localhost'
-      end
+    if ENV['PEAS_API_LISTENING'] == 'true' && Peas.controller? && Peas.pod? && Pod.count == 0
+      Peas.logger.info "Creating Pod stub"
+      Pod.create! hostname: 'localhost'
     end
   end
 end

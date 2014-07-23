@@ -60,7 +60,7 @@ class Pea
 
   # Before removing a pea from the database kill and remove the relevant app container
   before_destroy do
-    worker(pod.docker_id, block_until_complete: true).destroy_container if docker_id
+    worker(pod, block_until_complete: true).destroy_container if docker_id
   end
 
   # Creates a docker container and the pea DB record representing it. Use instead of Pea.create()
