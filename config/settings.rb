@@ -105,4 +105,9 @@ module Peas
     }
   end
 
+  def self.logger
+    output = Peas.environment == 'test' ? '/dev/null' : STDOUT
+    @logger ||= Logger.new output
+  end
+
 end

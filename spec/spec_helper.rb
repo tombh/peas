@@ -3,6 +3,7 @@ ENV["RACK_ENV"] = ENV["PEAS_ENV"] = 'test'
 require File.expand_path("../../config/boot", __FILE__)
 Bundler.require :test
 require 'rack/test'
+require 'webmock/rspec'
 require 'celluloid/test'
 require 'docker_creation_mock.rb'
 
@@ -58,7 +59,6 @@ RSpec.configure do |config|
   config.after(:each) do
     Mongoid.default_session.drop
   end
-
 end
 
 # VCR is used to record HTTP interactions and replay them. Currently used to fake a Docker
@@ -116,7 +116,7 @@ end
 Dir["#{Peas.root}/switchboard/**/*.rb"].each { |f| require f }
 
 SWITCHBOARD_TEST_HOST = '127.0.0.1'
-SWITCHBOARD_TEST_PORT = 79_345
+SWITCHBOARD_TEST_PORT = 79345
 
 Celluloid.logger = nil unless ENV['CELLULOID_LOGS']
 

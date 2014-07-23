@@ -1,7 +1,4 @@
 require './config/boot'
 
-use Rack::Proxy do |request|
-  Peas.proxy request
-end
-
+use Peas::Proxy
 run Peas::API

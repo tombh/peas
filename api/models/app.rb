@@ -256,6 +256,11 @@ class App
     Mongoid::Sessions.default["#{_id}_logs"]
   end
 
+  # Return a lisr of the most recent log lines for the app
+  def recent_logs(lines = 100)
+    logs_collection.find.limit(lines).to_a.map { |line| line['line'] }
+  end
+
   # Log any activity for this app
   def log(logs, from = 'general', _level = :info)
     logs = logs.to_s
