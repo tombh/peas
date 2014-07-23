@@ -1,3 +1,4 @@
+ENV['PEAS_API'] = 'true'
 require './config/boot'
 
 use Peas::Proxy

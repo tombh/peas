@@ -8,6 +8,7 @@ class WorkerRunner
   end
 
   def perform(job)
+    info "Worker runner received job on: #{@queue_name} (#{job['model']}.#{job['method']})"
     model = job['model'] # eg; App
     id = job['id'] # eg; App._id
     method = job['method'] # eg; App.scale

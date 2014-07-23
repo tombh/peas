@@ -62,17 +62,15 @@ module Peas
     "#{Peas.host}:#{SWITCHBOARD_PORT}"
   end
 
-  # Figure out if we're running inside a docker container. Used by pods to identify themselves to the controller.
-  # Note that pods are docker-in-docker containers, they run app docker containers inside a host docker container.
-  # Yo dawg I heard you like docker containers, and all that.
-  def self.current_docker_host_id
+  # Figure out if we're running inside a docker container.
+  def self.dind?
     cgroups = File.open('/proc/self/cgroup').read
     matches = cgroups.match(/docker\/([a-z0-9]*)$/)
     if matches
+      # Return the Docker ID. Note that this changes everyt time the DinD container boots
       matches.captures.first
     else
-      # There is no host container when running in development
-      'dockerless_pod'
+      false
     end
   end
 
@@ -85,6 +83,11 @@ module Peas
   # Is this instance of Peas functioning as a pod?
   def self.pod?
     ENV['PEAS_POD'] ||= 'true'
+  end
+
+  # The publicly accessible address for the pod. Only relevant if we're running as a pod of course
+  def self.pod_host
+    ENV['DIND_HOST'] || 'localhost'
   end
 
   # Introspect the lib/services folder to find the available classes that allow the management

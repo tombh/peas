@@ -4,6 +4,12 @@
 set -e
 
 PORT=${1:-4000}
+
+# Make the assumption that if we're exposing Peas port 80, then this is a non-development environment
+if [ $PORT = 80 ]; then
+  export DIND_HOST=$(curl icanhazip.com)
+fi
+
 PEAS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../"
 
 data_container=$(docker ps -a | grep -P 'busybox:.*peas-data ' | awk '{print $1}')

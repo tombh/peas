@@ -3,8 +3,8 @@
 module Peas
   module ModelWorker
     class ModelProxy
-      def initialize(pod_id, block_until_complete, instance)
-        @pod_id = pod_id
+      def initialize(pod, block_until_complete, instance)
+        @pod = pod
         @block_until_complete = block_until_complete
         @instance = instance
         self
@@ -42,7 +42,7 @@ module Peas
         @instance.current_job = new_job_id unless @instance.current_job
         # Open up a pubsub publisher to add a job to the worker queue
         socket = Peas::Switchboard.connection
-        socket.puts "publish.jobs_for.#{@pod_id}"
+        socket.puts "publish.jobs_for.#{@pod}"
         # Package up the job
         job = {
           parent_job: @instance.parent_job,

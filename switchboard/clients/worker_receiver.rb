@@ -12,6 +12,7 @@ class WorkerReceiver
   end
 
   def listen(socket, queue)
+    info "Worker listening to queue: #{queue}"
     while job = socket.gets
       WorkerRunner.new job, queue
     end

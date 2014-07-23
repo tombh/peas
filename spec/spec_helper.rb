@@ -35,7 +35,7 @@ RSpec.configure do |config|
     allow(Peas).to receive(:host).and_return(SWITCHBOARD_TEST_HOST)
     @server = switchboard_server
     @controller_worker = WorkerReceiver.new 'controller'
-    @pod_worker = WorkerReceiver.new Peas.current_docker_host_id
+    @pod_worker = WorkerReceiver.new Pod.first.to_s
   end
 
   config.after(:each, :with_worker) do

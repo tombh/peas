@@ -71,9 +71,9 @@ describe 'The Peas PaaS Integration Tests', :integration do
   describe 'Features of deployed apps', :maintain_test_env do
     before :all do
       @cli = Cli.new REPO_PATH
+      @cli.run 'admin settings mongodb.uri mongodb://localhost:27017'
       response = @cli.run 'create'
       expect(response).to eq "App 'node-js-sample' successfully created"
-      @cli.run 'config set MONGODB_URI=mongodb://172.17.42.1:27017'
       @cli.run 'deploy'
       sleep 5
       response = http_get 'node-js-sample.vcap.me:4004'
@@ -98,7 +98,9 @@ describe 'The Peas PaaS Integration Tests', :integration do
     describe 'Addons' do
       it 'should auto add an addon if a service URI is present' do
         response = @cli.run 'config'
-        expect(response).to match %r{"MONGODB_URI"=>"mongodb://172.17.42.1:27017"}
+        expect(response).to match(
+          %r{"MONGODB_URI"=>"mongodb://node-js-sample:[a-z0-9]*@localhost:27017/node-js-sample"}
+        )
       end
       it 'should enable an app to interact with a service' do
         response = http_get 'node-js-sample.vcap.me:4004/mongo'

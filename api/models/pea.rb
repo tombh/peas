@@ -44,7 +44,6 @@ class Pea
   belongs_to :pod
 
   validates_presence_of :app
-  validates_uniqueness_of :docker_id
 
   def initialize(attrs = nil)
     super
@@ -61,7 +60,7 @@ class Pea
 
   # Before removing a pea from the database kill and remove the relevant app container
   before_destroy do
-    worker(pod.docker_id, block_until_complete: true).destroy_container
+    worker(pod.docker_id, block_until_complete: true).destroy_container if docker_id
   end
 
   # Creates a docker container and the pea DB record representing it. Use instead of Pea.create()
@@ -94,7 +93,7 @@ class Pea
       'PublishAllPorts' => 'true'
     )
     # What pod are we in right now?
-    self.pod = Pod.find_by(docker_id: Peas.current_docker_host_id)
+    self.pod = Pod.find_by(hostname: Peas.pod_host)
     # Get the Docker ID so we can find it later
     self.docker_id = container.info['id']
     # Find the randomly created external port that forwards to the internal 5000 port
@@ -107,7 +106,7 @@ class Pea
   # across multiple machines, we need to make sure that certain methods are only ever run on the
   # host machine upon which the pea lives.
   def ensure_correct_host
-    if Peas.current_docker_host_id != pod.docker_id
+    if Peas.pod_host != pod.hostname
       raise "Attempt to interact with a pea (belonging to '#{pod.docker_id}') " \
         "not located in the current pod ('#{Peas.current_docker_host_id}')."
     end
