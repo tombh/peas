@@ -1,7 +1,7 @@
 ###0.2.0
-**99999999999999th July 2014**    
+**24th July 2014**    
 **Features**:
-  * Addons. Currently MongoDB and Postgres. Automatically added to app if admin connection provided
+  * Addons. Currently MongoDB and Postgres. Automatically added to app if admin connection provided.
 
 ###0.1.3
 **11th July 2014**    
