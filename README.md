@@ -90,18 +90,18 @@ your local repo as the CLI client. You can put it in your `$PATH` with something
 
 #Usage
 
-**Setup**
+**Setup**    
 Peas aims to follow the conventions and philosophies of Heroku as closely as possible. So it is worth
 bearing in mind that a lot of the [Heroku documentation](https://devcenter.heroku.com/) is relevant to Peas.
 
 First thing is to set the domain that points to your Peas installation. If you're developing locally
 you can actually just rely on the default `vcap.me` which has wildcard DNS records to point all subdomains
-to 127.0.0.1
+to `127.0.0.1`.
 
 To use a different domain:
-`peas settings --domain customdomain.com`
+`peas admin settings --domain customdomain.com`
 
-**Deploying**
+**Deploying**    
 Next thing is to get into your app's directory. Peas approaches git repos for apps differently from
 other PaaS projects. It does not have a git server so requires app repos to be remotely accessible.
 At the moment this is only web accessible repos like on Github and Bitbucket. But the plan is to allow
@@ -116,12 +116,12 @@ peas deploy
 You can scale processes using:
 `peas scale web=3 worker=2`
 
-**Services**
+**Services**    
 If a service URI is provided to Peas' admin settings then all subsequently created apps will be given an instance of
 that service. Therefore, by issuing somehting like;    
 `peas admin settings mongodb.uri mongodb://root:password@mongoservice.com`
 all new apps will get created with a config variable of something like;    
-'MONGDB_URI=mongodb://appname:2f7n87fr@mongoservice.com/appname'
+`MONGDB_URI=mongodb://appname:2f7n87fr@mongoservice.com/appname`
 
 New services can be added by creating a new class in `lib/services`. You can use any of the existing service classes as
 a template.
