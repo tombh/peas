@@ -14,6 +14,7 @@ describe 'Peas CLI' do
     it 'should set and use the domain setting' do
       stub_request(:put, 'http://new-domain.com:4000/admin/settings?peas.domain=new-domain.com:4000')
         .to_return(body: response_mock({}))
+      expect(Git).to receive(:sh).with("git config peas.domain http://new-domain.com:4000")
       cli %w(admin settings peas.domain new-domain.com:4000)
       config = JSON.parse File.open('/tmp/.peas').read
       expect(config).to eq("domain" => "http://new-domain.com:4000")

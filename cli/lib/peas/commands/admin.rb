@@ -20,9 +20,12 @@ command :admin do |admin|
         if args.first == 'peas.domain'
           domain = args[1]
           domain = "http://#{domain}" unless domain.start_with? 'http://'
+          # Update Git config
+          Git.sh "git config peas.domain #{domain}"
+          # Update file
           content = Peas.config.merge('domain' => domain).to_json
           File.open(Peas.config_file, 'w+') { |f| f.write(content) }
-          @api = API.new # Refresh settings from file because there's a new domain URI
+          @api = API.new # Refresh settings from git/file because there's a new domain URI
         end
         @api.request(:put, '/admin/settings', args[0] => args[1]) { |response| format_settings response }
       else

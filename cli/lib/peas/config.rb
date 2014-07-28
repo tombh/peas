@@ -16,9 +16,12 @@ module Peas
 
   # Hierarchy of sources for the Peas API domain
   def self.api_domain
+    git_domain = Git.sh 'git config peas.domain'
     domain =
     if ENV['PEAS_API_ENDPOINT']
       ENV['PEAS_API_ENDPOINT']
+    elsif git_domain
+      git_domain
     elsif Peas.config['domain']
       Peas.config['domain']
     else

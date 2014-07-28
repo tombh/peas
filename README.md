@@ -99,7 +99,7 @@ you can actually just rely on the default `vcap.me` which has wildcard DNS recor
 to `127.0.0.1`.
 
 To use a different domain:
-`peas admin settings --domain customdomain.com`
+`peas admin settings peas.domain customdomain.com`
 
 **Deploying**    
 Next thing is to get into your app's directory. Peas approaches git repos for apps differently from
