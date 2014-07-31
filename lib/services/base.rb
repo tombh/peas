@@ -26,11 +26,11 @@ module Peas
       end
 
       def user_name
-        @app.name
+        @app.name.gsub(/[^0-9a-z ]/i, '')
       end
 
       def instance_name
-        @app.name
+        @app.name.gsub(/[^0-9a-z ]/i, '')
       end
 
       # Uses the Service-specific version of create() to create an Addon for an app

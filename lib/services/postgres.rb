@@ -39,7 +39,7 @@ module Peas
           WHERE datid=(SELECT oid from pg_database where datname = '#{instance_name}');
         "
         # And now it's safe to do the dropping
-        c.exec "DROP DATABASE IF EXISTS  #{instance_name}"
+        c.exec "DROP DATABASE IF EXISTS #{instance_name}"
         c.exec "DROP ROLE IF EXISTS #{user_name}"
       end
     end
