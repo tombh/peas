@@ -96,6 +96,7 @@ fi
 
 export LANG="C.UTF-8"
 export LC_ALL="C.UTF-8"
+rm -f /data/db/mongod.lock # This situation could be better dealt with
 /usr/bin/mongod --smallfiles &>/var/log/mongo.log &
 
 # If /var/lib/gems is mounted as a volume, then the first time Peas boots, there will be no
@@ -108,7 +109,16 @@ fi
 cd /home/peas/repo
 BUNDLE_BIN=/var/lib/gems/binstubs bundle install
 PATH=$PATH:/var/lib/gems/binstubs
-bundle exec foreman start -f ./Procfile &
 
-sleep 5
-exec bash
+peas_cmd() { bundle exec foreman start -f ./Procfile; }
+
+PEAS_ENV=${PEAS_ENV:-development}
+echo "Running Peas in $PEAS_ENV environment"
+
+if [ "$PEAS_ENV" == "production" ]; then
+    peas_cmd
+else
+    peas_cmd &
+    sleep 5
+    exec bash
+fi
