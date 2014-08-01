@@ -110,7 +110,7 @@ module Peas
         data.close
         if $CHILD_STATUS.to_i > 0
           broadcast accumulated
-          raise Peas::ShellError, "#{command} exited with non-zero status"
+          raise Peas::ShellError, "#{command} exited with non-zero status. Output: #{accumulated}"
         end
       end
       accumulated.strip

@@ -208,7 +208,7 @@ class App
     # Respawn all needed containers
     processes.each do |process_type, quantity|
       quantity.to_i.times do |i|
-        broadcast "#{arrow if deploy}Scaling process '#{process_type}:#{i + 1}'"
+        broadcast "#{arrow if deploy}Scaling process '#{process_type}:#{i + 1}'" if @current_job
         Pea.spawn(
           {
             app: self,
