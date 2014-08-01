@@ -104,12 +104,15 @@ RSpec.configure do |config|
         -v #{Peas.root}:/home/peas/repo \
         -p 4004:4000 \
         -p 7345:9345 \
-        -e RACK_ENV=production \
+        -e PEAS_ENV=production \
         tombh/peas"
     )
     # Wait until the container has completely booted
     Timeout.timeout(4 * 60) do
-      result = `bash -c 'until [ "$(curl -s localhost:4004)" == "Not Found" ]; do sleep 1; done' 2>&1`
+      result = `bash -c \
+        'until [ "$(curl -s -o /dev/null -w "%{http_code}" localhost:4004)" == "200" ]; do \
+          sleep 1;
+        done' 2>&1`
       raise result if $CHILD_STATUS.to_i != 0
     end
     # Open an IO pipe to the launched container
