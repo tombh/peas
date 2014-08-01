@@ -20,7 +20,7 @@ module Peas
     domain =
     if ENV['PEAS_API_ENDPOINT']
       ENV['PEAS_API_ENDPOINT']
-    elsif !git_domain.empty?
+    elsif !git_domain.nil? && git_domain != ''
       git_domain
     elsif Peas.config['domain']
       Peas.config['domain']
