@@ -10,7 +10,7 @@
 # processes, but they might also be one-off consoles, worker processes, etc.
 
 ENV['PEAS_ENV'] ||= 'development'
-ENV['RACK_ENV'] ||= ENV['PEAS_ENV']
+ENV['RACK_ENV'] = ENV['PEAS_ENV']
 
 require 'rubygems'
 require 'bundler/setup'
