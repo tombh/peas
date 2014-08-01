@@ -13,11 +13,12 @@ module Peas
       method = req.request_method.downcase
       method[0..0] = method[0..0].upcase
 
-      return @app.call(env) unless uri = find_destination(req)
+      uri = find_destination(req)
+      return @app.call(env) unless uri
 
       sub_request = Net::HTTP.const_get(method).new("#{uri.path}#{"?" if uri.query}#{uri.query}")
 
-      if sub_request.request_body_permitted? and req.body
+      if sub_request.request_body_permitted? && req.body
         sub_request.body_stream = req.body
         sub_request.content_length = req.content_length
         sub_request.content_type = req.content_type
@@ -49,16 +50,16 @@ module Peas
     end
 
     def find_destination(req)
-      domain = Peas.host
-      if req.host =~ /\.#{domain.gsub('.', '\.')}$/
-        app_name = req.host.split('.').first
-        app = App.where(name: app_name).first
-        @random_web_pea = Pea.where(app: app).where(process_type: 'web').to_a.sample
-        return false if @random_web_pea.nil?
-        forwarding_address = "http://#{@random_web_pea.pod.hostname}:#{@random_web_pea.port}#{req.path}"
-        Peas.logger.info "Proxying request to: #{forwarding_address}"
-        URI.parse forwarding_address
-      end
+      peas_part = Peas.host.split('.').first # Eg; 'peas' from 'peas.io'
+      req_part = req.host.split('.').first # Eg; 'appname' from 'appname.peas.io'
+      return false if peas_part == req_part # If there's no subdomain
+      app_name = req_part
+      app = App.where(name: app_name).first
+      @random_web_pea = Pea.where(app: app).where(process_type: 'web').to_a.sample
+      return false if @random_web_pea.nil?
+      forwarding_address = "http://#{@random_web_pea.pod.hostname}:#{@random_web_pea.port}#{req.path}"
+      Peas.logger.info "Proxying request to: #{forwarding_address}"
+      URI.parse forwarding_address
     end
   end
 end

@@ -1,8 +1,14 @@
+Dir["#{Peas.root}/api/methods/**/*.rb"].each { |f| require f }
+
 module Peas
   class API < Grape::API
     version 'v1', using: :header, vendor: 'peas'
     format :json
     add_swagger_documentation api_version: 'v1'
+
+    before do
+      docker_version_check
+    end
 
     helpers do
       def logger
@@ -19,11 +25,10 @@ module Peas
       # the Docker binary version, so for now I will assume that pinning against the binary version
       # also follows any breaking changes to the Docker Remote API.
       def docker_version_check
-        if Gem::Version.new(Docker.version['Version']) > Gem::Version.new(Peas::DOCKER_VERSION)
-          API.logger.warn "Using version #{Docker.version['Version']} of Docker " \
-            'which is newer than the latest version Peas has been tested with ' \
-            "(#{Peas::DOCKER_VERSION})"
-        end
+        return if Gem::Version.new(Peas::DOCKER_VERSION) >= Gem::Version.new(Docker.version['Version'])
+        API.logger.warn "Using version #{Docker.version['Version']} of Docker " \
+          'which is newer than the latest version Peas has been tested with ' \
+          "(#{Peas::DOCKER_VERSION})"
       end
 
       def respond(response, key = :message)
@@ -41,8 +46,19 @@ module Peas
       end
     end if Peas.environment != 'test'
 
-    before do
-      docker_version_check
+    # Make sure all paths are loaded before the catch-all 404 block
+    mount Peas::AdminMethods
+    mount Peas::AppMethods
+
+    route :any, '/' do
+      respond(
+        "This is the Peas API for #{Peas.domain}. See https://github.com/tombh/peas for more details"
+      )
     end
+
+    route :any, '*path' do
+      error!("404, you've been led up the garden path", 404)
+    end
+
   end
 end

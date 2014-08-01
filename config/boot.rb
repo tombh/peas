@@ -26,12 +26,12 @@ Mongoid.load!(Peas.root + '/config/mongoid.yml')
 # Add the Peas project path to Ruby's library path for easy require()'ing
 $LOAD_PATH.unshift(Peas.root)
 
-require 'config/api'
-
 Dir["#{Peas.root}/lib/**/*.rb"].each { |f| require f }
-# The /api folder is loaded regardless of role (controller/pod). The api/methods may not be needed to run a pod, but
+Dir["#{Peas.root}/api/models/**/*.rb"].each { |f| require f }
+
+# The API HTTP code is loaded regardless of role (controller/pod). The api/methods may not be needed to run a pod, but
 # there seems little advantage in explictly preventing their loading for pods. Memory savings would be trivial.
-Dir["#{Peas.root}/api/**/*.rb"].each { |f| require f }
+require 'config/api'
 
 # Create a pod stub if this a default combined controller-pod setup
 Pod.create_stub
