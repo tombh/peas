@@ -100,7 +100,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         response = @cli.run 'config'
         # 10.0.42.1 seems to be the default IP for the internal DinD interface
         expect(response).to match(
-          %r{"MONGODB_URI"=>"mongodb://node-js-sample:[a-z0-9]*@10.0.42.1:27017/node-js-sample"}
+          %r{"MONGODB_URI"=>"mongodb://nodejssample:[a-z0-9]*@10.0.42.1:27017/nodejssample"}
         )
       end
       it 'should enable an app to interact with a service' do

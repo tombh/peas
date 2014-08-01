@@ -1,3 +1,8 @@
+###0.2.1
+**1st August 2014**    
+**Features**:
+  * New methods to list and destroy apps.
+
 ###0.2.0
 **24th July 2014**    
 **Features**:

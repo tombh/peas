@@ -48,8 +48,8 @@ class ContainerConnection
   def env_reset
     # TODO: need a way to check if these commands were successful
     bash "mongo peas --eval 'db.dropDatabase()'"
-    bash "mongo node-js-sample --eval 'db.dropDatabase()'"
-    bash "mongo node-js-sample --eval \"db.dropUser('node-js-sample')\""
+    bash "mongo nodejssample --eval 'db.dropDatabase()'"
+    bash "mongo nodejssample --eval \"db.dropUser('nodejssample')\""
     bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
     sleep 5
     # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
@@ -79,7 +79,7 @@ class Cli
   def run(cmd, timeout = 60)
     cmd = "cd #{@path} && " \
       "HOME=/tmp/peas " \
-      "PEAS_API_ENDPOINT=localhost:4004 " \
+      "PEAS_API_ENDPOINT=vcap.me:4004 " \
       "SWITCHBOARD_PORT=7345 " \
       "#{Peas.root}cli/bin/peas-dev #{cmd}"
     Peas.pty cmd, timeout

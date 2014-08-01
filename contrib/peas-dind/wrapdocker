@@ -115,10 +115,6 @@ peas_cmd() { bundle exec foreman start -f ./Procfile; }
 PEAS_ENV=${PEAS_ENV:-development}
 echo "Running Peas in $PEAS_ENV environment"
 
-if [ "$PEAS_ENV" == "production" ]; then
-    peas_cmd
-else
-    peas_cmd &
-    sleep 5
-    exec bash
-fi
+peas_cmd &
+sleep 5
+exec bash

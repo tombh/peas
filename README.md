@@ -128,13 +128,15 @@ a template.
 
 **All current CLI commands**
 ```
-admin  - Admin commands
-config - Add, remove and list config for an app
-create - Create an app
-deploy - Deploy an app
-help   - Shows a list of commands or help for one command
-logs   - Show logs for an app
-scale  - Scale an app
+admin   - Admin commands
+apps    - List all apps
+config  - Add, remove and list config for an app
+create  - Create an app
+deploy  - Deploy an app
+destroy - Destroy an app
+help    - Shows a list of commands or help for one command
+logs    - Show logs for an app
+scale   - Scale an app
 ```
 
 #Roadmap
