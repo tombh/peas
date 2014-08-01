@@ -18,6 +18,15 @@ describe Peas::API do
   end
 
   describe 'Apps' do
+    it "should list all apps" do
+      expect(peas_app).to be_a App
+      get '/app'
+      expect(last_response.status).to eq 200
+      expect(JSON.parse(last_response.body)).to include(
+        'message' => ['fabricated']
+      )
+    end
+
     it "should create an app" do
       post '/app/5b', remote: 'git@github.com:test/test.git'
       expect(last_response.status).to eq 201
@@ -25,6 +34,16 @@ describe Peas::API do
       expect(App.first.first_sha).to eq "5b"
       expect(JSON.parse(last_response.body)).to include(
         'message' => "App 'test' successfully created"
+      )
+    end
+
+    it "should destroy an app" do
+      expect(peas_app).to be_a App
+      delete "/app/#{peas_app.first_sha}"
+      expect(last_response.status).to eq 200
+      expect { App.find(peas_app) }.to raise_error Mongoid::Errors::DocumentNotFound
+      expect(JSON.parse(last_response.body)).to include(
+        'message' => "App 'fabricated' successfully destroyed"
       )
     end
 

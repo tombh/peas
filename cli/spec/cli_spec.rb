@@ -23,7 +23,7 @@ describe 'Peas CLI' do
     it 'should set a normal setting' do
       stub_request(:put, 'http://vcap.me:4000/admin/settings?mongodb.uri=mongodb://uri')
         .to_return(body: response_mock(
-          defaults: {'peas.domain' => 'http://boss.com'},
+          defaults: { 'peas.domain' => 'http://boss.com' },
           services: {
             'mongodb.uri' => 'mongodb://uri',
             'postgres.uri' => 'xsgfd'
@@ -36,11 +36,25 @@ describe 'Peas CLI' do
   end
 
   describe 'App methods' do
+    it 'should list all apps' do
+      stub_request(:get, TEST_DOMAIN + '/app')
+        .to_return(body: response_mock(["coolapp"]))
+      output = cli ['apps']
+      expect(output).to eq "coolapp\n"
+    end
+
     it 'should create an app' do
       stub_request(:post, TEST_DOMAIN + '/app/fakesha?remote=git@github.com:test/test.git')
         .to_return(body: response_mock("App 'test' successfully created"))
       output = cli ['create']
       expect(output).to eq "App 'test' successfully created\n"
+    end
+
+    it 'should destroy an app' do
+      stub_request(:delete, TEST_DOMAIN + '/app/fakesha')
+        .to_return(body: response_mock("App 'test' successfully destroyed"))
+      output = cli ['destroy']
+      expect(output).to eq "App 'test' successfully destroyed\n"
     end
 
     it 'should deploy an app', :with_socket do

@@ -1,9 +1,28 @@
+desc 'List all apps'
+command :apps do |c|
+  c.action do |_global_options, _options, _args|
+    @api.request(:get, "/app")
+  end
+end
+
 desc 'Create an app'
 command :create do |c|
   c.action do |_global_options, _options, _args|
-    @api.request :post, "/app/#{Git.first_sha}",
-                 remote: Git.remote
+    @api.request(
+      :post,
+      "/app/#{Git.first_sha}",
+      remote: Git.remote
+    )
+  end
+end
 
+desc 'Destroy an app'
+command :destroy do |c|
+  c.action do |_global_options, _options, _args|
+    @api.request(
+      :delete,
+      "/app/#{Git.first_sha}"
+    )
   end
 end
 
@@ -30,8 +49,10 @@ command :scale do |c|
       quantity = parts[1]
       scaling_hash[process_type] = quantity
     end
-    @api.request :put, "/app/#{Git.first_sha}/scale",
-                 scaling_hash: scaling_hash.to_json
-
+    @api.request(
+      :put,
+      "/app/#{Git.first_sha}/scale",
+      scaling_hash: scaling_hash.to_json
+    )
   end
 end
