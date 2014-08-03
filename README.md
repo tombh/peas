@@ -43,6 +43,18 @@ curl mycoolapp.vcap.me:4000
 => Yay!
 ```
 
+#Demo
+I'm currently experimenting with maintaining a live install at [peasdemo.com](http://peasdemo.com).
+It comes with MongoDB and Postgres already installed. All you'll need is an app to deploy and the
+Peas CLI;
+```
+gem install peas-cli
+peas admin settings peas.domain peasdemo.com
+peas create
+peas deploy
+```
+At some point, once it's proven to work, I'll reset the VPS (Digital Ocean) image every 24 hours.
+
 #Installation
 Peas is at a very early stage and has only been tested in development environments. Formal methods
 for installing on cloud services such as EC2 and Digital Ocean will come soon. Meanwhile you can try
