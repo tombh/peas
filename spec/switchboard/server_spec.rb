@@ -98,7 +98,9 @@ describe 'Switchboard', :celluloid do
     it 'should read a header and call the relevant method' do
       with_socket_pair do |client, peer|
         connection = Connection.new(peer)
-        expect(connection.wrapped_object).to receive(:fake)
+        conn_double = instance_double Connection
+        allow(connection).to receive(:async).and_return(conn_double)
+        expect(conn_double).to receive(:send).with('fake')
         client.puts 'fake.foo.bar'
         connection.dispatch
       end
@@ -119,8 +121,7 @@ describe 'Switchboard', :celluloid do
         allow(peer).to receive(:puts).and_raise(EOFError)
         connection = Connection.new(peer)
         expect(connection.wrapped_object).to receive(:close).with(:detected)
-        client.puts 'ping'
-        connection.dispatch
+        connection.ping
       end
     end
 
@@ -128,31 +129,43 @@ describe 'Switchboard', :celluloid do
       it 'should close a long running connection after an inactivity timeout' do
         module Commands
           def dose
-            sleep @command[1].to_i / 1000
+            sleep 1
           end
         end
         with_socket_pair do |client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
           connection = Connection.new(peer)
-          expect(connection.wrapped_object).to receive(:terminate).at_least(:once)
-          client.puts 'dose.1000' # Sleep for 1 second
-          connection.dispatch
-          sleep 0.01
+          expect(connection.wrapped_object).to receive(:inactivity_callback)
+          connection.dose
         end
       end
 
       it 'io activity prevents timeout' do
         module Commands
           def keep_awake
-            10.times { write_line 'foo'; sleep 0.0005 }
+            10.times { write_line 'foo'; sleep 0.05 }
           end
         end
         with_socket_pair do |client, peer|
-          stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
+          stub_const('Connection::INACTIVITY_TIMEOUT', 0.1)
+          connection = Connection.new(peer)
+          expect(connection.wrapped_object).to_not receive(:inactivity_callback)
+          connection.keep_awake
+        end
+      end
+
+      it 'should keep a connection alive if the command sets @keep_alive to true' do
+        module Commands
+          def keep_alive
+            @keep_alive = true
+            sleep 0.2
+          end
+        end
+        with_socket_pair do |client, peer|
+          stub_const('Connection::INACTIVITY_TIMEOUT', 0.1)
           connection = Connection.new(peer)
           expect(connection.wrapped_object).to_not receive(:terminate)
-          client.puts 'keep_awake'
-          connection.dispatch
+          connection.keep_alive
         end
       end
     end

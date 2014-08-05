@@ -4,6 +4,7 @@ module Commands
   # request.s
   # Usage: subscribe.channel_name [history]
   def subscribe
+    @keep_alive = true # Prevent connection dying from inactivity
     # Everything after the first '.' is considered the channel name
     channel = @command[1..-1].join('.')
     debug "NEW SUBSCRIBER to #{channel}"

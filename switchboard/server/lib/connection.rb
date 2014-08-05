@@ -16,7 +16,8 @@ class Connection
     @socket = socket
     # Safety measure to kill the thread if nothing happens for a while.
     # You can reset the timer by calling activity()
-    @timer = after(INACTIVITY_TIMEOUT) { terminate }
+    @keep_alive = false # Set this to true to prevent the connection being closed by inactivity
+    @timer = after(INACTIVITY_TIMEOUT) { inactivity_callback }
   end
 
   def dispatch
@@ -105,5 +106,9 @@ class Connection
   rescue EOFError, Errno::EPIPE, IOError, Errno::EBADF
     close :detected
     return false
+  end
+
+  def inactivity_callback
+    terminate if !@keep_alive
   end
 end
