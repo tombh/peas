@@ -117,7 +117,7 @@ describe 'Switchboard', :celluloid do
     end
 
     it 'should detect a closed client connection' do
-      with_socket_pair do |client, peer|
+      with_socket_pair do |_client, peer|
         allow(peer).to receive(:puts).and_raise(EOFError)
         connection = Connection.new(peer)
         expect(connection.wrapped_object).to receive(:close).with(:detected)
@@ -132,7 +132,7 @@ describe 'Switchboard', :celluloid do
             sleep 1
           end
         end
-        with_socket_pair do |client, peer|
+        with_socket_pair do |_client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
           connection = Connection.new(peer)
           expect(connection.wrapped_object).to receive(:inactivity_callback)
@@ -143,10 +143,13 @@ describe 'Switchboard', :celluloid do
       it 'io activity prevents timeout' do
         module Commands
           def keep_awake
-            10.times { write_line 'foo'; sleep 0.05 }
+            10.times {
+              write_line 'foo'
+              sleep 0.05
+            }
           end
         end
-        with_socket_pair do |client, peer|
+        with_socket_pair do |_client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.1)
           connection = Connection.new(peer)
           expect(connection.wrapped_object).to_not receive(:inactivity_callback)
@@ -161,7 +164,7 @@ describe 'Switchboard', :celluloid do
             sleep 0.2
           end
         end
-        with_socket_pair do |client, peer|
+        with_socket_pair do |_client, peer|
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.1)
           connection = Connection.new(peer)
           expect(connection.wrapped_object).to_not receive(:terminate)

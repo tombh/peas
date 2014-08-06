@@ -78,19 +78,17 @@ class Connection
   # Read a fixed number of bytes from the incoming connection
   def read_partial(bytes = 1)
     data = io { @socket.recv bytes }
-    if data
-      yield data if block_given?
-      return data
-    end
+    return unless data
+    yield data if block_given?
+    data
   end
 
   # Read a line from the incoming connection
   def read_line
     line = io { @socket.gets }
-    if line
-      yield line if block_given?
-      return line
-    end
+    return unless line
+    yield line if block_given?
+    line
   end
 
   # Write a line to the incoming connection
@@ -109,6 +107,6 @@ class Connection
   end
 
   def inactivity_callback
-    terminate if !@keep_alive
+    terminate unless @keep_alive
   end
 end
