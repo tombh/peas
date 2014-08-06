@@ -32,7 +32,7 @@ describe 'Switchboard Pea Commands', :celluloid do
         app.log 'Do you even log?', 'testing'
         with_socket_pair do |client, peer|
           connection = Connection.new(peer)
-          client.puts "stream_logs.#{app.first_sha}"
+          client.puts "stream_logs.#{app.name}"
           connection.dispatch
           first = client.gets
           expect(first).to include Date.today.to_s
@@ -48,7 +48,7 @@ describe 'Switchboard Pea Commands', :celluloid do
         app.log 'Existing', 'testing'
         with_socket_pair do |client, peer|
           connection = Connection.new(peer)
-          client.puts "stream_logs.#{app.first_sha}"
+          client.puts "stream_logs.#{app.name}"
           connection.dispatch
           client.gets
           app.log 'New logs!', 'testing'

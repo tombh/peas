@@ -8,11 +8,15 @@ end
 desc 'Create an app'
 command :create do |c|
   c.action do |_global_options, _options, _args|
-    @api.request(
+    unless Git.remote('peas').empty?
+      exit_now! "This repo already has an app (#{Git.name_from_remote}) associated with it.", 1
+    end
+    response = @api.request(
       :post,
-      "/app/#{Git.first_sha}",
-      remote: Git.remote
+      '/app',
+      muse: Git.name_from_remote(Git.remote('origin'))
     )
+    Git.add_remote response['remote_uri']
   end
 end
 
@@ -21,7 +25,7 @@ command :destroy do |c|
   c.action do |_global_options, _options, _args|
     @api.request(
       :delete,
-      "/app/#{Git.first_sha}"
+      "/app/#{Git.name_from_remote}"
     )
   end
 end
@@ -29,7 +33,7 @@ end
 desc 'Deploy an app'
 command :deploy do |c|
   c.action do |_global_options, _options, _args|
-    @api.request :get, "/app/#{Git.first_sha}/deploy"
+    @api.request :get, "/app/#{Git.name_from_remote}/deploy"
   end
 end
 
@@ -40,7 +44,7 @@ EOF
 command :scale do |c|
   c.action do |_global_options, _options, args|
     if args.length == 0
-      exit_now! "Please provide scaling arguments in the form: web=3 worker=2"
+      exit_now! "Please provide scaling arguments in the form: web=3 worker=2", 1
     end
     scaling_hash = {}
     args.each do |arg|
@@ -51,7 +55,7 @@ command :scale do |c|
     end
     @api.request(
       :put,
-      "/app/#{Git.first_sha}/scale",
+      "/app/#{Git.name_from_remote}/scale",
       scaling_hash: scaling_hash.to_json
     )
   end

@@ -31,11 +31,11 @@ module Peas
           "(#{Peas::DOCKER_VERSION})"
       end
 
-      def respond(response, key = :message)
+      def respond(response, key = :message, extra = {})
         {
           version: Peas::VERSION,
           key => response
-        }
+        }.merge! extra
       end
     end
 

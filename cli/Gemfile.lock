@@ -75,6 +75,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   gli
   httparty
   jeweler

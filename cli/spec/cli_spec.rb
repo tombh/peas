@@ -3,11 +3,17 @@ require 'spec_helper'
 describe 'Peas CLI' do
   before :each do
     allow(Git).to receive(:sh).and_return(nil)
-    allow(Git).to receive(:remote).and_return('git@github.com:test/test.git')
-    allow(Git).to receive(:first_sha).and_return('fakesha')
+    allow(Git).to receive(:remote).and_return('git@github.com:test-test.git')
     allow_any_instance_of(API).to receive(:sleep).and_return(nil)
     allow(Peas).to receive(:config_file).and_return('/tmp/.peas')
     File.delete '/tmp/.peas' if File.exist? '/tmp/.peas'
+  end
+
+  describe 'App name' do
+    it 'should get the app name from a remote URI' do
+      allow(Git).to receive(:remote).and_return('git@github.com:tombh-peas.git')
+      expect(Git.name_from_remote).to eq 'tombh-peas'
+    end
   end
 
   describe 'Settings' do
@@ -43,15 +49,24 @@ describe 'Peas CLI' do
       expect(output).to eq "coolapp\n"
     end
 
-    it 'should create an app' do
-      stub_request(:post, TEST_DOMAIN + '/app/fakesha?remote=git@github.com:test/test.git')
-        .to_return(body: response_mock("App 'test' successfully created"))
+    it 'should create an app and its remote' do
+      stub_request(:post, TEST_DOMAIN + '/app?muse=test-test')
+        .to_return(
+          body: {
+            version: Peas::VERSION,
+            message: "App 'test-test' successfully created",
+            remote_uri: 'git@peas.io:test-test.git'
+          }.to_json
+        )
+      allow(Git).to receive(:remote).with('peas').and_return('')
+      allow(Git).to receive(:remote).with('origin').and_return('git@github.com:test-test.git')
+      expect(Git).to receive(:add_remote).with('git@peas.io:test-test.git')
       output = cli ['create']
-      expect(output).to eq "App 'test' successfully created\n"
+      expect(output).to eq "App 'test-test' successfully created\n"
     end
 
     it 'should destroy an app' do
-      stub_request(:delete, TEST_DOMAIN + '/app/fakesha')
+      stub_request(:delete, TEST_DOMAIN + '/app/test-test')
         .to_return(body: response_mock("App 'test' successfully destroyed"))
       output = cli ['destroy']
       expect(output).to eq "App 'test' successfully destroyed\n"
@@ -72,7 +87,7 @@ describe 'Peas CLI' do
     it 'should scale an app', :with_socket do
       stub_request(
         :put,
-        TEST_DOMAIN + '/app/fakesha/scale?scaling_hash=%7B%22web%22:%223%22,%22worker%22:%222%22%7D'
+        TEST_DOMAIN + '/app/test-test/scale?scaling_hash=%7B%22web%22:%223%22,%22worker%22:%222%22%7D'
       ).to_return(body: '{"job": "123"}')
       allow(@socket).to receive(:gets).and_return(
         '{"body":"scaling"}',
@@ -84,21 +99,21 @@ describe 'Peas CLI' do
 
     describe 'Config ENV vars' do
       it 'should set config for an app' do
-        stub_request(:put, TEST_DOMAIN + '/app/fakesha/config?vars=%7B%22FOO%22:%22BAR%22%7D')
+        stub_request(:put, TEST_DOMAIN + '/app/test-test/config?vars=%7B%22FOO%22:%22BAR%22%7D')
           .to_return(body: response_mock("{'FOO' => 'BAR'}"))
         output = cli %w(config set FOO=BAR)
         expect(output).to eq "{'FOO' => 'BAR'}\n"
       end
 
       it 'delete config for an app' do
-        stub_request(:delete, TEST_DOMAIN + '/app/fakesha/config?keys=%5B%22FOO%22%5D')
+        stub_request(:delete, TEST_DOMAIN + '/app/test-test/config?keys=%5B%22FOO%22%5D')
           .to_return(body: response_mock(nil))
         output = cli %w(config rm FOO)
         expect(output).to eq "\n"
       end
 
       it 'should list all config for an app' do
-        stub_request(:get, TEST_DOMAIN + '/app/fakesha/config')
+        stub_request(:get, TEST_DOMAIN + '/app/test-test/config')
           .to_return(body: response_mock("{'FOO' => 'BAR'}\n{'MOO' => 'CAR'}"))
         output = cli %w(config)
         expect(output).to eq "{'FOO' => 'BAR'}\n{'MOO' => 'CAR'}\n"
@@ -129,7 +144,7 @@ describe 'Peas CLI' do
   end
 
   it 'should show a warning when there is a version mismatch' do
-    stub_request(:get, TEST_DOMAIN + '/app/fakesha/config')
+    stub_request(:get, TEST_DOMAIN + '/app/test-test/config')
         .to_return(body: '{"version": "100000.1000000.100000"}')
     output = cli %w(config)
     expect(output).to include 'Your version of the CLI client is out of date'

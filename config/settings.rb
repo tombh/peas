@@ -53,7 +53,7 @@ module Peas
     end
   end
 
-  # Returns only the host part of the Peas domain. Eg; 'vcap' from http://vcap.me:4000
+  # Returns only the host part of the Peas domain. Eg; 'vcap.me' from http://vcap.me:4000
   def self.host
     URI.parse(Peas.domain).host
   end

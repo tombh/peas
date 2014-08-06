@@ -48,6 +48,7 @@ class API
       else
         puts json['message']
       end
+      json
     end
   end
 

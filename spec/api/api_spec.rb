@@ -28,18 +28,40 @@ describe Peas::API do
     end
 
     it "should create an app" do
-      post '/app/5b', remote: 'git@github.com:test/test.git'
+      post '/app', muse: 'test-test'
       expect(last_response.status).to eq 201
       expect(App.count).to eq 1
-      expect(App.first.first_sha).to eq "5b"
+      expect(App.first.name).to eq "test-test"
       expect(JSON.parse(last_response.body)).to include(
-        'message' => "App 'test' successfully created"
+        'message' => "App 'test-test' successfully created"
       )
+      expect(JSON.parse(last_response.body)).to include(
+        'remote_uri' => 'ssh://git@vcap.me:4000/test-test'
+      )
+    end
+
+    it "should come up with a unique name when muse is blank" do
+      stub_request(:get, "http://randomword.setgetgo.com/get.php")
+        .to_return(body: "hipster")
+      post '/app'
+      expect(last_response.status).to eq 201
+      expect(App.count).to eq 1
+      expect(App.first.name).to eq "hipster"
+    end
+
+    it "should prepend an adverb when name is already taken" do
+      allow(File).to receive(:open).with("#{Peas.root}/lib/adverbs.txt").and_return("hipsterly")
+      expect(peas_app).to be_a App
+      expect(App.first.name).to eq 'fabricated'
+      post '/app', muse: 'fabricated'
+      expect(last_response.status).to eq 201
+      expect(App.count).to eq 2
+      expect(App.where(:name.ne => 'fabricated').first.name).to eq "hipsterly-fabricated"
     end
 
     it "should destroy an app" do
       expect(peas_app).to be_a App
-      delete "/app/#{peas_app.first_sha}"
+      delete "/app/#{peas_app.name}"
       expect(last_response.status).to eq 200
       expect { App.find(peas_app) }.to raise_error Mongoid::Errors::DocumentNotFound
       expect(JSON.parse(last_response.body)).to include(
@@ -58,7 +80,7 @@ describe Peas::API do
         args: []
       }
       expect(@socket).to receive(:puts).with(job.to_json)
-      get "/app/#{peas_app.first_sha}/deploy"
+      get "/app/#{peas_app.name}/deploy"
       expect(last_response.status).to eq 200
       expect(JSON.parse(last_response.body)['job']).to eq uuid
     end
@@ -75,7 +97,7 @@ describe Peas::API do
         args: [scaling_hash]
       }.to_json
       expect(@socket).to receive(:puts).with(job)
-      put "/app/#{peas_app.first_sha}/scale", scaling_hash: scaling_hash.to_json
+      put "/app/#{peas_app.name}/scale", scaling_hash: scaling_hash.to_json
       expect(last_response.status).to eq 200
       expect(JSON.parse(last_response.body)['job']).to eq uuid
     end
@@ -106,13 +128,13 @@ describe Peas::API do
 
     describe 'Config ENV vars' do
       it 'should return 400 if no config values are given' do
-        put "/app/#{peas_app.first_sha}/config"
+        put "/app/#{peas_app.name}/config"
         expect(last_response.status).to eq 400
       end
 
       it 'should create a new config hash for an existing app', :mock_worker do
         expect(@mock_worker).to receive(:restart)
-        put "/app/#{peas_app.first_sha}/config", vars: { 'foo' => 'bar' }.to_json
+        put "/app/#{peas_app.name}/config", vars: { 'foo' => 'bar' }.to_json
         expect(last_response.status).to eq 200
         message = JSON.parse(last_response.body)['message']
         expect(message).to eq('foo' => 'bar')
@@ -128,7 +150,7 @@ describe Peas::API do
         end
 
         it 'should return all existing config vars' do
-          get "/app/#{peas_app.first_sha}/config"
+          get "/app/#{peas_app.name}/config"
           expect(last_response.status).to eq 200
           message = JSON.parse(last_response.body)['message']
           expect(message).to eq('foo' => 'bar', 'mange' => 'tout')
@@ -136,14 +158,14 @@ describe Peas::API do
 
         it 'should update an existing config var', :mock_worker do
           expect(@mock_worker).to receive(:restart)
-          put "/app/#{peas_app.first_sha}/config", vars: { 'foo' => 'peas' }.to_json
+          put "/app/#{peas_app.name}/config", vars: { 'foo' => 'peas' }.to_json
           expect(last_response.status).to eq 200
           message = JSON.parse(last_response.body)['message']
           expect(message).to eq('foo' => 'peas', 'mange' => 'tout')
         end
 
         it 'should delete existing config var' do
-          delete "/app/#{peas_app.first_sha}/config", keys: ['foo'].to_json
+          delete "/app/#{peas_app.name}/config", keys: ['foo'].to_json
           expect(last_response.status).to eq 200
           message = JSON.parse(last_response.body)['message']
           expect(message).to eq('mange' => 'tout')
@@ -157,7 +179,7 @@ describe Peas::API do
     it "should log when the machine's Docker version is newer than Peas' tested version" do
       allow(Docker).to receive(:version).and_return('Version' => '9999999999.9.9')
       expect(Peas::API.logger).to receive(:warn).with(/Using version/)
-      get "/app/#{peas_app.first_sha}/config"
+      get "/app/#{peas_app.name}/config"
     end
   end
 

@@ -3,7 +3,7 @@ require 'switchboard/server/lib/log_cursor'
 module Commands
   # Stream and tail logs for an app
   def stream_logs
-    app = App.find_by(first_sha: @command[1])
+    app = App.find_by(name: @command[1])
     info "Request to stream logs for #{app.name} on connection (ID: #{@socket.object_id})"
     logs = LogsCursor.new app
 

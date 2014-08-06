@@ -1,17 +1,11 @@
+require 'open-uri'
+
 # An app, as you might guess, represents an application. Like a Rails, Django or Wordpress app.
 class App
   include Mongoid::Document
   include Peas::ModelWorker
 
-  # The first SHA1 hash of the repo's commit history is used as a fingerprint tying the repo to an
-  # app
-  field :first_sha, type: String
-
-  # The Git remote for the app. Currently only remote URIs supported. Plan to support local paths
-  # as well
-  field :remote, type: String
-
-  # The human-readable name for the app. Based on the remote URI. See App.remote_to_name
+  # The primary key for the app.
   field :name, type: String
 
   # Environment variables such as a database URI, etc
@@ -24,8 +18,7 @@ class App
   has_many :addons, dependent: :destroy
 
   # Validations
-  validates_presence_of :first_sha, :remote, :name
-  validates_uniqueness_of :first_sha, :name
+  validates_uniqueness_of :name
 
   after_create do |app|
     app.create_capped_collection
@@ -61,15 +54,40 @@ class App
     end
   end
 
+  # Create a unique name given a string as a muse
+  def self.divine_name(muse)
+    muse = hipster_word if muse.blank?
+    muse.gsub!(/[^0-9a-z-]/i, '')
+    if App.where(name: muse).count > 0
+      "#{hipster_adverb}-#{muse}"
+    else
+      muse
+    end
+  end
+
+  # Generate a random word
+  def self.hipster_word
+    open('http://randomword.setgetgo.com/get.php').read.strip
+  end
+
+  # Generate a random hipster adverb
+  def self.hipster_adverb
+    File.open("#{Peas.root}/lib/adverbs.txt").each_line.to_a.sample.strip
+  end
+
+  # The canonical Git remote URI for pushing/deploying
+  def remote_uri
+    port = URI.parse(Peas.domain).port
+    if port
+      "ssh://git@#{Peas.host}:#{port}/#{name}"
+    else
+      "git@#{Peas.host}:#{name}.git"
+    end
+  end
+
   # Pretty arrow. Same as used in Heroku buildpacks
   def arrow
     '-----> '
-  end
-
-  # Convert a Git remote URI to an app name usable in subdomains and by docker.
-  # Eg; 'git@github.com:owner/repo_name.git' becomes 'repo_name'
-  def self.remote_to_name(remote)
-    URI.parse(remote.gsub(':', '/')).path.split('/')[-1].gsub('.git', '')
   end
 
   # Represent the app's current scaling profile as a hash
