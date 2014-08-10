@@ -5,9 +5,8 @@ describe App do
 
   before :each do
     # NB: can't stub Peas::TMP_BASE because the module has already been loaded in spec_helper
-    @tmp_base = '/tmp/peas/test'
-    stub_const "Peas::TMP_REPOS", "#{@tmp_base}/repos"
-    stub_const "Peas::TMP_TARS", "#{@tmp_base}/tars"
+    stub_const "Peas::TMP_REPOS", "#{TMP_BASE}/repos"
+    stub_const "Peas::TMP_TARS", "#{TMP_BASE}/tars"
     FileUtils.rm_rf '/tmp/peas/test/' # Hardcoded for sanity
   end
 
@@ -111,8 +110,8 @@ describe App do
       app._tar_repo
       tarred_repo = "#{Peas::TMP_TARS}/#{app.name}.tar"
       expect(File.exist? tarred_repo).to eq true
-      Peas.pty "tar -xf #{tarred_repo} -C #{@tmp_base}"
-      expect(File.exist? "#{@tmp_base}/lathyrus.odoratus").to eq true
+      Peas.pty "tar -xf #{tarred_repo} -C #{TMP_BASE}"
+      expect(File.exist? "#{TMP_BASE}/lathyrus.odoratus").to eq true
     end
 
     it 'should build an app resulting in a new Docker image', :docker do

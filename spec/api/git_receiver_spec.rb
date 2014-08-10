@@ -4,9 +4,8 @@ describe 'Git Push Deployment' do
   let(:app) { Fabricate :app }
   before do
     # NB: can't stub Peas::TMP_BASE because the module has already been loaded in spec_helper
-    @tmp_base = '/tmp/peas/test'
-    stub_const "Peas::TMP_REPOS", "#{@tmp_base}/repos"
-    stub_const "Peas::TMP_TARS", "#{@tmp_base}/tars"
+    stub_const "Peas::TMP_REPOS", "#{TMP_BASE}/repos"
+    stub_const "Peas::TMP_TARS", "#{TMP_BASE}/tars"
     FileUtils.rm_rf '/tmp/peas/test/' # Hardcoded for sanity
     # Make sure the git receiver connects to the test switchboard
     stub_const "App::GIT_RECEIVER_PATH", "SWITCHBOARD_PORT=#{SWITCHBOARD_TEST_PORT} #{Peas.root}/bin/git-receiver"
