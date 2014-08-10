@@ -8,13 +8,8 @@ cd cli
 export BUNDLE_GEMFILE=$PWD/Gemfile
 bundle exec rspec
 
-# Only use highest ruby version from matrix for all other tests
+# Choose just one Ruby version to trigger the main tests on ci.peas.io
 if [ "$TRAVIS_RUBY_VERSION" == "2.1.1" ]; then
-
-  # 2. PEAS SERVER TESTS but exclude integration tests
-  cd ..
-  export BUNDLE_GEMFILE=$PWD/Gemfile
-  bundle exec rspec # integration_helper filters out :integration tagged specs by default
 
   # 3. INTEGRATION TESTS run on a Digital Ocean instance via a simple netcat server.
   # Note the blocking ruby STDIN.gets to prevent prematurely sending EOF to the CI-server.

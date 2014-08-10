@@ -1,2 +1,15 @@
+rvm:
+  - 1.9.3
+  - 2.1.1
+
+language: ruby
+
+cache: bundler
+
+install:
+  - cd cli
+  - export BUNDLE_GEMFILE=$PWD/Gemfile
+  - bundle install --deployment --path=${BUNDLE_PATH:-vendor/bundle}
+
 script:
-  - contrib/ci/ci-client.sh
+  - 'cd $TRAVIS_BUILD_DIR && contrib/ci/ci-client.sh'

@@ -56,12 +56,9 @@ if [ "$1" == "--run-tests" ]; then
   # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
   echo "Rebuilding Dockerfile..."
   docker build --no-cache -t tombh/peas .
-  # Install dependencies for the CLI client
+  # Install dependencies for the CLI client (needed to run the integration tests)
   cd $PEAS_ROOT/cli
   echo "Installing CLI dependencies..."
-  bundle install
-  echo "Running CLI specs..."
-  bundle exec rspec
   # Main application tests
   cd $PEAS_ROOT
   echo "Installing API dependencies..."
