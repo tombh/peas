@@ -166,6 +166,6 @@ def create_non_bare_repo
     "git init && " \
     "touch lathyrus.odoratus && " \
     "git add . --all && " \
-    "git commit -m'first commit'"
+    "GIT_AUTHOR_NAME=test git commit -m'first commit'"
   non_bare_path
 end

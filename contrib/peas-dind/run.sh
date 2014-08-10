@@ -1,12 +1,13 @@
 #!/bin/bash
 # Convenience script for booting the Peas Dockerfile with a data container.
-# Usage: run.sh [port]
+# Usage: run.sh [api_port] [git_port]
 set -e
 
-PORT=${1:-4000}
+API_PORT=${1:-4000}
+GIT_PORT=${2:-2222}
 
 # Make the assumption that if we're exposing Peas port 80, then this is a non-development environment
-if [ $PORT = 80 ]; then
+if [ $API_PORT = 80 ]; then
   export DIND_HOST=$(curl icanhazip.com)
 fi
 
@@ -29,7 +30,9 @@ docker run \
   --rm=true \
   --volumes-from peas-data \
   -e "PEAS_ENV=$PEAS_ENV" \
+  -e "GIT_PORT=$GIT_PORT" \
   -v $PEAS_ROOT:/home/peas/repo \
-  -p $PORT:4000 \
+  -p $API_PORT:4000 \
+  -p $GIT_PORT:22 \
   -p 9345:9345 \
   tombh/peas

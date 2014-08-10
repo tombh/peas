@@ -14,7 +14,7 @@ trap finish EXIT
 # And gives the ci user the docker group: `gpasswd -a ci docker`
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )/ci-server.sh
-PEAS_ROOT="$(dirname $SCRIPTPATH)/../.."
+PEAS_ROOT="$HOME"/repo
 
 # Because the integration spec_helper bind mounts the live code onto the container we need to make
 # sure that no gems are mounted in the process, like through vendor/bundle. So we install gems
@@ -56,6 +56,8 @@ if [ "$1" == "--run-tests" ]; then
   # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
   echo "Rebuilding Dockerfile..."
   docker build --no-cache -t tombh/peas .
+  echo "Deleting untagged Docker images..."
+  docker rmi $(docker images | grep "^<none>" | tr -s ' ' | cut -d ' ' -f 3)
   # Install dependencies for the CLI client (needed to run the integration tests)
   cd $PEAS_ROOT/cli
   echo "Installing CLI dependencies..."

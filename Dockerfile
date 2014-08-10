@@ -26,6 +26,11 @@ RUN mkdir -p /data/db
 RUN mkdir /root/.ssh -p && /bin/bash -c 'echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config'
 ADD ./ /home/peas/repo
 RUN gem install bundler
+RUN apt-get install -qqy openssh-server
+RUN useradd -d /home/git git
+RUN mkdir -p /home/git/.ssh
+RUN touch /home/git/.ssh/authorized_keys
+RUN chown -R git /home/git
 
 # DinD magic
 RUN apt-get install -qqy iptables ca-certificates lxc
