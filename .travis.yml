@@ -1,23 +1,2 @@
-rvm:
-  - 1.9.3
-  - 2.1.1
-
-language: ruby
-
-cache: bundler
-
-before_install:
-  - "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10"
-  - "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list"
-  - "sudo apt-get update"
-  - "sudo apt-get install mongodb-org-server mongodb-org-shell"
-
-install:
-  - export BUNDLE_GEMFILE=$PWD/Gemfile
-  - bundle install --deployment --path=${BUNDLE_PATH:-vendor/bundle}
-  - cd cli
-  - export BUNDLE_GEMFILE=$PWD/Gemfile
-  - bundle install --deployment --path=${BUNDLE_PATH:-vendor/bundle}
-
 script:
-  - 'cd $TRAVIS_BUILD_DIR && contrib/ci/ci-client.sh'
+  - contrib/ci/ci-client.sh

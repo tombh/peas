@@ -9,11 +9,7 @@ require 'docker_creation_mock.rb'
 
 ENV['PEAS_API_LISTENING'] = 'true'
 
-if ENV['TRAVIS']
-  TMP_BASE = "#{ENV['HOME']}/peas_tmp"
-else
-  TMP_BASE = '/tmp/peas/test'
-end
+TMP_BASE = '/tmp/peas/test'
 
 # Note: I've found that the ordering for the config hooks is important. Specifically that Mongoid's
 # session needs to be dropped before shutting down Celluloid. Specifying hooks first seems to mean

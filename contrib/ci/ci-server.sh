@@ -60,11 +60,15 @@ if [ "$1" == "--run-tests" ]; then
   cd $PEAS_ROOT/cli
   echo "Installing CLI dependencies..."
   bundle install
-  # Run the tests
+  echo "Running CLI specs..."
+  bundle exec rspec
+  # Main application tests
   cd $PEAS_ROOT
-  echo "Installing API dependencies"
+  echo "Installing API dependencies..."
   bundle install
-  echo "Running integration tests"
+  echo "Running main application tests..."
+  bundle exec rspec
+  echo "Running integration tests..."
   bundle exec rspec spec/integration --tag integration --tag service
 
 # Run the CI server
