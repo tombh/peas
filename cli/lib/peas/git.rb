@@ -17,9 +17,14 @@ class Git
     sh "git remote add peas #{remote}"
   end
 
+  def self.remove_remote(remote = 'peas')
+    sh "git remote rm #{remote}"
+  end
+
   def self.name_from_remote(remote_uri = nil)
     remote_uri = remote unless remote_uri
+    exit_now! "No Peas remote. I can't figure out what app this is.", 1 if remote_uri == ''
     parts = Addressable::URI.parse remote_uri
-    parts.path.gsub('.git', '')
+    parts.path.split('/').last.gsub('.git', '')
   end
 end

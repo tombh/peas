@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+# This script is called by the pre-receive hook of an app's Git repo
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
+require 'config/boot'
+
+refs = $stdin.gets.split(' ')
+new_revision = refs[1]
+# In case they're needed one day, the follwowing are also available;
+# old_revision = refs[0]
+# branch = refs[2].split('/').last
+
+app = App.find_by name: ARGV[0]
+job_id = app.worker.deploy(new_revision)
+socket = Peas::Switchboard.connection
+socket.puts "subscribe.job_progress.#{job_id}"
+while line = socket.gets
+  parsed = JSON.parse(line)
+  if parsed.key? 'body'
+    parsed['body'].lines.each do |line|
+      # \b is the escape code for 'backspace', so it overwrites Git's 'remote:' string for each line of the build
+      # process.
+      puts "\b\b\b\b\b\b\b\b#{line}"
+    end
+  end
+  break if parsed['status'] == 'failed' || parsed['status'] == 'complete'
+end

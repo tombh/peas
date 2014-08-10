@@ -4,6 +4,7 @@ module Peas
   module ModelWorker
     class ModelProxy
       def initialize(pod, block_until_complete, instance)
+        raise PeasError, "Trying to create a worker job without specifying a pod to run it on." if !pod
         @pod = pod
         @block_until_complete = block_until_complete
         @instance = instance

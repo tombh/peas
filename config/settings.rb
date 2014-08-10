@@ -11,7 +11,7 @@ module Peas
   # Peas base path for temp files
   TMP_BASE = '/tmp/peas'
 
-  # Path to clone and pull repos for deploying
+  # Path to receive repos for deploying
   TMP_REPOS = "#{TMP_BASE}/repos"
 
   # Path to tar repos into before sending to buildstep
@@ -25,7 +25,7 @@ module Peas
   DEFAULT_API_PORT = 4000
 
   # Port on which the messaging server runs
-  SWITCHBOARD_PORT = 9345
+  SWITCHBOARD_PORT = ENV['SWITCHBOARD_PORT'] || 9345
 
   # Root path of the project on the host filesystem
   def self.root

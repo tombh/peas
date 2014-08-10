@@ -27,13 +27,7 @@ command :destroy do |c|
       :delete,
       "/app/#{Git.name_from_remote}"
     )
-  end
-end
-
-desc 'Deploy an app'
-command :deploy do |c|
-  c.action do |_global_options, _options, _args|
-    @api.request :get, "/app/#{Git.name_from_remote}/deploy"
+    Git.remove_remote
   end
 end
 

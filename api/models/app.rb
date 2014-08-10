@@ -5,6 +5,8 @@ class App
   include Mongoid::Document
   include Peas::ModelWorker
 
+  GIT_RECEIVER_PATH = File.expand_path "#{Peas.root}/bin/git-receiver"
+
   # The primary key for the app.
   field :name, type: String
 
@@ -14,15 +16,28 @@ class App
   # Peas are needed to actually run the app, such as web and worker processes
   has_many :peas, dependent: :destroy
 
-  # Addons are instantances of services like redis, postgres, etc
+  # Addons are instances of services like redis, postgres, etc
   has_many :addons, dependent: :destroy
 
   # Validations
   validates_uniqueness_of :name
 
   after_create do |app|
+    app.create_local_repo
     app.create_capped_collection
     app.create_addons
+  end
+
+  before_destroy do |app|
+    # Remove the capped collection containing the app's logs
+    app.logs_collection.drop
+
+    # Destroy any services being used by the app
+    app.addons.each do |addon|
+      "Peas::Services::#{addon.type.capitalize}".constantize.new(app).destroy_instance
+    end
+
+    app.remove_local_repo
   end
 
   # Create a capped collection for the logs.
@@ -41,16 +56,6 @@ class App
   def create_addons
     Peas.enabled_services.each do |service|
       "Peas::Services::#{service.capitalize}".constantize.new(self).create_instance
-    end
-  end
-
-  before_destroy do |app|
-    # Remove the capped collection containing the app's logs
-    app.logs_collection.drop
-
-    # Destroy any services being used by the app
-    app.addons.each do |addon|
-      "Peas::Services::#{addon.type.capitalize}".constantize.new(app).destroy_instance
     end
   end
 
@@ -77,12 +82,51 @@ class App
 
   # The canonical Git remote URI for pushing/deploying
   def remote_uri
-    port = URI.parse(Peas.domain).port
-    if port
-      "ssh://git@#{Peas.host}:#{port}/#{name}"
+    # If we're running inside a Docker-in-Docker container
+    if Peas.dind?
+      port = URI.parse(Peas.domain).port
+      if port
+        "ssh://git@#{Peas.host}:#{port}/#{name}"
+      else
+        "git@#{Peas.host}:#{name}.git"
+      end
+    # If we're running in development
     else
-      "git@#{Peas.host}:#{name}.git"
+      local_repo_path
     end
+  end
+
+  # The local path on the filesystem where the app's Git repo lives
+  def local_repo_path
+    "#{Peas::TMP_REPOS}/#{name}"
+  end
+
+  # Create a bare Git repo ready to receive git pushes to trigger deploys
+  def create_local_repo
+    FileUtils.mkdir_p local_repo_path
+    Peas.pty "cd #{local_repo_path} && git init --bare"
+    create_prereceive_hook
+  end
+
+  # Create a pre-receive hook in the app's Git repo that will trigger Peas' deploy process
+  # TODO: Consider putting Peas.root in an ENV variable, so that the pre-receive hook still works if the Peas code is
+  # moved somewhere else on the system.
+  def create_prereceive_hook
+    hook_path = "#{local_repo_path}/hooks/pre-receive"
+    File.open(hook_path, 'w') do |file|
+      file.puts("#!/bin/bash")
+      file.puts("cd #{Peas.root}")
+      file.puts("cat | #{GIT_RECEIVER_PATH} #{name}")
+    end
+    Peas.pty "chmod +x #{hook_path}"
+  end
+
+  def remove_local_repo
+    return unless File.exist? local_repo_path
+    unless Dir.entries(local_repo_path).include? 'hooks'
+      raise PeasError, "Refusing to `rm -r` folder that doesn't look like a Git repo"
+    end
+    FileUtils.rm_r local_repo_path
   end
 
   # Pretty arrow. Same as used in Heroku buildpacks
@@ -111,9 +155,12 @@ class App
 
   # Fetch the latest code, create an image and fire up the necessary containers to make an app
   # pubicly accessible
-  def deploy
+  #
+  # `new_revision` The SHA1 hash for the commit to build from. Provided by Git pre-recieve hook.
+  def deploy(new_revision)
+    @new_revision = new_revision
     broadcast "Deploying #{name}" if @current_job
-    worker.build do
+    worker.build(new_revision) do
       if peas.count == 0
         scaling_profile = { web: 1 }
       else
@@ -130,11 +177,17 @@ class App
   # Create a Docker image using the Buildstep container.
   # The resultant image can be fired up as a new Docker containers instantly to run multiple
   # process types.
+  #
+  # `new_revision` The SHA1 hash for the commit to build from. Provided by Git pre-recieve hook.
+  #
   # To find out more about Buildstep see: https://github.com/progrium/buildstep
-  def build
-    # Prepare the repo for Buildstep. Keeping it in a separate function keeps build() simpler and
-    # helps with testing
-    _fetch_and_tar_repo
+  # TODO: Use something like container.tap(&:start).attach(stdin: StringIO.new("foo\nbar\n")) to stream the tarred repo
+  # into buildstep/slugbuilder.
+  def build(new_revision)
+    @new_revision = new_revision
+
+    # Prepare the repo for Buildstep.
+    _tar_repo
 
     # Create a new Docker image based on progrium/buildstep with the repo placed at /app
     # There's an issue with Excon's buffer so we need to manually lower the size of the chunks to
@@ -195,25 +248,15 @@ class App
     builder_json
   end
 
-  def _fetch_and_tar_repo
-    # First we need an up to date version of the repo
-    FileUtils.mkdir_p Peas::TMP_REPOS
-    tmp_repo_path = "#{Peas::TMP_REPOS}/#{name}"
-
-    broadcast "#{arrow}Fetching #{remote}"
-    if File.directory? tmp_repo_path
-      # Clone if we don't have an existing version
-      sh "cd #{tmp_repo_path} && git pull #{remote}"
-    else
-      # Just update the changes if there's an existing version of the repo
-      sh "git clone --depth 1 #{remote} #{tmp_repo_path}"
-    end
-
-    # Tar the repo to make moving it around more efficient
+  # Tar the repo to make moving it around more efficient
+  #
+  # `new_revision` The SHA1 hash for the commit to build from. Provided by Git pre-recieve hook.
+  def _tar_repo
     broadcast "#{arrow}Tarring repo"
     FileUtils.mkdir_p Peas::TMP_TARS
-    @tmp_tar_path = "#{Peas::TMP_TARS}/#{name}.tgz"
-    sh "cd #{tmp_repo_path} && tar --exclude='.git' -zcf #{@tmp_tar_path} ."
+    @tmp_tar_path = "#{Peas::TMP_TARS}/#{name}.tar"
+    File.delete @tmp_tar_path if File.exist? @tmp_tar_path
+    Peas.pty "cd #{local_repo_path} && git archive #{@new_revision} > #{@tmp_tar_path}"
   end
 
   # Given a hash of processes like `{web: 2, worker: 1}` create and/or destroy the necessary
@@ -274,7 +317,7 @@ class App
     Mongoid::Sessions.default["#{_id}_logs"]
   end
 
-  # Return a lisr of the most recent log lines for the app
+  # Return a list of the most recent log lines for the app
   def recent_logs(lines = 100)
     logs_collection.find.limit(lines).to_a.map { |line| line['line'] }
   end

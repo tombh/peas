@@ -3,6 +3,27 @@ require 'spec_helper'
 describe App do
   let(:app) { Fabricate :app }
 
+  before :each do
+    # NB: can't stub Peas::TMP_BASE because the module has already been loaded in spec_helper
+    @tmp_base = '/tmp/peas/test'
+    stub_const "Peas::TMP_REPOS", "#{@tmp_base}/repos"
+    stub_const "Peas::TMP_TARS", "#{@tmp_base}/tars"
+    FileUtils.rm_rf '/tmp/peas/test/' # Hardcoded for sanity
+  end
+
+  describe 'Git repo setup on app creation' do
+    it 'should create a bare git repo' do
+      expect(File.exist?("#{Peas::TMP_REPOS}/fabricated")).to be false
+      expect(app.name).to eq 'fabricated'
+      expect(File.exist?("#{Peas::TMP_REPOS}/fabricated/hooks")).to be true
+    end
+    it 'should create a bare git repo' do
+      expect(app.name).to eq 'fabricated'
+      hook_contents = File.open("#{Peas::TMP_REPOS}/fabricated/hooks/pre-receive").read
+      expect(hook_contents).to include App::GIT_RECEIVER_PATH
+    end
+  end
+
   describe 'Logging' do
     it 'should create a capped collection for logging' do
       expect(app.logs_collection).to be_a(Moped::Collection)
@@ -48,12 +69,12 @@ describe App do
 
     it 'should trigger a build' do
       expect(app).to receive(:build)
-      app.deploy
+      app.deploy('fakeSAH1')
     end
 
     it 'should scale web process to 1 if there are no existing containers for the app' do
       expect(app).to receive(:scale).with({ 'web' => 1 }, 'deploy')
-      app.deploy
+      app.deploy('fakeSAH1')
     end
 
     it "should broadcast the app's URI for a custom domain" do
@@ -62,7 +83,7 @@ describe App do
       expect(app).to receive(:broadcast).with(
         %r{       Deployed to http:\/\/#{app.name}\.custom-domain\.com}
       )
-      app.deploy
+      app.deploy('fakeSAH1')
     end
 
     it "should rescale processes to the app's existing scaling profile" do
@@ -71,88 +92,68 @@ describe App do
       expect(app).to receive(:scale).with(
         { 'web' => 3, 'worker' => 2 }, 'deploy'
       )
-      app.deploy
+      app.deploy('fakeSAH1')
     end
   end
 
   describe 'build()' do
     # Doesn't use :docker_creation_mock
 
-    before :each do
-      stub_const "Peas::TMP_REPOS", '/tmp/peas/test/repos'
-      stub_const "Peas::TMP_TARS", '/tmp/peas/test/tars'
-      FileUtils.rm_rf '/tmp/peas/test/'
+    it 'should tar a repo' do
+      app_local_path = "#{Peas::TMP_REPOS}/#{app.name}"
+      app.instance_variable_set('@new_revision', 'HEAD')
+      non_bare_path = create_non_bare_repo
+      # Remove the deploy hook, so nothing happens when we push to it
+      FileUtils.rm "#{app_local_path}/hooks/pre-receive"
+      # Simulate `git push peas`
+      Peas.pty "cd #{non_bare_path} && git push #{app_local_path} master"
+      allow(app).to receive(:broadcast)
+      app._tar_repo
+      tarred_repo = "#{Peas::TMP_TARS}/#{app.name}.tar"
+      expect(File.exist? tarred_repo).to eq true
+      Peas.pty "tar -xf #{tarred_repo} -C #{@tmp_base}"
+      expect(File.exist? "#{@tmp_base}/lathyrus.odoratus").to eq true
     end
 
-    context 'Fetching and tarring an app for Buildstep' do
-      before :each do
-        allow(app).to receive(:sh)
-        allow(app).to receive(:broadcast)
+    it 'should build an app resulting in a new Docker image', :docker do
+      # Use the nodejs example just because it builds so quickly
+      app = Fabricate :app, name: 'node-js-sample'
+      # Hack to detect whether this is being recorded for the first time or not
+      unless VCR.current_cassette.originally_recorded_at.nil?
+        allow(app).to receive(:_tar_repo)
       end
-
-      it 'should create the necessary directories' do
-        app._fetch_and_tar_repo
-        expect(File.exist? Peas::TMP_REPOS).to eq true
-        expect(File.exist? Peas::TMP_TARS).to eq true
-      end
-
-      it "should clone the app when the repo doesn't exist locally" do
-        expect(app).to receive(:sh).with(/git clone .* #{Peas::TMP_REPOS}\/#{app.name}/)
-        app._fetch_and_tar_repo
-      end
-
-      it 'should only pull updates when the repo already exists locally' do
-        FileUtils.mkdir_p "#{Peas::TMP_REPOS}/fabricated"
-        expect(app).to receive(:sh).with(/cd #{Peas::TMP_REPOS}\/#{app.name} .* git pull/)
-        app._fetch_and_tar_repo
-      end
+      allow(app).to receive(:broadcast)
+      expect(app).to receive(:broadcast).with(/       Node.js app detected/)
+      expect(app).to receive(:broadcast).with(/-----> Installing dependencies/)
+      expect(app).to receive(:broadcast).with(/       Procfile declares types -> web/)
+      expect_any_instance_of(Docker::Container).to receive(:commit)
+      expect_any_instance_of(Docker::Container).to receive(:delete)
+      app.build('fakeSAH1')
     end
 
-    context 'The build process itself' do
-
-      it 'should build an app resulting in a new Docker image', :docker do
-        # Use the nodejs example just because it builds so quickly
-        app = Fabricate :app,
-                        remote: 'https://github.com/heroku/node-js-sample.git',
-                        name: 'node-js-sample'
-        # Hack to detect whether this is being recorded for the first time or not
-        unless VCR.current_cassette.originally_recorded_at.nil?
-          allow(app).to receive(:_fetch_and_tar_repo)
-        end
-        allow(app).to receive(:broadcast)
-        expect(app).to receive(:broadcast).with(/       Node.js app detected/)
-        expect(app).to receive(:broadcast).with(/-----> Installing dependencies/)
-        expect(app).to receive(:broadcast).with(/       Procfile declares types -> web/)
-        expect_any_instance_of(Docker::Container).to receive(:commit)
-        expect_any_instance_of(Docker::Container).to receive(:delete)
-        app.build
+    it "should include the ENV vars saved in the app's config", :docker do
+      app = Fabricate :app, name: 'node-js-sample', config: { 'FOO' => 'BAR' }
+      # Hack to detect whether this is being recorded for the first time or not
+      unless VCR.current_cassette.originally_recorded_at.nil?
+        allow(app).to receive(:_tar_repo)
       end
+      allow(app).to receive(:broadcast)
+      details = app.build('fakeSAH1')
+      expect(details['Config']['Env']).to include("FOO=BAR")
+    end
 
-      it "should include the ENV vars saved in the app's config", :docker do
-        app = Fabricate :app,
-                        remote: 'https://github.com/heroku/node-js-sample.git',
-                        name: 'node-js-sample',
-                        config: { 'FOO' => 'BAR' }
-        allow(app).to receive(:broadcast)
-        details = app.build
-        expect(details['Config']['Env']).to include("FOO=BAR")
+    it 'should deal with a failed build', :docker do
+      app = Fabricate :app, name: 'hello-world-cpp'
+      # Hack to detect whether this is being recorded for the first time or not
+      unless VCR.current_cassette.originally_recorded_at.nil?
+        allow(app).to receive(:_tar_repo)
       end
-
-      it 'should deal with a failed build', :docker do
-        app = Fabricate :app,
-                        remote: 'https://github.com/saddleback/hello-world-cpp.git',
-                        name: 'hello-world-cpp'
-        # Hack to detect whether this is being recorded for the first time or not
-        unless VCR.current_cassette.originally_recorded_at.nil?
-          allow(app).to receive(:_fetch_and_tar_repo)
-        end
-        allow(app).to receive(:broadcast)
-        expect_any_instance_of(Docker::Container).to_not receive(:commit)
-        expect_any_instance_of(Docker::Container).to receive(:delete)
-        expect {
-          app.build
-        }.to raise_error RuntimeError, /Unable to select a buildpack/
-      end
+      allow(app).to receive(:broadcast)
+      expect_any_instance_of(Docker::Container).to_not receive(:commit)
+      expect_any_instance_of(Docker::Container).to receive(:delete)
+      expect {
+        app.build('fakeSAH1')
+      }.to raise_error RuntimeError, /Unable to select a buildpack/
     end
   end
 

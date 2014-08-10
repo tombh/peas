@@ -59,6 +59,5 @@ module Peas
     route :any, '*path' do
       error!("404, you've been led up the garden path", 404)
     end
-
   end
 end

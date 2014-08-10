@@ -36,7 +36,7 @@ describe Peas::API do
         'message' => "App 'test-test' successfully created"
       )
       expect(JSON.parse(last_response.body)).to include(
-        'remote_uri' => 'ssh://git@vcap.me:4000/test-test'
+        'remote_uri' => "#{Peas::TMP_REPOS}/test-test"
       )
     end
 
@@ -50,6 +50,7 @@ describe Peas::API do
     end
 
     it "should prepend an adverb when name is already taken" do
+      allow(File).to receive(:open).and_call_original
       allow(File).to receive(:open).with("#{Peas.root}/lib/adverbs.txt").and_return("hipsterly")
       expect(peas_app).to be_a App
       expect(App.first.name).to eq 'fabricated'
@@ -69,22 +70,6 @@ describe Peas::API do
       )
     end
 
-    it "should deploy an app" do
-      allow(@socket).to receive(:puts).exactly(4).times
-      job = {
-        parent_job: uuid,
-        current_job: uuid,
-        model: 'App',
-        id: peas_app._id.to_s,
-        method: 'deploy',
-        args: []
-      }
-      expect(@socket).to receive(:puts).with(job.to_json)
-      get "/app/#{peas_app.name}/deploy"
-      expect(last_response.status).to eq 200
-      expect(JSON.parse(last_response.body)['job']).to eq uuid
-    end
-
     it "should scale an app" do
       scaling_hash = { 'web' => 3, 'worker' => 2 }
       allow(@socket).to receive(:puts).exactly(4).times
@@ -102,8 +87,8 @@ describe Peas::API do
       expect(JSON.parse(last_response.body)['job']).to eq uuid
     end
 
-    it "should return a 404 if an app can't be found" do
-      get "/app/sha1doesnoteixst/deploy"
+    it "should return a 404 with 'App does not exist' message if an app can't be found" do
+      get "/app/appthatdoesnotexist/config"
       expect(last_response.status).to eq 404
       expect(JSON.parse(last_response.body)).to have_key('error')
       expect(JSON.parse(last_response.body)).to eq('error' => 'App does not exist')

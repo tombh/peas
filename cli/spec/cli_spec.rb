@@ -68,20 +68,9 @@ describe 'Peas CLI' do
     it 'should destroy an app' do
       stub_request(:delete, TEST_DOMAIN + '/app/test-test')
         .to_return(body: response_mock("App 'test' successfully destroyed"))
+      expect(Git).to receive(:remove_remote)
       output = cli ['destroy']
       expect(output).to eq "App 'test' successfully destroyed\n"
-    end
-
-    it 'should deploy an app', :with_socket do
-      stub_request(:get, /deploy/).to_return(body: '{"job": "123"}')
-      allow(@socket).to receive(:gets).and_return(
-        '{"body":"doing"}',
-        '{"body":"something"}',
-        '{"body":"done"}',
-        '{"status":"complete"}'
-      )
-      output = cli %w(deploy)
-      expect(output).to eq "doing\nsomething\ndone\n"
     end
 
     it 'should scale an app', :with_socket do
