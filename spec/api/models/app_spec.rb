@@ -5,20 +5,20 @@ describe App do
 
   before :each do
     # NB: can't stub Peas::TMP_BASE because the module has already been loaded in spec_helper
-    stub_const "Peas::TMP_REPOS", "#{TMP_BASE}/repos"
+    stub_const "Peas::APP_REPOS_PATH", "#{TMP_BASE}/repos"
     stub_const "Peas::TMP_TARS", "#{TMP_BASE}/tars"
     FileUtils.rm_rf '/tmp/peas/test/' # Hardcoded for sanity
   end
 
   describe 'Git repo setup on app creation' do
     it 'should create a bare git repo' do
-      expect(File.exist?("#{Peas::TMP_REPOS}/fabricated")).to be false
+      expect(File.exist?("#{Peas::APP_REPOS_PATH}/fabricated")).to be false
       expect(app.name).to eq 'fabricated'
-      expect(File.exist?("#{Peas::TMP_REPOS}/fabricated/hooks")).to be true
+      expect(File.exist?("#{Peas::APP_REPOS_PATH}/fabricated/hooks")).to be true
     end
     it 'should create a bare git repo' do
       expect(app.name).to eq 'fabricated'
-      hook_contents = File.open("#{Peas::TMP_REPOS}/fabricated/hooks/pre-receive").read
+      hook_contents = File.open("#{Peas::APP_REPOS_PATH}/fabricated/hooks/pre-receive").read
       expect(hook_contents).to include App::GIT_RECEIVER_PATH
     end
   end
@@ -99,7 +99,7 @@ describe App do
     # Doesn't use :docker_creation_mock
 
     it 'should tar a repo' do
-      app_local_path = "#{Peas::TMP_REPOS}/#{app.name}"
+      app_local_path = "#{Peas::APP_REPOS_PATH}/#{app.name}"
       app.instance_variable_set('@new_revision', 'HEAD')
       non_bare_path = create_non_bare_repo
       # Remove the deploy hook, so nothing happens when we push to it

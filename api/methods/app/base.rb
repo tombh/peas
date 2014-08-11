@@ -19,8 +19,13 @@ module Peas
       end
 
       desc "Create an app"
+      params do
+        requires :public_key, type: String, desc: "User's SSH public key"
+        optional :muse, type: String, desc: "A clue to help generate the app's name"
+      end
       post do
         muse = params.fetch :muse, nil
+        GitSSH.add_key params[:public_key] if Peas.dind?
         app = App.create!(
           name: App.divine_name(muse)
         )

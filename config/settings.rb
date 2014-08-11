@@ -11,11 +11,11 @@ module Peas
   # Peas base path for temp files
   TMP_BASE = '/tmp/peas'
 
-  # Path to receive repos for deploying
-  TMP_REPOS = "#{TMP_BASE}/repos"
-
   # Path to tar repos into before sending to buildstep
   TMP_TARS = "#{TMP_BASE}/tars"
+
+  # Path to receive repos for deploying
+  APP_REPOS_PATH = Peas.dind? ? "/home/git" : "#{TMP_BASE}/repos"
 
   # See self.domain() for more info
   # 'vcap.me' is managed by Cloud Foundry and has wildcard resolution to 127.0.0.1
@@ -67,7 +67,7 @@ module Peas
     cgroups = File.open('/proc/self/cgroup').read
     matches = cgroups.match(/docker\/([a-z0-9]*)$/)
     if matches
-      # Return the Docker ID. Note that this changes everyt time the DinD container boots
+      # Return the Docker ID. Note that this changes every time the DinD container boots
       matches.captures.first
     else
       false
@@ -112,5 +112,4 @@ module Peas
     output = Peas.environment == 'test' ? '/dev/null' : STDOUT
     @logger ||= Logger.new output
   end
-
 end

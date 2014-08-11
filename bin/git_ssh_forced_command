@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+# This script is called by the 'forced command' directive in `/home/git/.ssh/.authorized_keys`
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
+require 'config/boot'
+
+# $SSH_ORIGINAL_COMMAND is set by `sshd'. It stores the originally intended command to be run by `git push'. In
+# our case it is overridden by the 'forced command', so we need to reinstate it now that the 'forced command' has
+# run.
+RECEIVE_REPO="$(echo "$SSH_ORIGINAL_COMMAND" | parse_repo_from_ssh_command)"
+repo_path="$GITHOME/$RECEIVE_REPO"
+git-shell -c "$(echo "$SSH_ORIGINAL_COMMAND" | awk '{print $1}') '$RECEIVE_REPO'"

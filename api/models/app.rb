@@ -5,7 +5,7 @@ class App
   include Mongoid::Document
   include Peas::ModelWorker
 
-  GIT_RECEIVER_PATH = File.expand_path "#{Peas.root}/bin/git-receiver"
+  GIT_RECEIVER_PATH = File.expand_path "#{Peas.root}/bin/git_receiver"
 
   # The primary key for the app.
   field :name, type: String
@@ -98,7 +98,7 @@ class App
 
   # The local path on the filesystem where the app's Git repo lives
   def local_repo_path
-    "#{Peas::TMP_REPOS}/#{name}"
+    "#{Peas::APP_REPOS_PATH}/#{name}"
   end
 
   # Create a bare Git repo ready to receive git pushes to trigger deploys
