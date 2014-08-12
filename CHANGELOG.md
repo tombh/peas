@@ -1,3 +1,11 @@
+###0.3.0
+**999th 2014**    
+**Features**:
+  * Git server deploys, ie; `git push peas`. No more CLI deploys.
+  * API change: apps are ID'd by their name not their first SHA1 (that was always a bad idea)
+  * Main specs are run on ci.peas.io, so only CLI specs are run on Travis now. Travis still triggers and reports all
+  tests.
+
 ###0.2.1
 **1st August 2014**    
 **Features**:
