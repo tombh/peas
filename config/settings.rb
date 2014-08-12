@@ -8,6 +8,18 @@ module Peas
   # Location of Docker socket, used by Remote API
   DOCKER_SOCKET = 'unix:///var/run/docker.sock'
 
+  # Figure out if we're running inside a docker container.
+  DIND = begin
+    cgroups = File.open('/proc/self/cgroup').read
+    matches = cgroups.match(/docker\/([a-z0-9]*)$/)
+    if matches
+      # Return the Docker ID. Note that this changes every time the DinD container boots
+      matches.captures.first
+    else
+      false
+    end
+  end
+
   # Peas base path for temp files
   TMP_BASE = '/tmp/peas'
 
@@ -15,7 +27,7 @@ module Peas
   TMP_TARS = "#{TMP_BASE}/tars"
 
   # Path to receive repos for deploying
-  APP_REPOS_PATH = Peas.dind? ? "/home/git" : "#{TMP_BASE}/repos"
+  APP_REPOS_PATH = DIND ? "/home/git" : "#{TMP_BASE}/repos"
 
   # See self.domain() for more info
   # 'vcap.me' is managed by Cloud Foundry and has wildcard resolution to 127.0.0.1
@@ -60,18 +72,6 @@ module Peas
 
   def self.switchboard_server_uri
     "#{Peas.host}:#{SWITCHBOARD_PORT}"
-  end
-
-  # Figure out if we're running inside a docker container.
-  def self.dind?
-    cgroups = File.open('/proc/self/cgroup').read
-    matches = cgroups.match(/docker\/([a-z0-9]*)$/)
-    if matches
-      # Return the Docker ID. Note that this changes every time the DinD container boots
-      matches.captures.first
-    else
-      false
-    end
   end
 
   # Is this instance of Peas functioning as a controller?

@@ -17,9 +17,14 @@ data_container=$(docker ps -a | grep -P 'busybox:.*peas-data ' | awk '{print $1}
 if [ -z "$data_container" ]; then
 	echo "Creating data container..."
 	docker run \
+    # Internal docker containers (app containers)
 	  -v /var/lib/docker \
+    # Mongo data
 	  -v /data/db \
-	  -v /var/lib/gems \
+    # Gems (just speeds up boot because you don't have to wait for any updated gems to install)
+    -v /var/lib/gems \
+    # App repos and SSH public keys
+	  -v /home/git \
 	  --name peas-data \
 	  busybox true
 fi

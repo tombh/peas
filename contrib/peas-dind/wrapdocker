@@ -106,6 +106,8 @@ if [ `ls -1A /var/lib/gems | wc -l` -eq 0 ]; then
     gem install bundler
 fi
 
+service ssh start
+
 cd /home/peas/repo
 BUNDLE_BIN=/var/lib/gems/binstubs bundle install
 PATH=$PATH:/var/lib/gems/binstubs

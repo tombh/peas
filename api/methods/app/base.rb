@@ -25,7 +25,7 @@ module Peas
       end
       post do
         muse = params.fetch :muse, nil
-        GitSSH.add_key params[:public_key] if Peas.dind?
+        GitSSH.add_key params[:public_key] if Peas::DIND
         app = App.create!(
           name: App.divine_name(muse)
         )

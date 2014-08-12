@@ -26,6 +26,7 @@ RUN mkdir -p /data/db
 RUN mkdir /root/.ssh -p && /bin/bash -c 'echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config'
 ADD ./ /home/peas/repo
 RUN gem install bundler
+# Create a Git server
 RUN apt-get install -qqy openssh-server
 RUN useradd -d /home/git git
 RUN mkdir -p /home/git/.ssh

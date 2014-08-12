@@ -83,10 +83,9 @@ class App
   # The canonical Git remote URI for pushing/deploying
   def remote_uri
     # If we're running inside a Docker-in-Docker container
-    if Peas.dind?
-      port = URI.parse(Peas.domain).port
-      if port
-        "ssh://git@#{Peas.host}:#{port}/#{name}"
+    if Peas::DIND
+      if ENV['GIT_PORT'] != '22'
+        "ssh://git@#{Peas.host}:#{ENV['GIT_PORT']}/~/#{name}.git"
       else
         "git@#{Peas.host}:#{name}.git"
       end
@@ -98,7 +97,7 @@ class App
 
   # The local path on the filesystem where the app's Git repo lives
   def local_repo_path
-    "#{Peas::APP_REPOS_PATH}/#{name}"
+    "#{Peas::APP_REPOS_PATH}/#{name}.git"
   end
 
   # Create a bare Git repo ready to receive git pushes to trigger deploys
@@ -106,6 +105,7 @@ class App
     FileUtils.mkdir_p local_repo_path
     Peas.pty "cd #{local_repo_path} && git init --bare"
     create_prereceive_hook
+    Peas.pty "chown git -R #{local_repo_path}" if Peas::DIND
   end
 
   # Create a pre-receive hook in the app's Git repo that will trigger Peas' deploy process
