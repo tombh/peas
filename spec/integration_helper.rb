@@ -84,6 +84,10 @@ class Cli
       "#{Peas.root}cli/bin/peas-dev #{cmd}"
     Peas.pty cmd, timeout
   end
+
+  def sh(cmd)
+    Peas.pty "cd #{@path} && #{cmd}"
+  end
 end
 
 RSpec.configure do |config|

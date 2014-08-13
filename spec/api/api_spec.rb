@@ -36,7 +36,7 @@ describe Peas::API do
         'message' => "App 'test-test' successfully created"
       )
       expect(JSON.parse(last_response.body)).to include(
-        'remote_uri' => "#{Peas::APP_REPOS_PATH}/test-test"
+        'remote_uri' => "#{Peas::APP_REPOS_PATH}/test-test.git"
       )
     end
 

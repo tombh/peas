@@ -20,7 +20,7 @@ module Peas
 
       desc "Create an app"
       params do
-        requires :public_key, type: String, desc: "User's SSH public key"
+        requires :public_key, type: String, desc: "User's SSH public key" if Peas::DIND
         optional :muse, type: String, desc: "A clue to help generate the app's name"
       end
       post do

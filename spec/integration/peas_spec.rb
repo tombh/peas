@@ -21,7 +21,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
 
     describe 'Deploy' do
       it 'should deploy a basic nodejs app' do
-        response = @cli.run 'deploy'
+        response = @cli.sh 'git push peas master'
         expect(response).to match %r{-----> Fetching https:\/\/github.com\/tombh\/node-js-sample.git}
         expect(response).to match(/-----> Installing dependencies/)
         expect(response).to match(/-----> Discovering process types/)
@@ -36,7 +36,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
 
       it 'should deploy with a custom buildpack' do
         @cli.run 'config set BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs.git'
-        response = @cli.run 'deploy'
+        response = @cli.sh 'git push peas master'
         expect(response).to match(/Fetching custom buildpack/)
         sleep 5
         response = http_get "node-js-sample.vcap.me:4004"
@@ -48,7 +48,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       it 'should set config for an app' do
         response = @cli.run 'config set FOO=BAR'
         expect(response).to eq '{"FOO"=>"BAR"}'
-        @cli.run 'deploy'
+        @cli.sh 'git push peas master'
         sleep 5
         response = http_get "node-js-sample.vcap.me:4004"
         expect(response).to eq 'Hello BAR!'
@@ -74,7 +74,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       @cli.run 'admin settings mongodb.uri mongodb://10.0.42.1:27017'
       response = @cli.run 'create'
       expect(response).to eq "App 'node-js-sample' successfully created"
-      @cli.run 'deploy'
+      @cli.sh 'git push peas master'
       sleep 5
       response = http_get 'node-js-sample.vcap.me:4004'
       expect(response).to eq 'Hello World!'
