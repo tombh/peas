@@ -19,6 +19,11 @@ describe 'The Peas PaaS Integration Tests', :integration do
       expect(response).to eq "App 'node-js-sample' successfully created"
     end
 
+    after :each do
+      response = @cli.run 'destroy'
+      expect(response).to eq "App 'node-js-sample' successfully destroyed"
+    end
+
     describe 'Deploy' do
       it 'should deploy a basic nodejs app' do
         response = @cli.sh 'git push peas master'

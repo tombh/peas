@@ -111,6 +111,9 @@ RSpec.configure do |config|
         -e PEAS_ENV=production \
         tombh/peas"
     )
+    # Whatever user is running these tests, copy their public key to the fake home directory for uploading by the client
+    Peas.pty "mkdir -p #{TMP_PATH}/.ssh"
+    Peas.pty "cp -f ~/.ssh/id_rsa.pub #{TMP_PATH}/.ssh"
     # Wait until the container has completely booted
     Timeout.timeout(4 * 60) do
       result = `bash -c \
