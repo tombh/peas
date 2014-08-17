@@ -86,7 +86,7 @@ class Cli
   end
 
   def sh(cmd)
-    Peas.pty "cd #{@path} && #{cmd}"
+    Peas.pty "cd #{@path} && GIT_SSH='#{Peas.root}/spec/integration/ssh_without_stricthostkeycheck.sh' #{cmd}"
   end
 end
 

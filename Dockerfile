@@ -23,15 +23,19 @@ RUN apt-get install -qqy mongodb-org=2.6.3
 RUN mkdir -p /data/db
 
 # Peas-specific deps
-RUN mkdir /root/.ssh -p && /bin/bash -c 'echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config'
+RUN useradd -d /home/peas peas
+RUN chsh -s /bin/bash peas
 ADD ./ /home/peas/repo
+RUN echo "export GEM_HOME=/home/peas/.bundler" > /home/peas/.profile
+RUN echo "export PATH=$PATH:/home/peas/.bundler/bin" >> /home/peas/.profile
+RUN chown -R peas /home/peas
 RUN gem install bundler
 # Create a Git server
 RUN apt-get install -qqy openssh-server
 RUN useradd -d /home/git git
-RUN mkdir -p /home/git/.ssh
-RUN touch /home/git/.ssh/authorized_keys
-RUN chown -R git /home/git
+# Make the primary group for git the peas group, so all files it creates have the peas group
+RUN usermod -g peas git
+RUN gpasswd -a git peas
 
 # DinD magic
 RUN apt-get install -qqy iptables ca-certificates lxc
@@ -40,6 +44,7 @@ RUN echo deb https://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
 RUN apt-get update -qq
 RUN apt-get install -qqy lxc-docker-1.1.1
+RUN gpasswd -a peas docker
 
 VOLUME /var/lib/docker
 CMD ["/home/peas/repo/contrib/peas-dind/wrapdocker"]

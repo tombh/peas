@@ -99,24 +99,31 @@ export LC_ALL="C.UTF-8"
 rm -f /data/db/mongod.lock # This situation could be better dealt with
 /usr/bin/mongod --smallfiles &>/var/log/mongo.log &
 
-# If /var/lib/gems is mounted as a volume, then the first time Peas boots, there will be no
-# bundler command, even though it was installed with the Dockerfile. So install it.
-# Mounting /var/lib/gems means that `bundle install` is much quicker and so Peas boots faster.
-if [ `ls -1A /var/lib/gems | wc -l` -eq 0 ]; then
-    gem install bundler
-fi
-
 service ssh start
 
-cd /home/peas/repo
-BUNDLE_BIN=/var/lib/gems/binstubs bundle install
-PATH=$PATH:/var/lib/gems/binstubs
-
-peas_cmd() { bundle exec foreman start -f ./Procfile; }
+# Files that exist inside volumes can't be handled by Dockerfile
+chown peas:peas /home/peas/.bundler # Volumes get mounted as root https://github.com/docker/docker/pull/5910
+chown git:peas /home/git
+su - git <<EOF
+chmod g+w /home/git
+echo "umask 002" > .profile # Default file creation for group-writable files
+umask 002
+mkdir -p /home/git/.ssh
+touch /home/git/.ssh/authorized_keys
+EOF
 
 PEAS_ENV=${PEAS_ENV:-development}
-echo "Running Peas in $PEAS_ENV environment"
+su - peas <<EOF
+export API_PORT=$API_PORT
+export GIT_PORT=$GIT_PORT
+export PEAS_ENV=$PEAS_ENV
 
-peas_cmd &
+cd /home/peas/repo
+BUNDLE_APP_CONFIG=~/.bundler/peas_config BUNDLE_PATH=~/.bundler bundle install
+
+echo "Running Peas in $PEAS_ENV environment"
+bundle exec foreman start -f ./Procfile &
+EOF
+
 sleep 5
 exec bash

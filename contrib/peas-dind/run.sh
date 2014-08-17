@@ -16,14 +16,14 @@ PEAS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../"
 data_container=$(docker ps -a | grep -P 'busybox:.*peas-data ' | awk '{print $1}')
 if [ -z "$data_container" ]; then
 	echo "Creating data container..."
+  # /var/lib/docker: Internal docker containers (app containers)
+  # /data/db: Mongo data
+  # /home/peas/.bundler: Gems (just speeds up boot because you don't have to wait for any updated gems to install)
+  # /home/git: App repos and SSH public keys
 	docker run \
-    # Internal docker containers (app containers)
 	  -v /var/lib/docker \
-    # Mongo data
 	  -v /data/db \
-    # Gems (just speeds up boot because you don't have to wait for any updated gems to install)
-    -v /var/lib/gems \
-    # App repos and SSH public keys
+    -v /home/peas/.bundler \
 	  -v /home/git \
 	  --name peas-data \
 	  busybox true
@@ -34,6 +34,7 @@ docker run \
   --privileged \
   --rm=true \
   --volumes-from peas-data \
+  --name=peas \
   -e "PEAS_ENV=$PEAS_ENV" \
   -e "GIT_PORT=$GIT_PORT" \
   -v $PEAS_ROOT:/home/peas/repo \

@@ -2,6 +2,10 @@
 
 # This script is called by the pre-receive hook of an app's Git repo
 
+if Peas::DIND
+  ENV['GEM_HOME']='/home/peas/.bundler'
+end
+
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'config/boot'
 

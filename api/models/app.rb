@@ -105,7 +105,6 @@ class App
     FileUtils.mkdir_p local_repo_path
     Peas.pty "cd #{local_repo_path} && git init --bare"
     create_prereceive_hook
-    Peas.pty "chown git -R #{local_repo_path}" if Peas::DIND
   end
 
   # Create a pre-receive hook in the app's Git repo that will trigger Peas' deploy process
