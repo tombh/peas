@@ -101,25 +101,31 @@ rm -f /data/db/mongod.lock # This situation could be better dealt with
 
 service ssh start
 
-# Files that exist inside volumes can't be handled by Dockerfile
-chown peas:peas /home/peas/.bundler # Volumes get mounted as root https://github.com/docker/docker/pull/5910
-chown git:peas /home/git
+echo "peas ALL=(git:git) NOPASSWD:ALL" >> /etc/sudoers
+
+# Files that exist inside volumes can't be handled by Dockerfile as they're mounted after the build process.
+# So the folllowing would ideally be run during build but for one reason or another can't be.
+# Volumes get mounted as root https://github.com/docker/docker/pull/5910
+chown peas:peas /home/peas/.bundler
+chown git:git /home/git
 su - git <<EOF
-chmod g+w /home/git
-echo "umask 002" > .profile # Default file creation for group-writable files
-umask 002
 mkdir -p /home/git/.ssh
 touch /home/git/.ssh/authorized_keys
 EOF
 
 PEAS_ENV=${PEAS_ENV:-development}
 su - peas <<EOF
+# TODO: consider prepending all Peas env vars with 'PEAS', so that we can automagically loop through them and not
+# have to remember to change them here and in contrib/peas-dind/run.sh
 export API_PORT=$API_PORT
 export GIT_PORT=$GIT_PORT
 export PEAS_ENV=$PEAS_ENV
 
+export BUNDLE_APP_CONFIG=~/.bundler/peas_config
+export BUNDLE_PATH=~/.bundler
+
 cd /home/peas/repo
-BUNDLE_APP_CONFIG=~/.bundler/peas_config BUNDLE_PATH=~/.bundler bundle install
+bundle install
 
 echo "Running Peas in $PEAS_ENV environment"
 bundle exec foreman start -f ./Procfile &

@@ -3,10 +3,11 @@ require 'pty'
 
 module Peas
   # Convenience wrapper for the command line. Kills commands if they run too long
-  # Note that `curl` seems to behave oddly with this -  it doesn't output anything
-  def self.pty(command, timeout = 60)
+  # Note that `curl` seems to behave oddly with this - it doesn't output anything
+  def self.pty(command, timeout = 60, user: 'peas')
     output = ''
     pid = nil
+    command = "sudo -u #{user} bash -c '#{command}'" unless user == 'peas'
     PTY.spawn(command  + ' 2>&1') do |stdout, _stdin, pid_local|
       pid = pid_local
       begin

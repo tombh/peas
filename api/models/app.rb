@@ -6,6 +6,7 @@ class App
   include Peas::ModelWorker
 
   GIT_RECEIVER_PATH = File.expand_path "#{Peas.root}/bin/git_receiver"
+  GIT_USER = Peas::DIND ? 'git' : 'peas'
 
   # The primary key for the app.
   field :name, type: String
@@ -102,8 +103,8 @@ class App
 
   # Create a bare Git repo ready to receive git pushes to trigger deploys
   def create_local_repo
-    FileUtils.mkdir_p local_repo_path
-    Peas.pty "cd #{local_repo_path} && git init --bare"
+    Peas.pty "mkdir -p #{local_repo_path}", user: GIT_USER
+    Peas.pty "cd #{local_repo_path} && git init --bare", user: GIT_USER
     create_prereceive_hook
   end
 
@@ -112,20 +113,17 @@ class App
   # moved somewhere else on the system.
   def create_prereceive_hook
     hook_path = "#{local_repo_path}/hooks/pre-receive"
-    File.open(hook_path, 'w') do |file|
-      file.puts("#!/bin/bash")
-      file.puts("cd #{Peas.root}")
-      file.puts("cat | #{GIT_RECEIVER_PATH} #{name}")
-    end
-    Peas.pty "chmod +x #{hook_path}"
+    hook_code = "#!/bin/bash\ncd #{Peas.root}\ncat | #{GIT_RECEIVER_PATH} #{name}\n"
+    Peas.pty "echo \'#{hook_code}\' > #{hook_path}", user: GIT_USER
+    Peas.pty "chmod +x #{hook_path}", user: GIT_USER
   end
 
   def remove_local_repo
     return unless File.exist? local_repo_path
     unless Dir.entries(local_repo_path).include? 'hooks'
-      raise PeasError, "Refusing to `rm -r` folder that doesn't look like a Git repo"
+      # raise Peas::PeasError, "Refusing to `rm -rf` folder that doesn't look like a Git repo"
     end
-    FileUtils.rm_r local_repo_path
+    Peas.pty "rm -rf #{local_repo_path}", user: GIT_USER
   end
 
   # Pretty arrow. Same as used in Heroku buildpacks

@@ -7,7 +7,7 @@ API_PORT=${1:-4000}
 GIT_PORT=${2:-2222}
 
 # Make the assumption that if we're exposing Peas port 80, then this is a non-development environment
-if [ $API_PORT = 80 ]; then
+if [ "$API_PORT" -eq "80" ]; then
   export DIND_HOST=$(curl icanhazip.com)
 fi
 
@@ -20,6 +20,7 @@ if [ -z "$data_container" ]; then
   # /data/db: Mongo data
   # /home/peas/.bundler: Gems (just speeds up boot because you don't have to wait for any updated gems to install)
   # /home/git: App repos and SSH public keys
+  # TODO: consider having only a single mount and symlinking all the other required persistence paths to it
 	docker run \
 	  -v /var/lib/docker \
 	  -v /data/db \
