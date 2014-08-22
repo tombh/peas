@@ -104,12 +104,12 @@ describe App do
       # Remove the deploy hook, so nothing happens when we push to it
       FileUtils.rm "#{app.local_repo_path}/hooks/pre-receive"
       # Simulate `git push peas`
-      Peas.pty "cd #{non_bare_path} && git push #{app.local_repo_path} master"
+      Peas.sh "cd #{non_bare_path} && git push #{app.local_repo_path} master"
       allow(app).to receive(:broadcast)
       app._tar_repo
       tarred_repo = "#{Peas::TMP_TARS}/#{app.name}.tar"
       expect(File.exist? tarred_repo).to eq true
-      Peas.pty "tar -xf #{tarred_repo} -C #{TMP_BASE}"
+      Peas.sh "tar -xf #{tarred_repo} -C #{TMP_BASE}"
       expect(File.exist? "#{TMP_BASE}/lathyrus.odoratus").to eq true
     end
 

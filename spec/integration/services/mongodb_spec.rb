@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Peas::Services::Mongodb, :service do
   before :each do
-    Peas.pty 'mongo fabricated --eval "db.dropUser(\'fabricated\');"'
-    Peas.pty 'mongo fabricated --eval "db.dropDatabase();"'
+    Peas.sh 'mongo fabricated --eval "db.dropUser(\'fabricated\');"'
+    Peas.sh 'mongo fabricated --eval "db.dropDatabase();"'
     @app = Fabricate :app
     Setting.create(key: 'mongodb.uri', value: 'mongodb://localhost:27017')
     uri = Peas::Services::Mongodb.new(@app).create

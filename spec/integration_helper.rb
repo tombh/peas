@@ -11,7 +11,7 @@ puts "\nRun `docker logs -f peas-test` to tail integration test activity\n\n"
 
 # Find the test-specific data volume
 def get_data_vol_id
-  output = Peas.pty "docker ps -a | grep 'busybox:.*peas-data-test' | awk '{print $1}'"
+  output = Peas.sh "docker ps -a | grep 'busybox:.*peas-data-test' | awk '{print $1}'"
   if output.length == 12 # Trivial sanity check
     output
   else
@@ -23,7 +23,7 @@ end
 def setup_data_volume
   return get_data_vol_id if get_data_vol_id
   # Name the volume differently from the one that may be used in dev/prod
-  Peas.pty "docker run -v /var/lib/docker -v /data/db -v /var/lib/gems --name peas-data-test busybox true"
+  Peas.sh "docker run -v /var/lib/docker -v /data/db -v /var/lib/gems --name peas-data-test busybox true"
   if !get_data_vol_id
     raise "Failed to create data volume. Aborting."
   else
@@ -82,11 +82,11 @@ class Cli
       "PEAS_API_ENDPOINT=vcap.me:4004 " \
       "SWITCHBOARD_PORT=7345 " \
       "#{Peas.root}cli/bin/peas-dev #{cmd}"
-    Peas.pty cmd, timeout
+    Peas.sh cmd, timeout
   end
 
   def sh(cmd)
-    Peas.pty "cd #{@path} && GIT_SSH='#{Peas.root}/spec/integration/ssh_without_stricthostkeycheck.sh' #{cmd}"
+    Peas.sh "cd #{@path} && GIT_SSH='#{Peas.root}/spec/integration/ssh_without_stricthostkeycheck.sh' #{cmd}"
   end
 end
 
@@ -99,7 +99,7 @@ RSpec.configure do |config|
     WebMock.allow_net_connect!
     VCR.turn_off!
     setup_data_volume
-    @peas_container_id = Peas.pty(
+    @peas_container_id = Peas.sh(
       "docker run -d \
         --privileged \
         -i \
@@ -112,8 +112,8 @@ RSpec.configure do |config|
         tombh/peas"
     )
     # Whatever user is running these tests, copy their public key to the fake home directory for uploading by the client
-    Peas.pty "mkdir -p #{TMP_PATH}/.ssh"
-    Peas.pty "cp -f ~/.ssh/id_rsa.pub #{TMP_PATH}/.ssh"
+    Peas.sh "mkdir -p #{TMP_PATH}/.ssh"
+    Peas.sh "cp -f ~/.ssh/id_rsa.pub #{TMP_PATH}/.ssh"
     # Wait until the container has completely booted
     Timeout.timeout(4 * 60) do
       result = `bash -c \
@@ -127,8 +127,8 @@ RSpec.configure do |config|
 
     # Clone a very basic NodeJS app
     REPO_PATH = TMP_PATH + '/node-js-sample'
-    Peas.pty "rm -rf #{REPO_PATH}"
-    Peas.pty "cd #{TMP_PATH} && git clone https://github.com/tombh/node-js-sample.git"
+    Peas.sh "rm -rf #{REPO_PATH}"
+    Peas.sh "cd #{TMP_PATH} && git clone https://github.com/tombh/node-js-sample.git"
 
     # Just to make sure everything is clean before we start
     @peas_io.env_reset
@@ -152,10 +152,10 @@ RSpec.configure do |config|
     @peas_io.bash "mongod --shutdown"
     @peas_io.close
     # Save logs before destroying
-    Peas.pty "docker logs #{@peas_container_id} > #{TMP_PATH}/integration-tests.log 2>&1"
+    Peas.sh "docker logs #{@peas_container_id} > #{TMP_PATH}/integration-tests.log 2>&1"
     # Remove the Peas test container. But the data container 'peas-data-test' still remains
-    Peas.pty "docker stop #{@peas_container_id}"
-    Peas.pty "docker rm -f #{@peas_container_id}"
+    Peas.sh "docker stop #{@peas_container_id}"
+    Peas.sh "docker rm -f #{@peas_container_id}"
     puts ""
     puts "Integration tests log available at #{TMP_PATH}/integration-tests.log"
     WebMock.disable_net_connect!

@@ -162,7 +162,7 @@ end
 def create_non_bare_repo
   non_bare_path = "#{Peas::APP_REPOS_PATH}/non_bare_repo"
   FileUtils.mkdir_p non_bare_path
-  Peas.pty "cd #{non_bare_path} && " \
+  Peas.sh "cd #{non_bare_path} && " \
     "git init && " \
     "touch lathyrus.odoratus && " \
     "git add . --all && " \

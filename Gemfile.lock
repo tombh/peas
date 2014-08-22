@@ -1,14 +1,4 @@
 GIT
-  remote: git://github.com/mongoid/mongoid.git
-  revision: 8cb17e9839973b76295cf87189e91a5ffcc03ab0
-  specs:
-    mongoid (4.0.0)
-      activemodel (~> 4.0)
-      moped (~> 2.0.0)
-      origin (~> 2.1)
-      tzinfo (>= 0.3.37)
-
-GIT
   remote: git://github.com/intridea/grape.git
   revision: 1fe9e435c80dd2dd85dd75f8d9a19c44eee2c3f3
   specs:
@@ -22,6 +12,16 @@ GIT
       rack-accept
       rack-mount
       virtus (>= 1.0.0)
+
+GIT
+  remote: git://github.com/mongoid/mongoid.git
+  revision: 8cb17e9839973b76295cf87189e91a5ffcc03ab0
+  specs:
+    mongoid (4.0.0)
+      activemodel (~> 4.0)
+      moped (~> 2.0.0)
+      origin (~> 2.1)
+      tzinfo (>= 0.3.37)
 
 GEM
   remote: http://rubygems.org/
