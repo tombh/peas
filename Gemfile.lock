@@ -1,16 +1,6 @@
 GIT
-  remote: git://github.com/mongoid/mongoid.git
-  revision: 8cb17e9839973b76295cf87189e91a5ffcc03ab0
-  specs:
-    mongoid (4.0.0)
-      activemodel (~> 4.0)
-      moped (~> 2.0.0)
-      origin (~> 2.1)
-      tzinfo (>= 0.3.37)
-
-GIT
   remote: git://github.com/intridea/grape.git
-  revision: 1fe9e435c80dd2dd85dd75f8d9a19c44eee2c3f3
+  revision: 1db4c5eff39896dc86ccce7e1bee8bd06153221a
   specs:
     grape (0.8.1)
       activesupport
@@ -23,13 +13,23 @@ GIT
       rack-mount
       virtus (>= 1.0.0)
 
+GIT
+  remote: git://github.com/mongoid/mongoid.git
+  revision: 5ba2e1fb4cb8189c9890e29c19cf4e16c25e4bc5
+  specs:
+    mongoid (4.0.0)
+      activemodel (~> 4.0)
+      moped (~> 2.0.0)
+      origin (~> 2.1)
+      tzinfo (>= 0.3.37)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (4.1.4)
-      activesupport (= 4.1.4)
+    activemodel (4.1.5)
+      activesupport (= 4.1.5)
       builder (~> 3.1)
-    activesupport (4.1.4)
+    activesupport (4.1.5)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -66,14 +66,14 @@ GEM
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
     equalizer (0.0.9)
-    excon (0.38.0)
+    excon (0.39.5)
     fabrication (2.11.3)
     ffi (1.9.3)
     foreman (0.74.0)
       dotenv (~> 0.11.1)
       thor (~> 0.19.1)
     formatador (0.2.5)
-    grape-entity (0.4.3)
+    grape-entity (0.4.4)
       activesupport
       multi_json (>= 1.3.2)
     grape-swagger (0.7.2)
@@ -89,18 +89,14 @@ GEM
     guard-bundler (2.0.0)
       bundler (~> 1.0)
       guard (~> 2.2)
-    guard-puma (0.2.4)
+    guard-puma (0.2.5)
       guard (>= 1.0.1)
-      libnotify
       puma
-      rb-inotify
     hashie (3.2.0)
     i18n (0.6.11)
     ice_nine (0.11.0)
     json (1.8.1)
-    kramdown (1.4.0)
-    libnotify (0.8.3)
-      ffi (>= 1.0.11)
+    kramdown (1.4.1)
     listen (2.7.9)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -117,12 +113,12 @@ GEM
     nio4r (1.0.0)
     optionable (0.2.0)
     origin (2.1.1)
-    parser (2.2.0.pre.3)
+    parser (2.2.0.pre.4)
       ast (>= 1.1, < 3.0)
       slop (~> 3.4, >= 3.4.5)
     pg (0.17.1)
     powerpack (0.0.9)
-    pry (0.10.0)
+    pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
@@ -144,17 +140,16 @@ GEM
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
       rspec-mocks (~> 3.0.0)
-    rspec-core (3.0.3)
+    rspec-core (3.0.4)
       rspec-support (~> 3.0.0)
-    rspec-expectations (3.0.3)
+    rspec-expectations (3.0.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.0.0)
-    rspec-mocks (3.0.3)
+    rspec-mocks (3.0.4)
       rspec-support (~> 3.0.0)
-    rspec-support (3.0.3)
-    rubocop (0.24.1)
-      json (>= 1.7.7, < 2)
-      parser (>= 2.2.0.pre.3, < 3.0)
+    rspec-support (3.0.4)
+    rubocop (0.25.0)
+      parser (>= 2.2.0.pre.4, < 3.0)
       powerpack (~> 0.0.6)
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.4)
@@ -164,7 +159,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     timers (1.1.0)
-    tzinfo (1.2.1)
+    tzinfo (1.2.2)
       thread_safe (~> 0.1)
     vcr (2.9.2)
     virtus (1.0.3)
