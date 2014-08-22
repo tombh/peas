@@ -20,6 +20,8 @@ module Peas
     end
   end
 
+  GIT_USER = Peas::DIND ? 'git' : 'peas'
+
   # Peas base path for temp files
   TMP_BASE = '/tmp/peas'
 

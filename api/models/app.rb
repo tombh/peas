@@ -6,7 +6,6 @@ class App
   include Peas::ModelWorker
 
   GIT_RECEIVER_PATH = File.expand_path "#{Peas.root}/bin/git_receiver"
-  GIT_USER = Peas::DIND ? 'git' : 'peas'
 
   # The primary key for the app.
   field :name, type: String
@@ -103,8 +102,8 @@ class App
 
   # Create a bare Git repo ready to receive git pushes to trigger deploys
   def create_local_repo
-    Peas.sh "mkdir -p #{local_repo_path}", user: GIT_USER
-    Peas.sh "cd #{local_repo_path} && git init --bare", user: GIT_USER
+    Peas.sh "mkdir -p #{local_repo_path}", user: Peas::GIT_USER
+    Peas.sh "cd #{local_repo_path} && git init --bare", user: Peas::GIT_USER
     create_prereceive_hook
   end
 
@@ -114,8 +113,8 @@ class App
   def create_prereceive_hook
     hook_path = "#{local_repo_path}/hooks/pre-receive"
     hook_code = "#!/bin/bash\ncd #{Peas.root}\ncat | #{GIT_RECEIVER_PATH} #{name}\n"
-    Peas.sh "echo '#{hook_code}' > #{hook_path}", user: GIT_USER
-    Peas.sh "chmod +x #{hook_path}", user: GIT_USER
+    Peas.sh "echo '#{hook_code}' > #{hook_path}", user: Peas::GIT_USER
+    Peas.sh "chmod +x #{hook_path}", user: Peas::GIT_USER
   end
 
   def remove_local_repo
@@ -123,7 +122,7 @@ class App
     unless Dir.entries(local_repo_path).include? 'hooks'
       # raise Peas::PeasError, "Refusing to `rm -rf` folder that doesn't look like a Git repo"
     end
-    Peas.sh "rm -rf #{local_repo_path}", user: GIT_USER
+    Peas.sh "rm -rf #{local_repo_path}", user: Peas::GIT_USER
   end
 
   # Pretty arrow. Same as used in Heroku buildpacks
@@ -250,10 +249,13 @@ class App
   # `new_revision` The SHA1 hash for the commit to build from. Provided by Git pre-recieve hook.
   def _tar_repo
     broadcast "#{arrow}Tarring repo"
-    FileUtils.mkdir_p Peas::TMP_TARS
+    unless File.directory? Peas::TMP_TARS
+      FileUtils.mkdir_p Peas::TMP_TARS
+      Peas.sh "chmod a+w #{Peas::TMP_TARS}" # Allow any user to write to the temp tars directory
+    end
     @tmp_tar_path = "#{Peas::TMP_TARS}/#{name}.tar"
     File.delete @tmp_tar_path if File.exist? @tmp_tar_path
-    Peas.sh "cd #{local_repo_path} && git archive #{@new_revision} > #{@tmp_tar_path}"
+    Peas.sh "cd #{local_repo_path} && git archive #{@new_revision} > #{@tmp_tar_path}", user: Peas::GIT_USER
   end
 
   # Given a hash of processes like `{web: 2, worker: 1}` create and/or destroy the necessary

@@ -6,13 +6,17 @@ module Peas
   #   * Can switch user before running the requested command
   def self.sh(command, timeout = 60, user: 'peas')
     session = Shell.new
-    session.command "sudo su - #{user}" if user != 'peas'
+    session.su user if user != 'peas'
     session.command command, timeout: timeout
   end
 
   class Shell
     def initialize
       @io = IO.popen('bash', mode: 'a+')
+    end
+
+    def su(user)
+      @io.puts "sudo -u #{user} /bin/bash"
     end
 
     def command(command, timeout: 60)
@@ -39,7 +43,6 @@ module Peas
       unless status == '0'
         raise Peas::PeasError, "`#{command}` failed with: \n--- \n #{output} \n---"
       end
-      output.lines.first.strip! if output.lines.count == 1
       output
     end
   end

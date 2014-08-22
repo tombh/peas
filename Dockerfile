@@ -33,9 +33,7 @@ RUN gem install bundler
 # Create a Git server
 RUN apt-get install -qqy openssh-server
 RUN useradd -d /home/git git
-# Make the primary group for git the peas group, so all files it creates have the peas group
-RUN usermod -g peas git
-RUN gpasswd -a git peas
+RUN echo "peas ALL=(git) NOPASSWD: ALL" >> /etc/sudoers
 
 # DinD magic
 RUN apt-get install -qqy iptables ca-certificates lxc

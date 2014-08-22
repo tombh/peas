@@ -101,8 +101,6 @@ rm -f /data/db/mongod.lock # This situation could be better dealt with
 
 service ssh start
 
-echo "peas ALL=(git:git) NOPASSWD:ALL" >> /etc/sudoers
-
 # Files that exist inside volumes can't be handled by Dockerfile as they're mounted after the build process.
 # So the folllowing would ideally be run during build but for one reason or another can't be.
 # Volumes get mounted as root https://github.com/docker/docker/pull/5910
@@ -111,6 +109,7 @@ chown git:git /home/git
 su - git <<EOF
 mkdir -p /home/git/.ssh
 touch /home/git/.ssh/authorized_keys
+chmod 700 /home/git/.ssh && chmod 600 /home/git/.ssh/authorized_keys
 EOF
 
 PEAS_ENV=${PEAS_ENV:-development}
