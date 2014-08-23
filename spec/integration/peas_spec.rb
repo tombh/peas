@@ -87,7 +87,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       it 'should set config and restart app' do
         response = @cli.run 'config set SUCH=CONFIG'
         expect(response).to match(/"SUCH"=>"CONFIG"}/)
-        response = @cli.run 'logs', 30
+        response = @cli.run 'logs', 5
         expect(response).to match(/app\[App.restart.worker\]: Restarting all processes.../)
       end
     end
@@ -96,7 +96,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         response = @cli.run 'scale web=2'
         expect(response).to match(/Scaling process 'web:2'/)
         response = @cli.run 'logs', 5
-        expect(response).to match(/app\[web.1\]: Node app is running at localhost:5000/)
+        expect(response).to match(/app\[web.2\]: > node-js-sample@0.1.0 start \/app/)
       end
     end
     describe 'Addons' do
