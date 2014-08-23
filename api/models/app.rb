@@ -112,7 +112,7 @@ class App
   # moved somewhere else on the system.
   def create_prereceive_hook
     hook_path = "#{local_repo_path}/hooks/pre-receive"
-    hook_code = "#!/bin/bash\ncd #{Peas.root}\ncat | #{GIT_RECEIVER_PATH} #{name}\n"
+    hook_code = "#!/bin/bash\nexport PEAS_ENV=#{ENV['PEAS_ENV']}\ncd #{Peas.root}\ncat | #{GIT_RECEIVER_PATH} #{name}\n"
     Peas.sh "echo '#{hook_code}' > #{hook_path}", user: Peas::GIT_USER
     Peas.sh "chmod +x #{hook_path}", user: Peas::GIT_USER
   end

@@ -29,11 +29,10 @@ ADD ./ /home/peas/repo
 RUN echo "export GEM_HOME=/home/peas/.bundler" > /home/peas/.profile
 RUN echo "export PATH=$PATH:/home/peas/.bundler/bin" >> /home/peas/.profile
 RUN chown -R peas /home/peas
-RUN gem install bundler
 # Create a Git server
 RUN apt-get install -qqy openssh-server
 RUN useradd -d /home/git git
-RUN echo "peas ALL=(git) NOPASSWD: ALL" >> /etc/sudoers
+RUN echo "peas ALL=(git) NOPASSWD: ALL" >> /etc/sudoers # Allow peas to sudo into the git user
 
 # DinD magic
 RUN apt-get install -qqy iptables ca-certificates lxc

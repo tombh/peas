@@ -27,7 +27,6 @@ describe 'The Peas PaaS Integration Tests', :integration do
     describe 'Deploy' do
       it 'should deploy a basic nodejs app' do
         response = @cli.sh 'git push peas master'
-        expect(response).to match %r{-----> Fetching https:\/\/github.com\/tombh\/node-js-sample.git}
         expect(response).to match(/-----> Installing dependencies/)
         expect(response).to match(/-----> Discovering process types/)
         expect(response).to match(/-----> Scaling process 'web:1'/)
@@ -88,7 +87,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       it 'should set config and restart app' do
         response = @cli.run 'config set SUCH=CONFIG'
         expect(response).to match(/"SUCH"=>"CONFIG"}/)
-        response = @cli.run 'logs', 5
+        response = @cli.run 'logs', 30
         expect(response).to match(/app\[App.restart.worker\]: Restarting all processes.../)
       end
     end

@@ -12,10 +12,15 @@ module Commands
       write_line line
     end
 
-    # Wait for more logs to be added to the DB and stream them back when they are
-    loop do
-      logs.more { |line| write_line line }
-      sleep 0.01 # Needed to allow Celluloid to pass flow control elsewhere
+    if !@options.include? 'follow'
+      close
+      return
+    else
+      # Wait for more logs to be added to the DB and stream them back when they are
+      loop do
+        logs.more { |line| write_line line }
+        sleep 0.01 # Needed to allow Celluloid to pass flow control elsewhere
+      end
     end
   end
 end

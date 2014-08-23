@@ -9,14 +9,14 @@ module Peas
       def add_key(key)
         # Don't add the key twice
         keys = Peas.sh "cat #{AUTHORIZED_KEYS_PATH}", user: Peas::GIT_USER
-        return unless keys.include? key
+        return if keys.include? key
 
         # TODO: add the force command anf `git-shell` for security
         # 'command=' is a syntax specific to SSH. It allows you to run an arbitrary command as soon as a use logs in
         # key_options = "command=\"#{Peas.root}/bin/git_ssh_forced_command\"," \
         #   'no-agent-forwarding,no-pty,no-user-rc,no-X11-forwarding,no-port-forwarding'
 
-        # Append the key with the forced command above
+        # Append the key
         Peas.sh "echo '#{key}' >> #{AUTHORIZED_KEYS_PATH}", user: Peas::GIT_USER
       end
     end

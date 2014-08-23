@@ -104,7 +104,9 @@ service ssh start
 # Files that exist inside volumes can't be handled by Dockerfile as they're mounted after the build process.
 # So the folllowing would ideally be run during build but for one reason or another can't be.
 # Volumes get mounted as root https://github.com/docker/docker/pull/5910
-chown peas:peas /home/peas/.bundler
+BUNDLE_PATH=/home/peas/.bundler
+mkdir -p $BUNDLE_PATH
+chown peas:peas $BUNDLE_PATH
 chown git:git /home/git
 su - git <<EOF
 mkdir -p /home/git/.ssh
@@ -120,8 +122,12 @@ export API_PORT=$API_PORT
 export GIT_PORT=$GIT_PORT
 export PEAS_ENV=$PEAS_ENV
 
-export BUNDLE_APP_CONFIG=~/.bundler/peas_config
-export BUNDLE_PATH=~/.bundler
+export BUNDLE_PATH=$BUNDLE_PATH
+export BUNDLE_APP_CONFIG=$BUNDLE_PATH/peas_config
+
+if ! gem list bundler | grep bundler; then
+    gem install bundler
+fi
 
 cd /home/peas/repo
 bundle install

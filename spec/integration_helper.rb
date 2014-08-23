@@ -3,6 +3,8 @@ require 'net/http'
 require 'webmock'
 require 'vcr'
 require_relative '../config/settings'
+require_relative '../lib/sh'
+require_relative '../lib/error'
 
 TMP_PATH = '/tmp/peas'
 FileUtils.mkdir_p TMP_PATH
@@ -23,7 +25,13 @@ end
 def setup_data_volume
   return get_data_vol_id if get_data_vol_id
   # Name the volume differently from the one that may be used in dev/prod
-  Peas.sh "docker run -v /var/lib/docker -v /data/db -v /var/lib/gems --name peas-data-test busybox true"
+  Peas.sh "docker run \
+    -v /var/lib/docker \
+    -v /data/db \
+    -v /home/peas/.bundler \
+    -v /home/git \
+    --name peas-data-test \
+    busybox true"
   if !get_data_vol_id
     raise "Failed to create data volume. Aborting."
   else
@@ -35,6 +43,7 @@ end
 class ContainerConnection
   def initialize(container_id)
     @io = IO.popen "docker attach #{container_id} > /dev/null 2>&1", 'r+'
+    @io.puts "source /home/peas/.profile"
   end
   # Run a BASH command
   def bash(cmd)
@@ -51,6 +60,8 @@ class ContainerConnection
     bash "mongo nodejssample --eval 'db.dropDatabase()'"
     bash "mongo nodejssample --eval \"db.dropUser('nodejssample')\""
     bash "docker kill `docker ps -a -q` && docker rm `docker ps -a -q`"
+    bash "su git -c 'rm -rf /home/git/node-js-sample.git'"
+    bash "su git -c 'cat /dev/null > /home/git/.ssh/authorized_keys'"
     sleep 5
     # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
     console "Setting.create(key: 'peas.domain', value: 'vcap.me:4004')"
@@ -107,8 +118,10 @@ RSpec.configure do |config|
         --volumes-from peas-data-test \
         -v #{Peas.root}:/home/peas/repo \
         -p 4004:4000 \
+        -p 2223:22 \
         -p 7345:9345 \
         -e PEAS_ENV=production \
+        -e GIT_PORT=2223 \
         tombh/peas"
     )
     # Whatever user is running these tests, copy their public key to the fake home directory for uploading by the client
