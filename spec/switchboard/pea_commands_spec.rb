@@ -48,7 +48,7 @@ describe 'Switchboard Pea Commands', :celluloid do
         app.log 'Existing', 'testing'
         with_socket_pair do |client, peer|
           connection = Connection.new(peer)
-          client.puts "stream_logs.#{app.name}"
+          client.puts "stream_logs.#{app.name} follow"
           connection.dispatch
           client.gets
           app.log 'New logs!', 'testing'

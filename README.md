@@ -23,14 +23,14 @@ and more.
 
 #Quickstart
 ```bash
-git clone https://github.com/tombh/peas.git
 gem install peas-cli
+git clone https://github.com/tombh/peas.git
 cd peas
 ./contrib/peas-dind/run.sh
 => (lots of logs about Peas booting up)
 cd [my cool app on github]
 peas create
-peas deploy
+git push peas master
 =>
 "-----> Installing dependencies
 .
@@ -51,7 +51,7 @@ Peas CLI;
 gem install peas-cli
 peas admin settings peas.domain peasdemo.com
 peas create
-peas deploy
+git push peas master
 ```
 At some point, once it's proven to work, I'll reset the VPS (Digital Ocean) image every 24 hours.
 
@@ -63,9 +63,9 @@ using the Docker method of installation on cloud servers.
 **Local development environment**    
 This is the preferred method for local development, but note that local development is also possible
 with the Docker installation method.
-All you will need is; Ruby 2.1,
-[Docker](https://www.docker.io/gettingstarted/)
-and [Mongo DB](http://docs.mongodb.org/manual/installation/)(>= 2.6).
+All you will need is; Ruby(>=2.1),
+[Docker](https://www.docker.io/gettingstarted/)(>=1.1)
+and [Mongo DB](http://docs.mongodb.org/manual/installation/)(>=2.6).
 All of these are generally installable via your system's package manager, no compiling should be necessary.
 ```bash
 docker pull progrium/buildstep # This runs Heroku buildpacks against repos to create deployable app images
@@ -114,18 +114,17 @@ To use a different domain:
 `peas admin settings peas.domain customdomain.com`
 
 **Deploying**    
-Next thing is to get into your app's directory. Peas approaches git repos for apps differently from
-other PaaS projects. It does not have a git server so requires app repos to be remotely accessible.
-At the moment this is only web accessible repos like on Github and Bitbucket. But the plan is to allow
-pulling from local git paths as well.
+Next thing is to get into the directory of the git repo for the app you want to deploy.
 
 Then:
 ```
 peas create
-peas deploy
+git push peas master
 ```
 
-You can scale processes using:
+The last line of the deployment output should contain the URL for your deployed app.
+
+You can then scale processes using:
 `peas scale web=3 worker=2`
 
 **Services**    
@@ -144,7 +143,6 @@ admin   - Admin commands
 apps    - List all apps
 config  - Add, remove and list config for an app
 create  - Create an app
-deploy  - Deploy an app
 destroy - Destroy an app
 help    - Shows a list of commands or help for one command
 logs    - Show logs for an app
