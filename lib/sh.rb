@@ -35,8 +35,8 @@ module Peas
           output = output.join.strip
         end
       rescue Timeout::Error
-        # raise Peas::PeasError, "`#{command}` timed out after #{timeout} seconds, " \
-        #   "captured output: \n--- \n #{output} \n---"
+        raise Peas::PeasError, "`#{command}` timed out after #{timeout} seconds, " \
+          "captured output: \n--- \n #{output} \n---"
       rescue Errno::EIO
         # Most likely means child has finished giving output
       end
