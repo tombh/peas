@@ -120,7 +120,7 @@ class App
   def remove_local_repo
     return unless File.exist? local_repo_path
     unless Dir.entries(local_repo_path).include? 'hooks'
-      # raise Peas::PeasError, "Refusing to `rm -rf` folder that doesn't look like a Git repo"
+      raise Peas::PeasError, "Refusing to `rm -rf` folder that doesn't look like a Git repo"
     end
     Peas.sh "rm -rf #{local_repo_path}", user: Peas::GIT_USER
   end
