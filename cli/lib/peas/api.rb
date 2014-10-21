@@ -15,11 +15,7 @@ class API
   # Generic wrapper to the Peas API
   def request(verb, method, params = nil)
     response = self.class.send(verb, "#{method}", query: params).body
-    if response
-      json = JSON.parse(response)
-    else
-      json = {}
-    end
+    json = response ? JSON.parse(response) : {}
     # If there was an HTTP-level error
     raise json['error'].color(:red) if json.key? 'error'
     # Successful responses
@@ -27,22 +23,7 @@ class API
       # Long-running jobs need to stream from the Switchboard server
       API.stream_job json['job']
     else
-      # Check CLI client is up to date.
-      # Only check major and minor versions
-      version_mismatch = false
-      api_version = json['version'].split('.')
-      client_version = Peas::VERSION.split('.')
-      if api_version[0] != client_version[0]
-        version_mismatch = true
-      else
-        version_mismatch = true if api_version[1] != client_version[1]
-      end
-      if version_mismatch
-        Peas.warning_message "Your version of the CLI client is out of date " \
-          "(Client: #{Peas::VERSION}, API: #{json['version']}). " \
-          "Please update using `gem install peas-cli`."
-      end
-      # Normal API response
+      check_versions(json)
       if block_given?
         yield json['message']
       else
@@ -50,6 +31,23 @@ class API
       end
       json
     end
+  end
+
+  # Check CLI client is up to date.
+  def check_versions(json)
+    # Only check major and minor versions
+    version_mismatch = false
+    api_version = json['version'].split('.')
+    client_version = Peas::VERSION.split('.')
+    if api_version[0] != client_version[0]
+      version_mismatch = true
+    else
+      version_mismatch = true if api_version[1] != client_version[1]
+    end
+    return unless version_mismatch
+    Peas.warning_message "Your version of the CLI client is out of date " \
+      "(Client: #{Peas::VERSION}, API: #{json['version']}). " \
+      "Please update using `gem install peas-cli`."
   end
 
   def self.switchboard_connection
@@ -75,7 +73,7 @@ class API
     socket = API.switchboard_connection
     socket.puts switchboard_command
     begin
-      while line = socket.gets
+      while (line = socket.gets)
         if block_given?
           yield JSON.parse line
         else

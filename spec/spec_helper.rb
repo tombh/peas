@@ -159,13 +159,22 @@ module Commands
 end
 
 # Make a non-bare repo to push to the bare repo (simulating a `git push peas`)
-def create_non_bare_repo
+# See spec/fixtures/repos/* for available repos.
+# Requires a bare remote repo to push to.
+def create_non_bare_repo(repo, remote_path, with_push = true)
   non_bare_path = "#{Peas::APP_REPOS_PATH}/non_bare_repo"
+  FileUtils.rm_rf non_bare_path
   FileUtils.mkdir_p non_bare_path
+  Peas.sh "cp -r #{Peas.root}/spec/fixtures/repos/#{repo}/* #{non_bare_path}"
   Peas.sh "cd #{non_bare_path} && " \
     "git init && " \
-    "touch lathyrus.odoratus && " \
     "git add . --all && " \
     "GIT_AUTHOR_NAME=test git commit -m'first commit'"
+  if with_push
+    # Remove the deploy hook on the remote, so nothing happens when we push to it
+    FileUtils.rm "#{remote_path}/hooks/pre-receive"
+    # Simulate `git push peas`
+    Peas.sh "cd #{non_bare_path} && git push #{remote_path} master"
+  end
   non_bare_path
 end

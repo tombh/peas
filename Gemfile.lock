@@ -58,7 +58,7 @@ GEM
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
-    docker-api (1.13.2)
+    docker-api (1.13.6)
       archive-tar-minitar
       excon (>= 0.38.0)
       json
@@ -66,7 +66,7 @@ GEM
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
     equalizer (0.0.9)
-    excon (0.39.5)
+    excon (0.40.0)
     fabrication (2.11.3)
     ffi (1.9.3)
     foreman (0.74.0)

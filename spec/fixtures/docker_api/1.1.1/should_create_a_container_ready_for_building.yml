@@ -1,0 +1,32 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.12/containers/create
+    body:
+      encoding: UTF-8
+      string: '{"Image":"progrium/buildstep","Env":[],"OpenStdin":true,"StdinOnce":true,"Cmd":["/bin/bash","-c","mkdir
+        -p /app \u0026\u0026 tar -xf - -C /app \u0026\u0026 /build/builder"]}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 20 Oct 2014 23:41:32 GMT
+      Content-Length:
+      - '90'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Id":"63422ddb2d31dab37c96d451ab9a0a717ddbd3429b5a032a96a237dd8bddd75e","Warnings":null}
+    http_version: 
+  recorded_at: Mon, 20 Oct 2014 23:41:32 GMT
+recorded_with: VCR 2.9.2

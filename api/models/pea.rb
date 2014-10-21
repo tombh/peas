@@ -75,19 +75,42 @@ class Pea
   end
 
   def spawn_container
-    container = Docker::Container.create(
+    if process_type == 'one-off'
       # `/start` is unique to progrium/buildstep, it brings a process type, such as 'web', to life
-      'Cmd' => ['/bin/bash', '-c', "/start #{process_type}"],
+      command = ['/bin/bash']
+    else
+      command = ['/bin/bash', '-c', "/start #{process_type}"]
+    end
+
+    properties = {
+      'Cmd' => command,
       # The base Docker image to use. In this case the prebuilt image created by the buildstep
       # process
       'Image' => app.name,
-      'Name' => "pea::#{full_name}",
-      # Global environment variables to pass and make available to the app
-      'Env' => ['PORT=5000'].concat(app.config_for_docker),
-      # Expose port 5000 from inside the container to the host machine
-      'ExposedPorts' => {
-        '5000' => {}
-      }
+      'Name' => "pea::#{full_name}"
+    }
+
+    if process_type == 'web'
+      properties.merge!(
+        # Global environment variables to pass and make available to the app
+        'Env' => ['PORT=5000'].concat(app.config_for_docker),
+        # Expose port 5000 from inside the container to the host machine
+        'ExposedPorts' => {
+          '5000' => {}
+        }
+      )
+    end
+
+    if process_type == 'one-off'
+      properties.merge!(
+        "OpenStdin" => true,
+        "StdinOnce" => true,
+        "Tty"       => true
+      )
+    end
+
+    container = Docker::Container.create(
+      properties
     ).start(
       # Takes each ExposedPort and forwards an external port to it. Eg; 46517 -> 5000
       'PublishAllPorts' => 'true'
@@ -96,8 +119,10 @@ class Pea
     self.pod = Pod.find_by(hostname: Peas.pod_host)
     # Get the Docker ID so we can find it later
     self.docker_id = container.info['id']
-    # Find the randomly created external port that forwards to the internal 5000 port
-    self.port = container.json['NetworkSettings']['Ports']['5000'].first['HostPort']
+    if process_type == 'web'
+      # Find the randomly created external port that forwards to the internal 5000 port
+      self.port = container.json['NetworkSettings']['Ports']['5000'].first['HostPort']
+    end
     self.save! unless new_record?
     get_docker_container
   end
@@ -106,10 +131,9 @@ class Pea
   # across multiple machines, we need to make sure that certain methods are only ever run on the
   # host machine upon which the pea lives.
   def ensure_correct_host
-    if Peas.pod_host != pod.hostname
-      raise "Attempt to interact with a pea (belonging to '#{pod.docker_id}') " \
-        "not located in the current pod ('#{Peas.current_docker_host_id}')."
-    end
+    return if Peas.pod_host == pod.hostname
+    raise "Attempt to interact with a pea (belonging to '#{pod.docker_id}') " \
+      "not located in the current pod ('#{Peas.current_docker_host_id}')."
   end
 
   # Destroy the pea's container

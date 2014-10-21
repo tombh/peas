@@ -68,12 +68,12 @@ describe App do
 
     it 'should trigger a build' do
       expect(app).to receive(:build)
-      app.deploy('fakeSAH1')
+      app.deploy('HEAD')
     end
 
     it 'should scale web process to 1 if there are no existing containers for the app' do
       expect(app).to receive(:scale).with({ 'web' => 1 }, 'deploy')
-      app.deploy('fakeSAH1')
+      app.deploy('HEAD')
     end
 
     it "should broadcast the app's URI for a custom domain" do
@@ -82,7 +82,7 @@ describe App do
       expect(app).to receive(:broadcast).with(
         %r{       Deployed to http:\/\/#{app.name}\.custom-domain\.com}
       )
-      app.deploy('fakeSAH1')
+      app.deploy('HEAD')
     end
 
     it "should rescale processes to the app's existing scaling profile" do
@@ -91,67 +91,73 @@ describe App do
       expect(app).to receive(:scale).with(
         { 'web' => 3, 'worker' => 2 }, 'deploy'
       )
-      app.deploy('fakeSAH1')
+      app.deploy('HEAD')
     end
   end
 
-  describe 'build()' do
-    # Doesn't use :docker_creation_mock
+  # See integration tests for actual testing of the buildstep process itself
+  # Doesn't use :docker_creation_mock
+  describe 'Builder', :with_worker do
+    let(:builder) { Peas::Builder.new app, 'HEAD' }
 
-    it 'should tar a repo' do
-      app.instance_variable_set('@new_revision', 'HEAD')
-      non_bare_path = create_non_bare_repo
-      # Remove the deploy hook, so nothing happens when we push to it
-      FileUtils.rm "#{app.local_repo_path}/hooks/pre-receive"
-      # Simulate `git push peas`
-      Peas.sh "cd #{non_bare_path} && git push #{app.local_repo_path} master"
+    before :each do
       allow(app).to receive(:broadcast)
-      app._tar_repo
-      tarred_repo = "#{Peas::TMP_TARS}/#{app.name}.tar"
-      expect(File.exist? tarred_repo).to eq true
-      Peas.sh "tar -xf #{tarred_repo} -C #{TMP_BASE}"
-      expect(File.exist? "#{TMP_BASE}/lathyrus.odoratus").to eq true
     end
 
-    it 'should build an app resulting in a new Docker image', :docker do
-      # Use the nodejs example just because it builds so quickly
-      app = Fabricate :app, name: 'node-js-sample'
-      # Hack to detect whether this is being recorded for the first time or not
-      unless VCR.current_cassette.originally_recorded_at.nil?
-        allow(app).to receive(:_tar_repo)
+    describe 'Builder prep' do
+
+      before :each do
+        create_non_bare_repo 'sweetpea', app.local_repo_path
       end
-      allow(app).to receive(:broadcast)
-      expect(app).to receive(:broadcast).with(/       Node.js app detected/)
-      expect(app).to receive(:broadcast).with(/-----> Installing dependencies/)
-      expect(app).to receive(:broadcast).with(/       Procfile declares types -> web/)
-      expect_any_instance_of(Docker::Container).to receive(:commit)
-      expect_any_instance_of(Docker::Container).to receive(:delete)
-      app.build('fakeSAH1')
+
+      it 'should tar a repo' do
+        builder.tar_repo
+        tarred_repo = "#{Peas::TMP_TARS}/#{app.name}.tar"
+        expect(File.exist? tarred_repo).to eq true
+        Peas.sh "tar -xf #{tarred_repo} -C #{TMP_BASE}"
+        expect(File.exist? "#{TMP_BASE}/lathyrus.odoratus").to eq true
+      end
+
+      it 'should create a container ready for building', :docker do
+        builder.tar_repo
+        expect(builder.create_build_container).to be_a Docker::Container
+      end
     end
 
-    it "should include the ENV vars saved in the app's config", :docker do
-      app = Fabricate :app, name: 'node-js-sample', config: { 'FOO' => 'BAR' }
-      # Hack to detect whether this is being recorded for the first time or not
-      unless VCR.current_cassette.originally_recorded_at.nil?
-        allow(app).to receive(:_tar_repo)
+    describe 'Building an image', :docker do
+      before :each do
+        create_non_bare_repo 'nodejs', app.local_repo_path
+        builder.tar_repo
       end
-      allow(app).to receive(:broadcast)
-      details = app.build('fakeSAH1')
-      expect(details['Config']['Env']).to include("FOO=BAR")
-    end
 
-    it 'should deal with a failed build', :docker do
-      app = Fabricate :app, name: 'hello-world-cpp'
-      # Hack to detect whether this is being recorded for the first time or not
-      unless VCR.current_cassette.originally_recorded_at.nil?
-        allow(app).to receive(:_tar_repo)
+      it 'should build an app resulting in a new Docker image' do
+        container = builder.create_build_container
+        allow(container).to receive(:attach).and_yield(:stdout, '-----> Node.js app detected')
+        expect(app).to receive(:broadcast).with(/-----> Node.js app detected/)
+        expect(container).to receive(:start)
+        expect(container).to receive(:commit)
+        expect(container).to receive(:delete)
+        builder.create_app_image
       end
-      allow(app).to receive(:broadcast)
-      expect_any_instance_of(Docker::Container).to_not receive(:commit)
-      expect_any_instance_of(Docker::Container).to receive(:delete)
-      expect {
-        app.build('fakeSAH1')
-      }.to raise_error RuntimeError, /Unable to select a buildpack/
+
+      it "should include the ENV vars saved in the app's config" do
+        app.config_update('FOO' => 'BAR')
+        container = builder.create_build_container
+        allow(container).to receive(:attach)
+        details = builder.create_app_image
+        expect(details['Config']['Env']).to include("FOO=BAR")
+      end
+
+      it 'should deal with a failed build' do
+        container = builder.create_build_container
+        allow(container).to receive(:attach).and_yield(:stderr, 'Something went wrong')
+        allow(container).to receive(:wait).and_return('StatusCode' => -1)
+        expect(container).to_not receive(:commit)
+        expect(container).to receive(:delete)
+        expect {
+          builder.create_app_image
+        }.to raise_error Peas::PeasError, /Something went wrong/
+      end
     end
   end
 

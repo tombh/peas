@@ -177,85 +177,17 @@ class App
   # `new_revision` The SHA1 hash for the commit to build from. Provided by Git pre-recieve hook.
   #
   # To find out more about Buildstep see: https://github.com/progrium/buildstep
-  # TODO: Use something like container.tap(&:start).attach(stdin: StringIO.new("foo\nbar\n")) to stream the tarred repo
-  # into buildstep/slugbuilder.
   def build(new_revision)
-    @new_revision = new_revision
+    builder = Peas::Builder.new self, new_revision
 
     # Prepare the repo for Buildstep.
-    _tar_repo
+    builder.tar_repo
 
-    # Create a new Docker image based on progrium/buildstep with the repo placed at /app
-    # There's an issue with Excon's buffer so we need to manually lower the size of the chunks to
-    # get a more interactive-style attachment.
-    # Follow the issue here: https://github.com/swipely/docker-api/issues/77
-    conn_interactive = Docker::Connection.new(Peas::DOCKER_SOCKET, chunk_size: 1, read_timeout: 1_000_000)
-    builder = Docker::Container.create(
-      {
-        'Image' => 'progrium/buildstep',
-        'Volumes' => {
-          '/tmp' => {}
-        },
-        'Env' => config_for_docker,
-        'Cmd' => [
-          '/bin/bash',
-          '-c',
-          "mkdir -p /app && tar -xf #{@tmp_tar_path} -C /app && /build/builder"
-        ]
-      },
-      conn_interactive
-    )
-    building = builder.start(
-      # Mount the host filesystem's /tmp folder to the same place on Buildstep
-      'Binds' => ['/tmp:/tmp']
-    )
+    # Create a container that builds the app
+    builder.create_build_container
 
-    # Stream the output of the the buildstep process
-    build_error = false
-    last_message = nil
-    building.attach do |stream, chunk|
-      # Save the error for later, because we still need to clean up the container
-      build_error = chunk if stream == :stderr
-      last_message = chunk # In case error isn't sent through :stderr
-      broadcast chunk.encode('utf-8', invalid: :replace, undef: :replace, replace: '')
-    end
-
-    # Commit the container with the newly built app as a new image named after the app
-    if builder.wait['StatusCode'] == 0
-      builder.commit 'repo' => name
-    else
-      build_error = "Buildstep failed with non-zero exit status. " \
-        "Error message was: '#{build_error}'. " \
-        "Last message was: '#{last_message}'."
-    end
-
-    # Keep a copy of the build container's details
-    builder_json = builder.json
-
-    # Make sure to clean up after ourselves
-    begin
-      builder.kill
-      builder.delete force: true
-    rescue Docker::Error::NotFoundError, Errno::EPIPE, Excon::Errors::SocketError
-    end
-
-    raise build_error.strip if build_error
-
-    builder_json
-  end
-
-  # Tar the repo to make moving it around more efficient
-  #
-  # `new_revision` The SHA1 hash for the commit to build from. Provided by Git pre-recieve hook.
-  def _tar_repo
-    broadcast "#{arrow}Tarring repo"
-    unless File.directory? Peas::TMP_TARS
-      FileUtils.mkdir_p Peas::TMP_TARS
-      Peas.sh "chmod a+w #{Peas::TMP_TARS}" # Allow any user to write to the temp tars directory
-    end
-    @tmp_tar_path = "#{Peas::TMP_TARS}/#{name}.tar"
-    File.delete @tmp_tar_path if File.exist? @tmp_tar_path
-    Peas.sh "cd #{local_repo_path} && git archive #{@new_revision} > #{@tmp_tar_path}", user: Peas::GIT_USER
+    # Build the app and commit an image
+    builder.create_app_image
   end
 
   # Given a hash of processes like `{web: 2, worker: 1}` create and/or destroy the necessary

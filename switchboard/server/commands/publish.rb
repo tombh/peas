@@ -18,7 +18,7 @@ module Commands
     # The JSON for the message body is sent on subsequent lines of the socket connection (the header having
     # already been read on the first line)
     # `super` is used because Celluloid::Notification's pubsub also uses 'publish' as its method name
-    while message = read_line
+    while (message = read_line)
       debug "PUB SENT :: #{channel} - #{message}"
       server_actor.channel_history[channel] << message if @options.include? 'history'
       super channel, message
