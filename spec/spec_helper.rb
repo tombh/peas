@@ -136,8 +136,9 @@ end
 # Creates a client and server into which you can inject a manipulated Connection instance for testing.
 # Got the idea from celluloid/reel's spec_helper
 def with_socket_pair
-  server = TCPServer.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
-  client = client_connection
+  # Server port needs to be different so the worker can run at the same time
+  server = TCPServer.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT + 1
+  client = TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT + 1
   peer = server.accept
 
   begin

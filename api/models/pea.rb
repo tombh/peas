@@ -34,6 +34,9 @@ class Pea
   # the app will create a Procfile during the build process with default process types.
   field :process_type, type: String
 
+  # The initial command to run.
+  field :command, type: String
+
   # The identifying number for a process_type, eg; web.2 or worker.3
   field :process_number, type: Integer
 
@@ -63,6 +66,16 @@ class Pea
     worker(pod, block_until_complete: true).destroy_container if docker_id
   end
 
+  # Default command to run
+  def command
+    if self[:command]
+      self[:command]
+    else
+      # `/start` is unique to progrium/buildstep, it brings a process type, such as 'web', to life
+      "/start #{process_type}"
+    end
+  end
+
   # Creates a docker container and the pea DB record representing it. Use instead of Pea.create()
   def self.spawn(properties, block_until_complete: true, parent_job_id: nil, &block)
     pea = Pea.create!(properties)
@@ -72,22 +85,18 @@ class Pea
       parent_job_id: parent_job_id,
       &block
     ).spawn_container
+    pea.reload
   end
 
   def spawn_container
-    if process_type == 'one-off'
-      # `/start` is unique to progrium/buildstep, it brings a process type, such as 'web', to life
-      command = ['/bin/bash']
-    else
-      command = ['/bin/bash', '-c', "/start #{process_type}"]
-    end
-
+    # Common properties
     properties = {
-      'Cmd' => command,
+      'Cmd' => ['/bin/bash', '-c', command],
       # The base Docker image to use. In this case the prebuilt image created by the buildstep
       # process
       'Image' => app.name,
-      'Name' => "pea::#{full_name}"
+      'Name' => "pea::#{full_name}",
+      'AttachStderr' => true
     }
 
     if process_type == 'web'
@@ -101,20 +110,24 @@ class Pea
       )
     end
 
-    if process_type == 'one-off'
+    if process_type == 'one-off' || process_type == 'console'
       properties.merge!(
         "OpenStdin" => true,
         "StdinOnce" => true,
-        "Tty"       => true
+        "Tty" => true
+      )
+    end
+    # Create the container
+    container = Docker::Container.create properties
+
+    # If container doesn't have TTY access then start it straight away
+    unless properties.fetch('Tty', false)
+      container.start(
+        # Takes each ExposedPort and forwards an external port to it. Eg; 46517 -> 5000
+        'PublishAllPorts' => 'true'
       )
     end
 
-    container = Docker::Container.create(
-      properties
-    ).start(
-      # Takes each ExposedPort and forwards an external port to it. Eg; 46517 -> 5000
-      'PublishAllPorts' => 'true'
-    )
     # What pod are we in right now?
     self.pod = Pod.find_by(hostname: Peas.pod_host)
     # Get the Docker ID so we can find it later
@@ -125,6 +138,30 @@ class Pea
     end
     self.save! unless new_record?
     get_docker_container
+  end
+
+  # When a one-off pea is requested it needs to receive input from the user, either commands or keystrokes.
+  # This input is brokered via the Rendevous (hat tip to Heroku) Switchboard command. The CLI can reach Switchboard,
+  # and Switchboard can reach any pod, but the CLI can't reach any pod directly, thus the need for Rendevous
+  # acting as an intermediary.
+  def connect_to_rendevous
+    socket = Peas::Switchboard.connection
+    socket.puts "rendevous.#{docker_id}"
+    begin
+      docker.tap(&:start).attach(
+        stdin: socket,
+        tty: true,
+        stdout: true,
+        stderr: true,
+        logs: true,
+        stream: true
+      ) do |chunk|
+        socket.write chunk
+      end
+    ensure
+      socket.close
+      destroy
+    end
   end
 
   # Because peas can be distributed across multiple machines and therefore this code can be run

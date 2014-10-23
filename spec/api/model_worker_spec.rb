@@ -171,21 +171,19 @@ describe Peas::ModelWorker, :with_worker do
 
   describe "Catching exceptions" do
     it 'should catch exceptions and broadcast them' do
-      class App; def badtimes
-                   raise 'HELL!'
-                 end end
+      class App; def badtimes; raise 'HELL!'; end; end
       expect {
         app.worker(block_until_complete: true).badtimes
       }.to raise_error Peas::ModelWorkerError
       job_listener = client_connection
       job_listener.puts "subscribe.job_progress.#{uuid} history"
       progress = []
-      while line = JSON.parse(job_listener.gets)
+      while (line = JSON.parse(job_listener.gets))
         progress << line
         break if line['status'] == 'failed' || line['status'] == 'complete'
       end
       failure_message = progress.delete_if { |p| p['status'] != 'failed' }.first['body']
-      expect(failure_message).to match /HELL! @ .*model_worker_spec.rb.* `badtimes'/
+      expect(failure_message).to match(/HELL! @ .*model_worker_spec.rb.* `badtimes'/)
     end
 
     it 'should propagate exceptions to parent jobs' do
@@ -202,12 +200,12 @@ describe Peas::ModelWorker, :with_worker do
       job_listener = client_connection
       job_listener.puts "subscribe.job_progress.#{parent_job} history"
       progress = []
-      while line = JSON.parse(job_listener.gets)
+      while (line = JSON.parse(job_listener.gets))
         progress << line
         break if line['status'] == 'failed' || line['status'] == 'complete'
       end
       failure_message = progress.delete_if { |p| p['status'] != 'failed' }.first['body']
-      expect(failure_message).to match /MOAR HELZ @ .*model_worker_spec.rb.* `child_worker'/
+      expect(failure_message).to match(/MOAR HELZ @ .*model_worker_spec.rb.* `child_worker'/)
     end
   end
 

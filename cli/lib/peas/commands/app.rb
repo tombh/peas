@@ -59,3 +59,40 @@ command :scale do |c|
     )
   end
 end
+
+desc 'Run one-off commands'
+long_desc <<-EOF
+For example: peas run rake db:migrate
+EOF
+command :run do |c|
+  c.action do |_global_options, _options, args|
+    exit_now!("Please provide a command to run", 1) if args.length == 0
+    socket = API.switchboard_connection
+    socket.puts "tty.#{Git.name_from_remote}"
+    tty_command = args.join ' '
+    socket.puts tty_command
+
+    threads = []
+
+    # Copy STDIN to socket
+    threads << Thread.start do
+      STDIN.raw do |stdin|
+        IO.copy_stream stdin, socket
+      end
+      socket.close_write
+    end
+
+    # Write response to STDOUT
+    threads << Thread.start do
+      begin
+        while (chunk = socket.readpartial(512))
+          print chunk
+        end
+      rescue EOFError
+      end
+      threads.first.kill
+    end
+
+    threads.each(&:join)
+  end
+end

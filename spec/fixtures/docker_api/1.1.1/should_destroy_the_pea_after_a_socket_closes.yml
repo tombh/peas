@@ -1,0 +1,281 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.12/containers/create
+    body:
+      encoding: UTF-8
+      string: '{"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh;
+        do source $file; done; ls"],"Image":"fabricated","Name":"pea::one-off.1@fabricated","AttachStderr":true,"OpenStdin":true,"StdinOnce":true,"Tty":true}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '90'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Id":"923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d","Warnings":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '1500'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"923b0cd79777","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:28:01.077672572Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/silly_yonath","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '1500'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"923b0cd79777","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:28:01.077672572Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/silly_yonath","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/start
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '1729'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"923b0cd79777","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:28:01.077672572Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/hostname","HostsPath":"/var/lib/docker/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/hosts","Id":"923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/silly_yonath","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/etc/resolv.conf","State":{"ExitCode":0,"FinishedAt":"2014-10-23T17:28:01.211398016Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"2014-10-23T17:28:01.187242193Z"},"Volumes":{},"VolumesRW":{}}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '1729'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"923b0cd79777","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:28:01.077672572Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/hostname","HostsPath":"/var/lib/docker/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/hosts","Id":"923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/silly_yonath","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/etc/resolv.conf","State":{"ExitCode":0,"FinishedAt":"2014-10-23T17:28:01.211398016Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"2014-10-23T17:28:01.187242193Z"},"Volumes":{},"VolumesRW":{}}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '1729'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"923b0cd79777","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:28:01.077672572Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/hostname","HostsPath":"/var/lib/docker/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/hosts","Id":"923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/silly_yonath","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/etc/resolv.conf","State":{"ExitCode":0,"FinishedAt":"2014-10-23T17:28:01.211398016Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"2014-10-23T17:28:01.187242193Z"},"Volumes":{},"VolumesRW":{}}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/kill
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '1729'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"923b0cd79777","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:28:01.077672572Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/hostname","HostsPath":"/var/lib/docker/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d/hosts","Id":"923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/silly_yonath","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/etc/resolv.conf","State":{"ExitCode":0,"FinishedAt":"2014-10-23T17:28:01.211398016Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"2014-10-23T17:28:01.187242193Z"},"Volumes":{},"VolumesRW":{}}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+- request:
+    method: delete
+    uri: unix:///var/run/docker.sock/v1.12/containers/923b0cd79777ddc0354bd596f02a0d78d1608b941249582cdb0055d78af7112d
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Thu, 23 Oct 2014 17:28:01 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:28:01 GMT
+recorded_with: VCR 2.9.2

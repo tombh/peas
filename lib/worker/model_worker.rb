@@ -103,7 +103,7 @@ module Peas
       accumulated = ''
       # Redirects STDOUT and STDERR to STDOUT
       IO.popen("#{command} 2>&1", chdir: Peas.root) do |data|
-        while line = data.gets
+        while (line = data.gets)
           accumulated += line
           broadcast line if broadcastable
         end

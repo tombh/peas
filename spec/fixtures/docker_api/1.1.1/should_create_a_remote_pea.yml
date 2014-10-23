@@ -1,0 +1,584 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.12/containers/create
+    body:
+      encoding: UTF-8
+      string: '{"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh;
+        do source $file; done; ls"],"Image":"fabricated","Name":"pea::one-off.1@fabricated","AttachStderr":true,"OpenStdin":true,"StdinOnce":true,"Tty":true}'
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '90'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Warnings":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '1506'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"da203a731692","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:20:45.327189878Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/distracted_pasteur","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '1506'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"da203a731692","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:20:45.327189878Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/distracted_pasteur","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '1506'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"da203a731692","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:20:45.327189878Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/distracted_pasteur","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '1506'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"da203a731692","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:20:45.327189878Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/distracted_pasteur","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '1506'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"da203a731692","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:20:45.327189878Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/distracted_pasteur","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '1506'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"da203a731692","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:20:45.327189878Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/distracted_pasteur","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/start
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '1756'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"da203a731692","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:20:45.327189878Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/hostname","HostsPath":"/var/lib/docker/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/hosts","Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/distracted_pasteur","NetworkSettings":{"Bridge":"docker0","Gateway":"172.17.42.1","IPAddress":"172.17.1.17","IPPrefixLen":16,"PortMapping":null,"Ports":{}},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/etc/resolv.conf","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":22041,"Running":true,"StartedAt":"2014-10-23T17:20:45.451078182Z"},"Volumes":{},"VolumesRW":{}}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/attach?logs=true&stderr=true&stdin=true&stdout=true&stream=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/vnd.docker.raw-stream
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/kill
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '1735'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"da203a731692","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-10-23T17:20:45.327189878Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"ContainerIDFile":"","Dns":null,"DnsSearch":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/hostname","HostsPath":"/var/lib/docker/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/hosts","Id":"da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a","Image":"10cef05ec9473b2ccd5a2fe90c47f1e0356c1c0c5c30beba8465c1fca4ddb041","MountLabel":"","Name":"/distracted_pasteur","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/etc/resolv.conf","State":{"ExitCode":0,"FinishedAt":"2014-10-23T17:20:45.458456876Z","Paused":false,"Pid":0,"Running":false,"StartedAt":"2014-10-23T17:20:45.451078182Z"},"Volumes":{},"VolumesRW":{}}
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: delete
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/plain; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '84'
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '84'
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '84'
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '84'
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '84'
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '84'
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '84'
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+- request:
+    method: get
+    uri: unix:///var/run/docker.sock/v1.12/containers/da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a/json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.13.6
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 404
+      message: 
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 23 Oct 2014 17:20:45 GMT
+      Content-Length:
+      - '84'
+    body:
+      encoding: UTF-8
+      string: |
+        No such container: da203a7316923d24fe5731b9d8fc383e8453c3b618107c499da09f31aa760c2a
+    http_version: 
+  recorded_at: Thu, 23 Oct 2014 17:20:45 GMT
+recorded_with: VCR 2.9.2
