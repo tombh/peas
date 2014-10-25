@@ -37,10 +37,16 @@ RSpec.configure do |config|
           end
         end
       rescue Timeout::Error
+      ensure
         @connection.close
       end
     end
   end
+
+  config.after(:each, :with_echo_server) do
+    @server.close rescue nil
+  end
+
 end
 
 # Execute a block that triggers STDOUT and test output
