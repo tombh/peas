@@ -90,6 +90,21 @@ describe 'Peas CLI' do
       expect(output).to eq "scaling\n"
     end
 
+    describe 'Running one-off commands', :with_echo_server do
+      it 'should run one-off commands direct from the CLI' do
+        output = cli %w(run FINAL COMMAND)
+        expect(output).to eq "tty.test-test\nFINAL COMMAND\n"
+      end
+      it 'should run one-off with input from STDIN' do
+        io = StringIO.new 'FINAL COMMAND'
+        allow(STDIN).to receive(:raw) do |&block|
+          block.call io
+        end
+        output = cli %w(run WITH STDIN)
+        expect(output).to eq "tty.test-test\nWITH STDIN\nFINAL COMMAND\n"
+      end
+    end
+
     describe 'Config ENV vars' do
       it 'should set config for an app' do
         stub_request(:put, TEST_DOMAIN + '/app/test-test/config?vars=%7B%22FOO%22:%22BAR%22%7D')

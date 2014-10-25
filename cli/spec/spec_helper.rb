@@ -24,6 +24,23 @@ RSpec.configure do |config|
     expect(@socket).to receive(:puts).with('subscribe.job_progress.123')
     allow(TCPSocket).to receive(:new).and_return(@socket)
   end
+
+  config.before(:each, :with_echo_server) do
+    @server = TCPServer.new 'vcap.me', SWITCHBOARD_TEST_PORT
+    Thread.new do
+      @connection = @server.accept
+      begin
+        Timeout.timeout(2) do
+          while (line = @connection.gets)
+            @connection.puts line
+            @connection.close if line.strip == 'FINAL COMMAND'
+          end
+        end
+      rescue Timeout::Error
+        @connection.close
+      end
+    end
+  end
 end
 
 # Execute a block that triggers STDOUT and test output
