@@ -124,6 +124,7 @@ describe 'Switchboard Pea Commands', :celluloid do
           # Wait up to 5 secs for the container to boot
           Timeout.timeout(5) do
             sleep 0.1 until app.peas.count == 1
+            sleep 0.1 while app.peas.first.pod.nil?
           end
           command = app.peas.first.command
           expect(command).to match(/cd \/app.*profile.*ls$/)
@@ -166,6 +167,7 @@ describe 'Switchboard Pea Commands', :celluloid do
             input = args.first[:stdin].gets.strip
             block.call "WOW #{input} TURNED INTO OUTPUT"
           end
+          server_actor = Celluloid::Actor[:switchboard_server]
           with_socket_pair do |client, peer|
             connection = Connection.new(peer)
             client.puts "tty.#{app.name}"
@@ -174,10 +176,8 @@ describe 'Switchboard Pea Commands', :celluloid do
             client.puts "INPUT"
             # Wait up to 5 secs for the worker to create the container mock
             Timeout.timeout(5) do
-              sleep 0.1 until Pea.count == 1
+              sleep 0.1 until Pea.count == 1 && server_actor.rendevous.keys.count == 1
             end
-            server_actor = Celluloid::Actor[:switchboard_server]
-            expect(server_actor.rendevous.keys.count).to eq 1
             rendevous_socket = server_actor.rendevous[server_actor.rendevous.keys.first]
             expect(rendevous_socket.gets).to eq 'WOW INPUT TURNED INTO OUTPUT'
           end
