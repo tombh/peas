@@ -146,6 +146,7 @@ create  - Create an app
 destroy - Destroy an app
 help    - Shows a list of commands or help for one command
 logs    - Show logs for an app
+run     - Run one-off commands
 scale   - Scale an app
 ```
 

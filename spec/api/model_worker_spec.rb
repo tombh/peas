@@ -204,8 +204,8 @@ describe Peas::ModelWorker, :with_worker do
         progress << line
         break if line['status'] == 'failed' || line['status'] == 'complete'
       end
-      failure_message = progress.delete_if { |p| p['status'] != 'failed' }.first['body']
-      expect(failure_message).to match(/MOAR HELZ @ .*model_worker_spec.rb.* `child_worker'/)
+      failure_messages = progress.delete_if { |p| p['status'] != 'failed' }.to_s
+      expect(failure_messages).to match(/MOAR HELZ @ .*model_worker_spec.rb.* `child_worker'/)
     end
   end
 
