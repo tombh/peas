@@ -25,9 +25,8 @@ module Peas
         end
       end
     rescue Timeout::Error
-      raise (
-        "Couldn't connect to the Peas Switchboard at #{Peas.host}:#{Peas::SWITCHBOARD_PORT}"
-      )
+      raise "Couldn't connect to the Peas Switchboard " \
+        "at #{Peas.host}:#{Peas::SWITCHBOARD_PORT}"
     end
   end
 end

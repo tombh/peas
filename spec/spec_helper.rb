@@ -54,6 +54,7 @@ RSpec.configure do |config|
     stub_const('Peas::SWITCHBOARD_PORT', SWITCHBOARD_TEST_PORT)
     allow(Peas).to receive(:host).and_return(SWITCHBOARD_TEST_HOST)
     @server = switchboard_server
+    Peas::Switchboard.wait_for_connection
     @controller_worker = WorkerReceiver.new 'controller'
     @pod_worker = WorkerReceiver.new Pod.first.to_s
   end
