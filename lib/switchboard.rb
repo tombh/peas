@@ -13,7 +13,7 @@ module Peas
     end
 
     def self.wait_for_connection
-      Timeout.timeout(2) do
+      Timeout.timeout(5) do
         loop do
           begin
             s = connection

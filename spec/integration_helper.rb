@@ -1,3 +1,5 @@
+ENV["RACK_ENV"] = ENV["PEAS_ENV"] = 'production'
+
 require 'rubygems'
 require 'net/http'
 require 'webmock'
