@@ -19,14 +19,13 @@ class LogsArchiver
       docker_ids = Docker::Container.all.map { |c| c.id }
       docker_ids.each do |id|
         # If the pea is not being watched then start a new thread to watch it and stream to the DB
-        unless id.in? @watched
-          begin
-            pea = Pea.find_by docker_id: id
-          rescue Mongoid::Errors::DocumentNotFound
-            warn "Couldn't find a corresponding DB record for Docker container #{id}"
-          end
-          async.watch pea
+        next if id.in? @watched
+        begin
+          pea = Pea.find_by docker_id: id
+        rescue Mongoid::Errors::DocumentNotFound
+          warn "Couldn't find a corresponding DB record for Docker container #{id}"
         end
+        async.watch pea
       end
       # No need to hammer the Docker API
       if ENV['RACK_ENV'] != 'test'

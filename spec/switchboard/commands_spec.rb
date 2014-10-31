@@ -199,14 +199,18 @@ describe 'Switchboard Pea Commands', :celluloid do
           double(id: pea1.docker_id),
           double(id: pea2.docker_id)
         ])
+        done = []
         expect(PeaLogsWatcher).to receive(:new).with(pea1).once do |&block|
           block.call
+          done << 'pea1'
         end
         expect(PeaLogsWatcher).to receive(:new).with(pea2).once do |&block|
           block.call
+          done << 'pea2'
         end
         actor = LogsArchiver.new
         expect(actor.watched).to eq []
+        sleep 0.05 until done.count == 2
       end
     end
 
