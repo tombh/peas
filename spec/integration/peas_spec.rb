@@ -121,8 +121,10 @@ describe 'The Peas PaaS Integration Tests', :integration do
     end
     describe 'Running commands' do
       it 'should list files in the app directory' do
-        response = @cli.run 'run ls'
-        expect(response).to match(/stuff/)
+        response = @cli.tty 'run ls'
+        expect(response).to match(/Starting one-off pea for node-js-sample...done/)
+        expect(response).to match(/.*Procfile.*app\.json.*/)
+        expect(response).to match(/.*index\.js  package\.json.*/)
       end
     end
   end

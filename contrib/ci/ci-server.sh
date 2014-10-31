@@ -55,7 +55,7 @@ if [ "$1" == "--run-tests" ]; then
   fi
   # Rebuild the Dockerfile in case the commit includes any unbuilt changes to the Dockerfile
   echo "Rebuilding Dockerfile..."
-  docker build --no-cache -t tombh/peas .
+  docker build --no-cache -t tombh/peas . > /dev/null
   echo "Deleting untagged Docker images..."
   docker rmi $(docker images | grep "^<none>" | tr -s ' ' | cut -d ' ' -f 3)
   # Install dependencies for the CLI client (needed to run the integration tests)
