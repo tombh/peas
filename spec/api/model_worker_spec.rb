@@ -6,7 +6,7 @@ describe Peas::ModelWorker, :with_worker do
   let(:uuid2) { 'b8d2cdbd6-d3d4-4d2f-8f48-96325a4f2cd6' }
 
   before :each do
-    class App; def fake; broadcast 'fake' end end
+    class App; def fake; broadcast 'fake' end end # rubocop:disable Style/SingleLineMethods
     allow(SecureRandom).to receive(:uuid).and_return(uuid, uuid2)
   end
 
@@ -72,13 +72,13 @@ describe Peas::ModelWorker, :with_worker do
 
   describe 'Broadcasting messages' do
     it 'should broadcast messages' do
-      class App; def fake; 100.times { |i| broadcast i } end end
+      class App; def fake; 100.times { |i| broadcast i } end end # rubocop:disable Style/SingleLineMethods
       job_listener = client_connection
       job_listener.puts "subscribe.job_progress.#{uuid}"
       app.worker.fake
       statuses = []
       bodies = []
-      while line = JSON.parse(job_listener.gets)
+      while (line = JSON.parse(job_listener.gets))
         statuses << line['status']
         bodies << line['body']
         break if line['status'] == 'failed' || line['status'] == 'complete'
@@ -108,7 +108,7 @@ describe Peas::ModelWorker, :with_worker do
       job_listener = client_connection
       job_listener.puts "subscribe.job_progress.#{parent_job} history"
       progress = []
-      while line = JSON.parse(job_listener.gets)
+      while (line = JSON.parse(job_listener.gets))
         progress << line
         break if line['status'] == 'complete'
       end
@@ -119,7 +119,7 @@ describe Peas::ModelWorker, :with_worker do
     end
 
     it 'should broadcast to the parent when child is created with a manually set parent job id' do
-      pea = Fabricate :pea, app: app
+      Fabricate :pea, app: app
       class App
         def parent_worker
           Pea.first.worker(block_until_complete: true, parent_job_id: parent_job).child_worker
@@ -134,7 +134,7 @@ describe Peas::ModelWorker, :with_worker do
       job_listener = client_connection
       job_listener.puts "subscribe.job_progress.#{parent_job} history"
       progress = []
-      while line = JSON.parse(job_listener.gets)
+      while (line = JSON.parse(job_listener.gets))
         progress << line
         break if line['status'] == 'complete'
       end
@@ -171,7 +171,7 @@ describe Peas::ModelWorker, :with_worker do
 
   describe "Catching exceptions" do
     it 'should catch exceptions and broadcast them' do
-      class App; def badtimes; raise 'HELL!'; end; end
+      class App; def badtimes; raise 'HELL!'; end; end # rubocop:disable Style/SingleLineMethods
       expect {
         app.worker(block_until_complete: true).badtimes
       }.to raise_error Peas::ModelWorkerError
@@ -200,9 +200,11 @@ describe Peas::ModelWorker, :with_worker do
       job_listener = client_connection
       job_listener.puts "subscribe.job_progress.#{parent_job} history"
       progress = []
-      while (line = JSON.parse(job_listener.gets))
-        progress << line
-        break if line['status'] == 'failed' || line['status'] == 'complete'
+      Timeout.timeout(3) do
+        while (line = JSON.parse(job_listener.gets))
+          progress << line
+          break if line['body'] =~ /.*MOAR HELZ.*/
+        end
       end
       failure_messages = progress.delete_if { |p| p['status'] != 'failed' }.to_s
       expect(failure_messages).to match(/MOAR HELZ @ .*model_worker_spec.rb.* `child_worker'/)

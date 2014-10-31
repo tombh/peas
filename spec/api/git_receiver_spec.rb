@@ -16,7 +16,7 @@ describe 'Git Push Deployment' do
   end
 
   it 'should triger a deploy', :with_worker do
-    output = Peas.sh "cd #{@non_bare_path} && git push #{@app_local_path} master"
+    output = Peas.sh "cd #{@non_bare_path} && git push #{@app_local_path} master", 10
     expect(output).to include 'The peas are ripe'
     expect(output).to include '* [new branch]      master -> master'
   end

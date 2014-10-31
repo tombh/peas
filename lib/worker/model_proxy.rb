@@ -90,7 +90,7 @@ module Peas
         new_job_id
       end
 
-      # Handle the end of a job, wether successful or not
+      # Handle the end of a job, whether successful or not
       def handle_status(method, status, progress, &_block)
         if status == 'failed'
           if @is_parent_caller

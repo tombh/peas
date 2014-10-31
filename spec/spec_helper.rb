@@ -55,12 +55,11 @@ RSpec.configure do |config|
     allow(Peas).to receive(:host).and_return(SWITCHBOARD_TEST_HOST)
     @server = switchboard_server
     Peas::Switchboard.wait_for_connection
-    @controller_worker = WorkerReceiver.new 'controller'
-    @pod_worker = WorkerReceiver.new Pod.first.to_s
+    @controller_worker = WorkerReceiver.supervise 'controller'
+    @pod_worker = WorkerReceiver.supervise Pod.first.to_s
   end
 
   config.after(:each, :with_worker) do
-    @server.terminate
     Celluloid::Actor.clear_registry
     Celluloid.shutdown_timeout = 0.02
     Celluloid.shutdown

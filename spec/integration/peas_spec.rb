@@ -119,5 +119,11 @@ describe 'The Peas PaaS Integration Tests', :integration do
         expect(response).to eq 'Barometer'
       end
     end
+    describe 'Running commands' do
+      it 'should list files in the app directory' do
+        response = @cli.run 'run ls'
+        expect(response).to match(/stuff/)
+      end
+    end
   end
 end
