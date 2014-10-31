@@ -5,6 +5,13 @@ describe 'The Peas PaaS Integration Tests', :integration do
     @cli = Cli.new REPO_PATH
   end
 
+  it "should know we're inside a Docker container" do
+    # The actual command is echoed, so if we matched an unconcatenated string we'd match the echo
+    # and not the result.
+    output = @peas_io.console "puts (!!Peas::DIND ? 'IN' : 'OUT') + 'DOCKER'"
+    expect(output).to match /.*INDOCKER.*/
+  end
+
   describe 'Settings' do
     it 'should update the domain' do
       response = @cli.run 'admin settings peas.domain 127.0.0.1:4004'

@@ -1,5 +1,3 @@
-ENV["RACK_ENV"] = ENV["PEAS_ENV"] = 'production'
-
 require 'rubygems'
 require 'net/http'
 require 'webmock'
@@ -43,8 +41,9 @@ end
 
 # Helper to run commands *inside* the running Peas test container
 class ContainerConnection
+  attr_accessor :io
   def initialize(container_id)
-    @io = IO.popen "docker attach #{container_id} > /dev/null 2>&1", 'r+'
+    @io = IO.popen "docker attach #{container_id} 2>&1", 'r+'
     @io.puts "source /home/peas/.profile"
   end
   # Run a BASH command
@@ -53,7 +52,17 @@ class ContainerConnection
   end
   # Run a command that you would normally run with the `rake console` IRB
   def console(cmd)
+    marker = Time.now.to_f.to_s
+    # The actual command is echoed, so if we matched an unconcatenated string we'd match the echo
+    # and not the result.
+    cmd = "#{cmd}; puts 'CONSOLE' + 'COMMAND' + '#{marker}'"
     bash 'cd /home/peas/repo && echo "%s" | bundle exec rake console' % cmd
+    output = []
+    loop do
+      output << @io.gets
+      break if output.last =~ %r{CONSOLECOMMAND#{marker}}
+    end
+    output.join
   end
   # Reset DBs and docker ready for new tests
   def env_reset

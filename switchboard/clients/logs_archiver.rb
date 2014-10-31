@@ -25,7 +25,7 @@ class LogsArchiver
           rescue Mongoid::Errors::DocumentNotFound
             warn "Couldn't find a corresponding DB record for Docker container #{id}"
           end
-          watch pea
+          async.watch pea
         end
       end
       # No need to hammer the Docker API

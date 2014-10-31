@@ -15,9 +15,7 @@ class PeaLogsWatcher
     unless pea.running?
       Timeout.timeout 60 do
         info "Waiting for #{pea.full_name} to be up and running..."
-        until pea.running?
-          sleep 1
-        end
+        sleep 1 until pea.running?
       end
     end
 
@@ -33,7 +31,7 @@ class PeaLogsWatcher
       stream: true,
       logs: true,
       stdout: true,
-      stderr: true,
+      stderr: true
     ) do |_stream, chunk|
       chunk.lines.each do |line|
         line = line.strip!
