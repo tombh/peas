@@ -19,7 +19,7 @@ new_revision = refs[1]
 app = App.find_by name: ARGV[0]
 job_id = app.worker.deploy(new_revision)
 socket = Peas::Switchboard.connection
-socket.puts "subscribe.job_progress.#{job_id}"
+socket.puts "subscribe.job_progress.#{job_id} history"
 while line = socket.gets
   parsed = JSON.parse(line)
   if parsed.key? 'body'
