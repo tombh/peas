@@ -126,6 +126,13 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
 
+  VCR.turned_off do
+    if Docker.version['Version'] != Peas::DOCKER_VERSION
+      raise "Installed Docker version #{Docker.version['Version']}" \
+        " does not match Peas' Docker version #{Peas::DOCKER_VERSION}"
+    end
+  end
+
   # Create the Peas container against which the CLI client will interact
   config.before(:all, :integration) do
     WebMock.allow_net_connect!
