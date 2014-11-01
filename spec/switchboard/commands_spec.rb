@@ -227,12 +227,21 @@ describe 'Switchboard Pea Commands', :celluloid do
         allow(@socket).to receive(:puts).with(any_args)
         @app = Fabricate :app, name: 'node-js-sample'
         @pea = Fabricate :pea, app: @app, port: nil, docker_id: nil
-        @pea.spawn_container
+        @container = @pea.spawn_container
       end
 
       it 'should stream the logs for a pea', :docker do
-        expect(@socket).to receive(:puts).with("app_logs.#{@pea._id}")
+        unless VCR.current_cassette.originally_recorded_at.nil?
+          allow(@container).to receive(:attach).and_yield(:stdout, '> node-js-sample@0.1.0 start /app')
+        end
         expect(@socket).to receive(:puts).with('> node-js-sample@0.1.0 start /app')
+        if VCR.current_cassette.originally_recorded_at.nil?
+          Thread.new do
+            sleep 0.5
+            @container.kill
+            @container.delete
+          end
+        end
         PeaLogsWatcher.new @pea
       end
 
@@ -241,7 +250,14 @@ describe 'Switchboard Pea Commands', :celluloid do
         allow_any_instance_of(PeaLogsWatcher).to receive(:info).with(/Starting to watch/)
         expect_any_instance_of(PeaLogsWatcher).to receive(:info).with(/Waiting for/)
         allow(@socket).to receive(:puts).with(any_args)
-        expect(@socket).to receive(:puts).with('Node app is running at localhost:5000')
+        expect(@socket).to receive(:puts).with('> node-js-sample@0.1.0 start /app')
+        if VCR.current_cassette.originally_recorded_at.nil?
+          Thread.new do
+            sleep 1
+            @container.kill
+            @container.delete
+          end
+        end
         PeaLogsWatcher.new @pea
       end
     end

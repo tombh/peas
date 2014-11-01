@@ -143,7 +143,10 @@ describe App do
       it "should include the ENV vars saved in the app's config" do
         app.config_update('FOO' => 'BAR')
         container = builder.create_build_container
-        allow(container).to receive(:attach)
+        # Hack to detect whether this is being recorded for the first time or not
+        unless VCR.current_cassette.originally_recorded_at.nil?
+          allow(container).to receive(:attach).and_yield(:stdout, '-----> Node.js app detected')
+        end
         details = builder.create_app_image
         expect(details['Config']['Env']).to include("FOO=BAR")
       end
