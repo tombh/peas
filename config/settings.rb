@@ -10,14 +10,7 @@ module Peas
 
   # Figure out if we're running inside a docker container.
   DIND = begin
-    cgroups = File.open('/proc/self/cgroup').read
-    matches = cgroups.match(/docker/)
-    if matches
-      # Return the Docker ID. Note that this changes every time the DinD container boots
-      matches.captures.first
-    else
-      false
-    end
+    !File.open('/proc/self/cgroup').read.match(/docker/).nil?
   end
 
   GIT_USER = Peas::DIND ? 'git' : 'peas'
