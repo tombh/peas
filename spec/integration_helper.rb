@@ -2,6 +2,7 @@ require 'rubygems'
 require 'net/http'
 require 'webmock'
 require 'vcr'
+require 'docker'
 require_relative '../config/settings'
 require_relative '../lib/sh'
 require_relative '../lib/error'
@@ -127,6 +128,7 @@ RSpec.configure do |config|
   config.expect_with :rspec
 
   VCR.turned_off do
+    WebMock.allow_net_connect!
     if Docker.version['Version'] != Peas::DOCKER_VERSION
       raise "Installed Docker version #{Docker.version['Version']}" \
         " does not match Peas' Docker version #{Peas::DOCKER_VERSION}"
