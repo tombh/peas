@@ -57,6 +57,7 @@ if [ "$1" == "--run-tests" ]; then
   echo "Rebuilding Dockerfile..."
   docker build --no-cache -t tombh/peas . > /dev/null
   echo "Deleting untagged Docker images..."
+  docker ps -a | grep -v peas-data-test | grep 'Exited' | awk '{print $1}' | xargs --no-run-if-empty docker rm
   docker rmi $(docker images | grep "^<none>" | tr -s ' ' | cut -d ' ' -f 3)
   # Install dependencies for the CLI client (needed to run the integration tests)
   cd $PEAS_ROOT/cli
