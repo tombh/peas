@@ -1,3 +1,8 @@
+###0.3.1
+**1st August 2014**    
+**Features**:
+  * `peas run` CLI command. Allows one-off commands and interactive sessions to be run
+
 ###0.3.0
 **23rd August 2014**    
 **Features**:
