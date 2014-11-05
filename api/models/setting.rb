@@ -1,4 +1,6 @@
 # Global Peas settings
+# NB the word 'setting' is used here rather than 'config' to differentiate between an individual app's config
+# and Peas global config.
 class Setting
   include Mongoid::Document
 

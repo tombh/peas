@@ -102,6 +102,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       it 'should scale an app' do
         response = @cli.run 'scale web=2'
         expect(response).to match(/Scaling process 'web:2'/)
+        sleep 3 # Give it a few moments to do the scaling
         response = @cli.run 'logs', 5
         expect(response).to match(/app\[web.2\]: > node-js-sample@0.1.0 start \/app/)
       end

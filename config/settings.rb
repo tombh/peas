@@ -54,7 +54,7 @@ module Peas
     domain = Setting.retrieve 'peas.domain'
     # Make sure the domain always has a protocol at the beginning
     unless domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
-      domain = "http://#{domain}"
+      "http://#{domain}"
     else
       domain
     end

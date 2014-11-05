@@ -100,21 +100,20 @@ class Cli
 
   # Helpers to call Peas CLI client
   def base_cmd
-    cmd = "cd #{@path} && " \
-      "HOME=/tmp/peas " \
-      "PEAS_API_ENDPOINT=vcap.me:4004 " \
-      "SWITCHBOARD_PORT=7345 " \
-      "#{Peas.root}cli/bin/peas-dev"
+    "cd #{@path} && " \
+    'HOME=/tmp/peas ' \
+    'PEAS_API_ENDPOINT=vcap.me:4004 ' \
+    'SWITCHBOARD_PORT=7345 ' \
+    "#{Peas.root}cli/bin/peas-dev"
   end
 
   # Normal popen shell
-  def run(cmd, timeout = 60)
-    Peas.sh "#{base_cmd} #{cmd}", timeout
+  def run(cmd, timeout = 60, tty = false)
+    Peas.sh "#{base_cmd} #{cmd}", timeout, tty: tty
   end
 
-  # Backticks provide a TTY, useful for testing commands that use STDIN.raw
   def tty(cmd, timeout = 60)
-    `#{base_cmd} #{cmd}`
+    run cmd, timeout, true
   end
 
   # Skip the Peas CLI client, mostly for git pushing

@@ -1,33 +1,44 @@
 require 'timeout'
+require 'pty'
 
 module Peas
   # Convenience wrapper for the command line.
   #   * Kills commands if they run too long
   #   * Can switch user before running the requested command
-  def self.sh(command, timeout = 60, user: 'peas')
-    session = Shell.new
+  def self.sh(command, timeout = 60, user: 'peas', tty: false)
+    session = Shell.new tty
     session.su user if user != 'peas'
     session.command command, timeout: timeout
   end
 
   class Shell
-    def initialize
-      @io = IO.popen('bash', mode: 'a+')
+    def initialize(tty = false)
+      # TTY along with the `script' command gives *very* raw output
+      if tty
+        @read, slave = PTY.open
+        r, @write = IO.pipe
+        @pid = spawn('script -q /dev/null bash', in: r, out: slave)
+        r.close
+        slave.close
+      else
+        @read = @write = IO.popen('bash', mode: 'a+')
+      end
     end
 
     def su(user)
-      @io.puts "sudo -u #{user} /bin/bash"
+      @write.puts "sudo -u #{user} /bin/bash"
     end
 
     def command(command, timeout: 60)
       output = []
-      status = nil
-      @io.puts "#{command} 2>&1; echo $?; echo 'PEAS_SH_COMPLETE'"
+      @write.puts "#{command} 2>&1; echo $?; echo 'PEAS_SH_COMPLETE'"
       begin
         Timeout.timeout(timeout) do
-          @io.each_line do |line|
+          @read.each_line do |line|
             if line.strip == 'PEAS_SH_COMPLETE'
-              status = output.pop.strip
+              unless output.pop.strip == '0'
+                raise Peas::PeasError, "`#{command}` failed with: \n--- \n #{output} \n---"
+              end
               break
             end
             output << line
@@ -40,10 +51,9 @@ module Peas
       rescue Errno::EIO
         # Most likely means child has finished giving output
       end
-      unless status == '0'
-        raise Peas::PeasError, "`#{command}` failed with: \n--- \n #{output} \n---"
-      end
       output
+    ensure
+      Process.kill 'SIGKILL', @pid if @pid
     end
   end
 end
