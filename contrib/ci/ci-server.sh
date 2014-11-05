@@ -25,7 +25,7 @@ export GEM_HOME="$HOME"/.gem
 if [ "$1" == "--run-tests" ]; then
   echo "Request to run integration tests accepted..."
   count=0
-  while docker ps | grep -q peas-test; do
+  while docker ps | grep -q Up; do
     [ $count == 0 ] && echo "Waiting for existing integration test to finish..."
     sleep 1
     count=$(($count + 1))
