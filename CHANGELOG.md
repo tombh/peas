@@ -1,3 +1,8 @@
+###0.3.2
+**5th November 2014**    
+**Bugfixes**:
+  * `peas run` needed to require io/console to accept STDIN.raw
+
 ###0.3.1
 **1st November 2014**    
 **Features**:

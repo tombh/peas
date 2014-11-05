@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "../lib"))
 require 'json'
+require 'io/console'
 require 'peas/version'
 require 'peas/config'
 require 'peas/git'
