@@ -56,11 +56,17 @@ git push peas master
 At some point, once it's proven to work, I'll reset the VPS (Digital Ocean) image every 24 hours.
 
 #Installation
-Peas is at a very early stage and has only been tested in development environments. Formal methods
-for installing on cloud services such as EC2 and Digital Ocean will come soon. Meanwhile you can try
-using the Docker method of installation on cloud servers.
+There is a universal installation script at `contrib/bootstrap.sh`, it can be run directly on most
+vanilla *nix systems with root access with;
 
-**Local development environment**    
+    curl -sSL https://raw.githubusercontent.com/tombh/peas/master/contrib/bootstrap.sh | sh
+
+It works on recent versions of Ubuntu, Debian (>=8), Fedora, Centos and Redhat. It uses [pacapt](https://github.com/icy/pacapt)
+to install the OS's native Docker package (ensuring Docker is managed by an init system). It then runs
+`contrib/peas-dind/run.sh` to intall the Peas image itself, with a restart policy of 'always', ensuring that Peas
+starts at boot.
+
+**Local development environment**
 This is the preferred method for local development, but note that local development is also possible
 with the Docker installation method.
 All you will need is; Ruby(>=2.1),
@@ -76,33 +82,33 @@ bundle exec guard
 
 The Peas API will be available at `vcap.me:4000`.
 
-**Docker**    
+**Docker**
 This installation method will work anywhere that Docker can be installed, so both locally and on
 remote servers like AWS and Digital Ocean.
 
 To install and boot just use `./contrib/peas-dind/run.sh` (ie. you will need to have cloned the repo
-first). For a detailed explanation read    
+first). For a detailed explanation read
 `contrib/peas-dind/README.md`.
 
 The Peas API will be available at `vcap.me:4000`.
 
-**Vagrant**    
+**Vagrant**
 Most likely useful to you if you are on Windows. There is a Vagrantfile in the root of the project.
 All it does is boot a recent VM of Ubuntu and then installs Peas using the Docker method above.
 
 The Peas API will be available at `peas.local:4000`.
 
-**CLI client**    
+**CLI client**
 To interact with the Peas API you will need to install the command line client:
 `gem install peas-cli`
 
 During development you will find it useful to use the `peas-dev` command. It uses the live code in
-your local repo as the CLI client. You can put it in your `$PATH` with something like;    
+your local repo as the CLI client. You can put it in your `$PATH` with something like;
 `sudo ln -s $(pwd)/peas-dev /usr/local/bin/peas-dev`
 
 #Usage
 
-**Setup**    
+**Setup**
 Peas aims to follow the conventions and philosophies of Heroku as closely as possible. So it is worth
 bearing in mind that a lot of the [Heroku documentation](https://devcenter.heroku.com/) is relevant to Peas.
 
@@ -113,7 +119,7 @@ to `127.0.0.1`.
 To use a different domain:
 `peas admin settings peas.domain customdomain.com`
 
-**Deploying**    
+**Deploying**
 Next thing is to get into the directory of the git repo for the app you want to deploy.
 
 Then:
@@ -127,11 +133,11 @@ The last line of the deployment output should contain the URL for your deployed 
 You can then scale processes using:
 `peas scale web=3 worker=2`
 
-**Services**    
+**Services**
 If a service URI is provided to Peas' admin settings then all subsequently created apps will be given an instance of
-that service. Therefore, by issuing somehting like;    
+that service. Therefore, by issuing somehting like;
 `peas admin settings mongodb.uri mongodb://root:password@mongoservice.com`
-all new apps will get created with a config variable of something like;    
+all new apps will get created with a config variable of something like;
 `MONGDB_URI=mongodb://appname:2f7n87fr@mongoservice.com/appname`
 
 New services can be added by creating a new class in `lib/services`. You can use any of the existing service classes as
@@ -156,7 +162,7 @@ scale   - Scale an app
   * Nodes, or 'pods' if we're keeping with the 'pea' theme. Therefore distributing containers over multiple servers.
 
 ##Video Presentation
-Given at Bristol Ruby User Group on June 26th 2014 (1h16m)    
+Given at Bristol Ruby User Group on June 26th 2014 (1h16m)
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=Y5vb5YEatnw
 " target="_blank"><img src="http://img.youtube.com/vi/Y5vb5YEatnw/0.jpg"
 alt="Peas presentation" width="480" border="10" /></a>

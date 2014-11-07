@@ -53,10 +53,10 @@ module Peas
   def self.domain
     domain = Setting.retrieve 'peas.domain'
     # Make sure the domain always has a protocol at the beginning
-    unless domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
-      "http://#{domain}"
-    else
+    if domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
       domain
+    else
+      "http://#{domain}"
     end
   end
 
