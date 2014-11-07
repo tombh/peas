@@ -27,6 +27,7 @@ ssh root@some_vanilla_server.com
 curl -sSL https://raw.githubusercontent.com/tombh/peas/master/contrib/bootstrap.sh | sh
 => (lots of logs about Peas booting up)
 gem install peas-cli
+peas admin settings peas.domain some_vanilla_server.com
 cd [my cool app on github]
 peas create
 git push peas master
