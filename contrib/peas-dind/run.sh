@@ -9,9 +9,11 @@ GIT_PORT=${2:-2222}
 # Make the assumption that if we're exposing Peas port 80, then this is a non-development environment
 if [ "$API_PORT" -eq "80" ]; then
   export DIND_HOST=$(curl icanhazip.com)
+  restart_or_remove="--restart=always" # Ensure Peas starts on system boot using Docker's restart policy
 else
   PEAS_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../"
   mount_local_repo="-v $PEAS_ROOT:/home/peas/repo"
+  restart_or_remove="--rm=true" # Politely remove the container when it exits
 fi
 
 
@@ -35,8 +37,7 @@ fi
 docker run \
   -it \
   --privileged \
-  --rm=true \
-  --restart=always \
+  $restart_or_remove \
   --volumes-from peas-data \
   --name=peas \
   -e "PEAS_ENV=$PEAS_ENV" \
