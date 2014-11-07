@@ -94,7 +94,7 @@ describe 'Switchboard', :celluloid do
           stub_const('Connection::INACTIVITY_TIMEOUT', 0.001)
           connection = Connection.new(peer)
           expect(connection.wrapped_object).to receive(:inactivity_callback)
-          connection.dose
+          connection.close
         end
       end
 
