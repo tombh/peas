@@ -23,11 +23,10 @@ and more.
 
 #Quickstart
 ```bash
-gem install peas-cli
-git clone https://github.com/tombh/peas.git
-cd peas
-./contrib/peas-dind/run.sh
+ssh root@some_vanilla_server.com
+curl -sSL https://raw.githubusercontent.com/tombh/peas/master/contrib/bootstrap.sh | sh
 => (lots of logs about Peas booting up)
+gem install peas-cli
 cd [my cool app on github]
 peas create
 git push peas master
@@ -35,12 +34,9 @@ git push peas master
 "-----> Installing dependencies
 .
 .
-.
  -----> Discovering process types
  -----> Scaling process 'web:1'
-        Deployed to http://mycoolapp.vcap.me:4000"
-curl mycoolapp.vcap.me:4000
-=> Yay!
+        Deployed to http://mycoolapp.some_vanilla_server.com"
 ```
 
 #Demo
@@ -57,13 +53,13 @@ At some point, once it's proven to work, I'll reset the VPS (Digital Ocean) imag
 
 #Installation
 There is a universal installation script at `contrib/bootstrap.sh`, it can be run directly on most
-vanilla *nix systems with root access with;
+vanilla *nix systems with root access;
 
     curl -sSL https://raw.githubusercontent.com/tombh/peas/master/contrib/bootstrap.sh | sh
 
 It works on recent versions of Ubuntu, Debian (>=8), Fedora, Centos and Redhat. It uses [pacapt](https://github.com/icy/pacapt)
 to install the OS's native Docker package (ensuring Docker is managed by an init system). It then runs
-`contrib/peas-dind/run.sh` to intall the Peas image itself, with a restart policy of 'always', ensuring that Peas
+`contrib/peas-dind/run.sh` to install the Peas image itself, with a restart policy of 'always', ensuring that Peas
 starts at boot.
 
 **Local development environment**
@@ -157,9 +153,7 @@ scale   - Scale an app
 ```
 
 #Roadmap
-  * Installation for production environments like AWS and Digital Ocean.
   * Users. Peas currently has absolutely no concept of users :/
-  * Nodes, or 'pods' if we're keeping with the 'pea' theme. Therefore distributing containers over multiple servers.
 
 ##Video Presentation
 Given at Bristol Ruby User Group on June 26th 2014 (1h16m)
