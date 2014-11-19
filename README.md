@@ -23,21 +23,23 @@ and more.
 
 #Quickstart
 ```bash
+# On remote server
 ssh root@some_vanilla_server.com
 curl -sSL https://raw.githubusercontent.com/tombh/peas/master/contrib/bootstrap.sh | sh
-=> (lots of logs about Peas booting up)
+#=> (lots of logs about Peas downloading and booting up)
+
+# Locally
 gem install peas-cli
+cd /my/cool/app/folder
 peas admin settings peas.domain some_vanilla_server.com
-cd [my cool app folder]
 peas create
 git push peas master
-=>
-"-----> Installing dependencies
-.
-.
- -----> Discovering process types
- -----> Scaling process 'web:1'
-        Deployed to http://mycoolapp.some_vanilla_server.com"
+#=>
+# -----> Installing dependencies
+# -----> ... lots more lines like this
+# -----> Discovering process types
+# -----> Scaling process 'web:1'
+#        Deployed to http://mycoolapp.some_vanilla_server.com"
 ```
 
 #Demo
@@ -142,15 +144,17 @@ a template.
 
 **All current CLI commands**
 ```
-admin   - Admin commands
-apps    - List all apps
-config  - Add, remove and list config for an app
-create  - Create an app
-destroy - Destroy an app
-help    - Shows a list of commands or help for one command
-logs    - Show logs for an app
-run     - Run one-off commands
-scale   - Scale an app
+admin      - Admin commands:
+  run      - Run commands on the Peas Controller
+  settings - Set Peas global system settings
+apps       - List all apps
+config     - Add, remove and list config for an app
+create     - Create an app
+destroy    - Destroy an app
+help       - Shows a list of commands or help for one command
+logs       - Show logs for an app
+run        - Run one-off commands
+scale      - Scale an app
 ```
 
 #Roadmap

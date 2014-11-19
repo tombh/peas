@@ -33,10 +33,9 @@ class Connection
       return
     end
 
-    response.strip!
     # Split by the first space character to get;
     # ['app_logs.5390f5665a454e77990b0000', 'option1 option2']
-    parts = response.split(' ', 2)
+    parts = response.strip.split(' ', 2)
     # Get the command, eg; ['app_logs', '5390f5665a454e77990b0000']
     @command = parts[0].split('.')
     # Get the options, eg; ['option1', 'option2']
@@ -108,5 +107,15 @@ class Connection
 
   def inactivity_callback
     terminate unless @keep_alive
+  end
+
+  # Connect 2 sockets together
+  def plug_sockets(incoming, outgoing)
+    loop do
+      data = incoming.readpartial(512)
+      outgoing.write data
+    end
+  rescue EOFError
+    outgoing.close
   end
 end

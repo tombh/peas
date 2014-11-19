@@ -12,16 +12,14 @@ module Peas
   end
 
   class Shell
-    def initialize(tty = false)
-      # TTY along with the `script' command gives *very* raw output
+    attr_accessor :read, :write
+
+    def initialize(tty = false, initial_command = 'bash')
       if tty
-        @read, slave = PTY.open
-        r, @write = IO.pipe
-        @pid = spawn('script -q /dev/null bash', in: r, out: slave)
-        r.close
-        slave.close
+        # TTY gives *very* raw output
+        @read, @write, @pid = PTY.spawn initial_command
       else
-        @read = @write = IO.popen('bash', mode: 'a+')
+        @read = @write = IO.popen(initial_command, mode: 'a+')
       end
     end
 
@@ -54,6 +52,11 @@ module Peas
       output
     ensure
       Process.kill 'SIGKILL', @pid if @pid
+    end
+
+    # Check to see if process is still running. Only applicable for TTY
+    def running?
+      PTY.check(@pid).nil?
     end
   end
 end

@@ -2,7 +2,8 @@ module Peas
   # Synchronise API version with CLI version (controversial. may need to revisit this decision)
   VERSION = File.read File.expand_path("../../cli/VERSION", __FILE__)
 
-  # The most recent version of Docker against which Peas has been tested
+  # The most recent version of Docker against which Peas has been tested.
+  # Remember to change the version in the DOCKERFILE too.
   DOCKER_VERSION = '1.3.0'
 
   # Location of Docker socket, used by Remote API

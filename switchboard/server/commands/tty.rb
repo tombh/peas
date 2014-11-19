@@ -1,15 +1,14 @@
 module Commands
   # Interact with a one-off app container
   def tty
-    app = App.find_by(name: @command[1])
     @socket.write "Starting one-off pea for #{@command[1]}..."
 
     # Create a remote container and get it to phone home via the Rendevous Switchboard command
-    tty_command = @socket.gets.strip
     properties = {
-      app: app,
+      app: App.find_by(name: @command[1]),
       process_type: 'console'
     }
+    tty_command = @socket.gets.strip
     unless tty_command == 'console'
       properties.merge!(
         process_type: 'one-off',
@@ -29,20 +28,11 @@ module Commands
     @socket.write "done\r\n"
 
     # Join the sockets together
-    async._plug_sockets @socket, remote_pea_socket
-    async._plug_sockets remote_pea_socket, @socket
+    async.plug_sockets @socket, remote_pea_socket
+    async.plug_sockets remote_pea_socket, @socket
 
     # Wait until the session is ended by either the container or the user
     sleep 0.1 until @socket.closed? || remote_pea_socket.closed?
     remote_pea.worker.destroy
-  end
-
-  # Connect 2 sockets together
-  def _plug_sockets(incoming, outgoing)
-    loop do
-      outgoing.write incoming.readpartial(512)
-    end
-  rescue EOFError
-    outgoing.close
   end
 end

@@ -83,4 +83,31 @@ class API
     rescue Interrupt, Errno::ECONNRESET
     end
   end
+
+  # Create 2 threads to allow raw TTY to be sent at the same time as outputting
+  # data from the socket.
+  def self.duplex_socket socket
+    threads = []
+
+    # Copy STDIN to socket
+    threads << Thread.start do
+      STDIN.raw do |stdin|
+        IO.copy_stream stdin, socket
+      end
+      socket.close_write
+    end
+
+    # Write response to STDOUT
+    threads << Thread.start do
+      begin
+        while (chunk = socket.readpartial(512))
+          print chunk
+        end
+      rescue EOFError
+      end
+      threads.first.kill
+    end
+
+    threads.each(&:join)
+  end
 end

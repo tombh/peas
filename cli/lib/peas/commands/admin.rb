@@ -33,4 +33,19 @@ command :admin do |admin|
       end
     end
   end
+
+  admin.desc 'Run commands on the Peas Controller'
+  admin.long_desc <<-EOF
+  For example: peas admin run rake console
+  EOF
+  admin.command :run do |c|
+    c.action do |_global_options, _options, args|
+      exit_now!("Please provide a command to run", 1) if args.length == 0
+      socket = API.switchboard_connection
+      socket.puts "admin_tty"
+      tty_command = args.join ' '
+      socket.puts tty_command
+      API.duplex_socket socket
+    end
+  end
 end

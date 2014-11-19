@@ -186,6 +186,19 @@ describe 'Switchboard Pea Commands', :celluloid do
 
     end
 
+    describe 'Admin TTY' do
+      it 'should shell out to the command line' do
+        with_socket_pair do |client, peer|
+          connection = Connection.new(peer)
+          client.puts "admin_tty"
+          connection.dispatch
+          client.puts "echo REKT"
+          client.gets
+          expect(client.gets.strip).to eq 'REKT'
+        end
+      end
+    end
+
   end
 
   describe 'Client Commands' do
