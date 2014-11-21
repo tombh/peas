@@ -67,7 +67,7 @@ class App
       "#{hipster_adverb}-#{muse}"
     else
       muse
-    end
+    end.downcase
   end
 
   # Generate a random word

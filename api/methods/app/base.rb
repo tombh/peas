@@ -15,7 +15,7 @@ module Peas
     resource :app do
       desc "List all apps"
       get do
-        respond App.all.map { |a| a.name }
+        respond App.all.map(&:name)
       end
 
       desc "Create an app"

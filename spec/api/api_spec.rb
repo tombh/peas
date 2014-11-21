@@ -28,7 +28,7 @@ describe Peas::API do
     end
 
     it "should create an app" do
-      post '/app', muse: 'test-test'
+      post '/app', muse: 'Test-test'
       expect(last_response.status).to eq 201
       expect(App.count).to eq 1
       expect(App.first.name).to eq "test-test"

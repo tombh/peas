@@ -86,7 +86,7 @@ class API
 
   # Create 2 threads to allow raw TTY to be sent at the same time as outputting
   # data from the socket.
-  def self.duplex_socket socket
+  def self.duplex_socket(socket)
     threads = []
 
     # Copy STDIN to socket

@@ -27,5 +27,8 @@ RUN apt-get update -qq
 RUN apt-get install -qqy lxc-docker-1.3.0
 RUN gpasswd -a peas docker
 
+RUN mkdir /var/log/peas
+RUN chown peas:peas /var/log/peas
+
 VOLUME /var/lib/docker
 CMD ["/home/peas/repo/contrib/peas-dind/wrapdocker"]

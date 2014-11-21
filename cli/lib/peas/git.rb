@@ -25,6 +25,6 @@ class Git
     remote_uri = remote unless remote_uri
     exit_now! "No Peas remote. I can't figure out what app this is.", 1 if remote_uri == ''
     parts = Addressable::URI.parse remote_uri
-    parts.path.split('/').last.gsub('.git', '')
+    parts.path.split('/').last.gsub('.git', '').downcase
   end
 end

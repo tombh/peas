@@ -1,6 +1,6 @@
 module Peas
   # Synchronise API version with CLI version (controversial. may need to revisit this decision)
-  VERSION = File.read File.expand_path("../../cli/VERSION", __FILE__)
+  VERSION = File.read(File.expand_path("../../cli/VERSION", __FILE__)).strip
 
   # The most recent version of Docker against which Peas has been tested.
   # Remember to change the version in the DOCKERFILE too.

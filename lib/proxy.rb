@@ -16,7 +16,7 @@ module Peas
       uri = find_destination(req)
       return @app.call(env) unless uri
 
-      sub_request = Net::HTTP.const_get(method).new("#{uri.path}#{"?" if uri.query}#{uri.query}")
+      sub_request = Net::HTTP.const_get(method).new("#{uri.path}#{'?' if uri.query}#{uri.query}")
 
       if sub_request.request_body_permitted? && req.body
         sub_request.body_stream = req.body

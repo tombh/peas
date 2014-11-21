@@ -23,7 +23,7 @@ and more.
 
 #Quickstart
 ```bash
-# On remote server
+# Remote
 ssh root@some_vanilla_server.com
 curl -sSL https://raw.githubusercontent.com/tombh/peas/master/contrib/bootstrap.sh | sh
 #=> (lots of logs about Peas downloading and booting up)
