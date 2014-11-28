@@ -133,8 +133,5 @@ cd /home/peas/repo
 bundle install
 
 echo "Running Peas in $PEAS_ENV environment"
-bundle exec foreman start -f ./Procfile &
+bundle exec foreman start -f ./Procfile
 EOF
-
-sleep 5
-exec bash

@@ -17,12 +17,12 @@ class Addon
   end
 
   after_create do |addon|
-    # Add the addons URI to the app's config
+    # Add the addon's URI to the app's config
     addon.app.config_update(addon_config_key => addon.uri)
   end
 
   after_destroy do |addon|
-    # Add the addons URI to the app's config
+    # Remove the addon's URI from the app's config
     addon.app.config_delete addon_config_key
   end
 end

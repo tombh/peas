@@ -1,10 +1,20 @@
 require 'spec_helper'
 
-describe Pea do
-  # If recording VCRs for the first time, you will need a docker image called 'node-js-sample'
-  let(:app) { Fabricate :app, name: 'node-js-sample' }
+describe Pea, :docker, :with_worker do
+  let(:app) {
+    node_app = Fabricate :app, name: 'node-js-sample'
+    # If recording VCRs for the first time, we'll need a docker image called 'node-js-sample'
+    if VCR.current_cassette.originally_recorded_at.nil?
+      unless Docker::Image.exist? 'node-js-sample'
+        puts "Sample NodeJS image doesn't exist, building..."
+        create_non_bare_repo 'nodejs', node_app.local_repo_path
+        node_app.worker(block_until_complete: true).build 'HEAD'
+      end
+    end
+    node_app
+  }
 
-  it 'should create a running docker container', :docker do
+  it 'should create a running docker container' do
     pea = Fabricate :pea, app: app, port: nil, docker_id: nil
     pea.spawn_container
     expect(pea.docker.json['State']['Running']).to eq true
@@ -13,7 +23,7 @@ describe Pea do
     expect(pea.docker.json['Config']['Cmd']).to eq ["/bin/bash", "-c", "/start web"]
   end
 
-  it "should parse the container's JSON", :docker do
+  it "should parse the container's JSON" do
     pea = Fabricate :pea, app: app, port: nil, docker_id: nil
     pea.spawn_container
     expect(pea.running?).to eq true
@@ -21,7 +31,7 @@ describe Pea do
     expect(pea.port).to eq pea.docker.json['NetworkSettings']['Ports']['5000'].first['HostPort']
   end
 
-  it 'should kill a running container', :docker, :with_worker do
+  it 'should kill a running container', :with_worker do
     pea = Fabricate :pea, app: app, port: nil, docker_id: nil
     pea.spawn_container
     expect(pea.running?).to eq true

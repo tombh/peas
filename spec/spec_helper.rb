@@ -175,7 +175,7 @@ def create_non_bare_repo(repo, remote_path, with_push = true)
     # Remove the deploy hook on the remote, so nothing happens when we push to it
     FileUtils.rm "#{remote_path}/hooks/pre-receive"
     # Simulate `git push peas`
-    Peas.sh "cd #{non_bare_path} && git push #{remote_path} master"
+    Peas.sh "cd #{non_bare_path} && git push #{remote_path} master --force"
   end
   non_bare_path
 end

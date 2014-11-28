@@ -244,13 +244,10 @@ describe 'Switchboard Pea Commands', :celluloid do
       end
 
       it 'should stream the logs for a pea', :docker do
-        unless VCR.current_cassette.originally_recorded_at.nil?
-          allow(@container).to receive(:attach).and_yield(:stdout, '> node-js-sample@0.1.0 start /app')
-        end
         expect(@socket).to receive(:puts).with('> node-js-sample@0.1.0 start /app')
         if VCR.current_cassette.originally_recorded_at.nil?
           Thread.new do
-            sleep 0.5
+            sleep 1
             @container.kill
             @container.delete
           end

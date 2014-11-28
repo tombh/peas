@@ -65,7 +65,7 @@ to install the OS's native Docker package (ensuring Docker is managed by an init
 `contrib/peas-dind/run.sh` to install the Peas image itself, with a restart policy of 'always', ensuring that Peas
 starts at boot.
 
-**Local development environment**
+**Local development environment**    
 This is the preferred method for local development, but note that local development is also possible
 with the Docker installation method.
 All you will need is; Ruby(>=2.1),
@@ -81,7 +81,7 @@ bundle exec guard
 
 The Peas API will be available at `vcap.me:4000`.
 
-**Docker**
+**Docker**   
 This installation method will work anywhere that Docker can be installed, so both locally and on
 remote servers like AWS and Digital Ocean.
 
@@ -91,13 +91,13 @@ first). For a detailed explanation read
 
 The Peas API will be available at `vcap.me:4000`.
 
-**Vagrant**
+**Vagrant**   
 Most likely useful to you if you are on Windows. There is a Vagrantfile in the root of the project.
 All it does is boot a recent VM of Ubuntu and then installs Peas using the Docker method above.
 
 The Peas API will be available at `peas.local:4000`.
 
-**CLI client**
+**CLI client**   
 To interact with the Peas API you will need to install the command line client:
 `gem install peas-cli`
 
@@ -107,7 +107,7 @@ your local repo as the CLI client. You can put it in your `$PATH` with something
 
 #Usage
 
-**Setup**
+**Setup**   
 Peas aims to follow the conventions and philosophies of Heroku as closely as possible. So it is worth
 bearing in mind that a lot of the [Heroku documentation](https://devcenter.heroku.com/) is relevant to Peas.
 
@@ -118,7 +118,7 @@ to `127.0.0.1`.
 To use a different domain:
 `peas admin settings peas.domain customdomain.com`
 
-**Deploying**
+**Deploying**   
 Next thing is to get into the directory of the git repo for the app you want to deploy.
 
 Then:
@@ -132,10 +132,10 @@ The last line of the deployment output should contain the URL for your deployed 
 You can then scale processes using:
 `peas scale web=3 worker=2`
 
-**Services**
+**Services**   
 If a service URI is provided to Peas' admin settings then all subsequently created apps will be given an instance of
 that service. Therefore, by issuing somehting like;
-`peas admin settings mongodb.uri mongodb://root:password@mongoservice.com`
+`peas admin settings mongodb.uri mongodb://root:password@mongoservice.com`   
 all new apps will get created with a config variable of something like;
 `MONGDB_URI=mongodb://appname:2f7n87fr@mongoservice.com/appname`
 
