@@ -134,7 +134,7 @@ You can then scale processes using:
 
 **Services**   
 If a service URI is provided to Peas' admin settings then all subsequently created apps will be given an instance of
-that service. Therefore, by issuing somehting like;
+that service. Therefore, by issuing somehting like;   
 `peas admin settings mongodb.uri mongodb://root:password@mongoservice.com`   
 all new apps will get created with a config variable of something like;
 `MONGDB_URI=mongodb://appname:2f7n87fr@mongoservice.com/appname`
