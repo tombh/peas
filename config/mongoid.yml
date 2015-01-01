@@ -1,6 +1,6 @@
 default_hosts: &default_host
   hosts:
-    - <%= Peas::DEFAULT_CONTROLLER_DOMAIN %>:27017
+    - <%= Peas::CONTROLLER_DOMAIN %>:27017
 
 production:
   sessions:

@@ -4,6 +4,8 @@ require 'openssl'
 
 class API
   include HTTParty
+  # TODO: Don't want to genuine SSL cert errors, say if there's a CA root cert
+  default_options.update(verify: false) # Ignore self-signed SSL error
 
   LONG_POLL_TIMEOUT = 10 * 60
   LONG_POLL_INTERVAL = 0.5

@@ -1,3 +1,8 @@
+###0.6.0
+**1st January 2015**    
+**Features**:
+* SSL for the API and the socket server
+
 ###0.5.0
 **21st November 2014**    
 **Features**:

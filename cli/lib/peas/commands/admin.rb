@@ -19,7 +19,7 @@ command :admin do |admin|
       if args.count > 1
         if args.first == 'peas.domain'
           domain = args[1]
-          domain = "http://#{domain}" unless domain.start_with? 'http://'
+          domain = "https://#{domain}" unless domain.start_with? 'https://'
           # Update Git config
           Git.sh "git config peas.domain #{domain}"
           # Update file

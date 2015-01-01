@@ -2,6 +2,11 @@ require 'guard/plugin'
 
 module Guard
   class BaseGuard < ::Guard::Plugin
+    def initialize(options = {})
+      super(options)
+      @options = options
+    end
+
     def log(msg)
       puts "GUARD: #{msg}"
     end
@@ -13,7 +18,11 @@ module Guard
     def start
       log "Starting #{service_name}"
       # TODO: check if already running
-      @pid = spawn command
+      if @options.key? :env
+        @pid = spawn @options[:env], command
+      else
+        @pid = spawn command
+      end
       log "#{service_name} running with PID #{@pid}"
       @pid
     end

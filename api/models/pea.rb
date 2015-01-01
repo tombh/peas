@@ -129,7 +129,7 @@ class Pea
     end
 
     # What pod are we in right now?
-    self.pod = Pod.find_by(hostname: Peas.pod_host)
+    self.pod = Pod.find_by(hostname: Peas::POD_HOST)
     # Get the Docker ID so we can find it later
     self.docker_id = container.info['id']
     if process_type == 'web'
@@ -168,7 +168,7 @@ class Pea
   # across multiple machines, we need to make sure that certain methods are only ever run on the
   # host machine upon which the pea lives.
   def ensure_correct_host
-    return if Peas.pod_host == pod.hostname
+    return if Peas::POD_HOST == pod.hostname
     raise "Attempt to interact with a pea (belonging to '#{pod.docker_id}') " \
       "not located in the current pod ('#{Peas.current_docker_host_id}')."
   end

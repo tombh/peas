@@ -28,7 +28,7 @@ module Peas
       'vcap.me:4000'
     end
     unless domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
-      "http://#{domain}"
+      "https://#{domain}"
     else
       domain
     end

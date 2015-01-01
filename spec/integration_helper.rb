@@ -10,6 +10,9 @@ require_relative '../lib/error'
 TMP_PATH = '/tmp/peas'
 FileUtils.mkdir_p TMP_PATH
 
+# Refactored this just because it's used so many times
+API_PORT = 5443
+
 puts "\nRun `docker logs -f peas-test` to tail integration test activity\n\n"
 
 # Find the test-specific data volume
@@ -76,7 +79,7 @@ class ContainerConnection
     bash "su git -c 'cat /dev/null > /home/git/.ssh/authorized_keys'"
     sleep 5
     # The test container runs on port 4004 to avoid conflicts with any dev/prod containers
-    console "Setting.create(key: 'peas.domain', value: 'vcap.me:4004')"
+    console "Setting.create(key: 'peas.domain', value: 'vcap.me:5443')"
     # Create a pod stub for the controller-pod combined setup
     console "ENV['PEAS_API_LISTENING'] = 'true'; Pod.create_stub"
   end
@@ -102,7 +105,7 @@ class Cli
   def base_cmd
     "cd #{@path} && " \
     'HOME=/tmp/peas ' \
-    'PEAS_API_ENDPOINT=vcap.me:4004 ' \
+    "PEAS_API_ENDPOINT=vcap.me:#{API_PORT} " \
     'SWITCHBOARD_PORT=7345 ' \
     "#{Peas.root}cli/bin/peas-dev"
   end
@@ -146,10 +149,13 @@ RSpec.configure do |config|
         --name peas-test \
         --volumes-from peas-data-test \
         -v #{Peas.root}:/home/peas/repo \
-        -p 4004:4000 \
+        -p #{API_PORT}:#{API_PORT} \
+        -p 5080:5080 \
         -p 2223:22 \
         -p 7345:9345 \
         -e PEAS_ENV=production \
+        -e API_PORT=#{API_PORT} \
+        -e PROXY_PORT=5080 \
         -e GIT_PORT=2223 \
         tombh/peas"
     )
@@ -159,7 +165,7 @@ RSpec.configure do |config|
     # Wait until the container has completely booted
     Timeout.timeout(4 * 60) do
       result = `bash -c \
-        'until [ "$(curl -s -o /dev/null -w "%{http_code}" localhost:4004)" == "200" ]; do \
+        'until [ "$(curl --insecure -s -o /dev/null -w "%{http_code}" https://localhost:#{API_PORT})" == "200" ]; do \
           sleep 1;
         done' 2>&1`
       raise result if $CHILD_STATUS.to_i != 0

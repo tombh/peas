@@ -1,12 +1,12 @@
 # Global Peas settings
-# NB the word 'setting' is used here rather than 'config' to differentiate between an individual app's config
-# and Peas global config.
+# NB the word 'setting' is used here rather than 'config' to differentiate between an individual
+# app's config and Peas' global config.
 class Setting
   include Mongoid::Document
 
   # List of all the settings that Peas uses
   DEFAULTS = {
-    'peas.domain' => "#{Peas::DEFAULT_CONTROLLER_DOMAIN}:#{Peas::DEFAULT_API_PORT}"
+    'peas.domain' => "#{Peas::CONTROLLER_DOMAIN}:#{Peas::API_PORT}"
   }
 
   field :key, type: String

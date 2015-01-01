@@ -118,8 +118,9 @@ PEAS_ENV=${PEAS_ENV:-development}
 su - peas <<EOF
 # TODO: consider prepending all Peas env vars with 'PEAS', so that we can automagically loop through them and not
 # have to remember to change them here and in contrib/peas-dind/run.sh
-export API_PORT=$API_PORT
-export GIT_PORT=$GIT_PORT
+export PEAS_API_PORT=$API_PORT
+export PEAS_GIT_PORT=$GIT_PORT
+export PEAS_PROXY_PORT=$PROXY_PORT
 export PEAS_ENV=$PEAS_ENV
 
 export BUNDLE_PATH=$BUNDLE_PATH
@@ -133,7 +134,7 @@ cd /home/peas/repo
 bundle install
 
 echo "Running Peas in $PEAS_ENV environment"
-bundle exec foreman start -f ./Procfile
+bundle exec foreman start -f ./Procfile &
 EOF
 
 sleep 5

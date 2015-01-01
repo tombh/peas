@@ -3,8 +3,7 @@ require 'spec_helper'
 describe Peas::Proxy do
   let(:app) { Fabricate :app }
   let(:pea) { Fabricate :pea, app: app }
-  let(:proxy) { proc { [200, {}, 'Proxy responded without forwarding'] } }
-  let(:stack) { Peas::Proxy.new proxy }
+  let(:stack) { Peas::Proxy.new }
   let(:request) { Rack::MockRequest.new stack }
   include_context :docker_creation_mock
 
@@ -17,7 +16,7 @@ describe Peas::Proxy do
 
   it "should not forward if the request doesn't involve an app" do
     response = request.get('http://nonexistentapp.vcap.me/somewhere')
-    expect(response.body).to eq 'Proxy responded without forwarding'
+    expect(response.body).to eq 'Peas has no application at this address'
   end
 
   it 'should raise a ProxyError with logs from the app when forwarding fails' do

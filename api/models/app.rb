@@ -84,8 +84,8 @@ class App
   def remote_uri
     # If we're running inside a Docker-in-Docker container
     if Peas::DIND
-      if ENV['GIT_PORT'] != '22'
-        "ssh://git@#{Peas.host}:#{ENV['GIT_PORT']}/~/#{name}.git"
+      if ENV['PEAS_GIT_PORT'] != '22'
+        "ssh://git@#{Peas.host}:#{ENV['PEAS_GIT_PORT']}/~/#{name}.git"
       else
         "git@#{Peas.host}:#{name}.git"
       end
@@ -105,6 +105,11 @@ class App
     Peas.sh "mkdir -p #{local_repo_path}", user: Peas::GIT_USER
     Peas.sh "cd #{local_repo_path} && git init --bare", user: Peas::GIT_USER
     create_prereceive_hook
+  end
+
+  def http_uri
+    port = Peas::PROXY_PORT.to_s == '80' ? '' : ":#{Peas::PROXY_PORT}"
+    "http://#{name}.#{Peas.domain.gsub('https://', '')}#{port}"
   end
 
   # Create a pre-receive hook in the app's Git repo that will trigger Peas' deploy process
@@ -165,7 +170,7 @@ class App
       broadcast
       worker.scale scaling_profile, :deploy do
         broadcast
-        broadcast "       Deployed to http://#{name}.#{Peas.domain.gsub('http://', '')}"
+        broadcast "       Deployed to #{http_uri}"
       end
     end
   end

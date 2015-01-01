@@ -14,8 +14,8 @@ describe 'The Peas PaaS Integration Tests', :integration do
 
   describe 'Settings' do
     it 'should update the domain' do
-      response = @cli.run 'admin settings peas.domain 127.0.0.1:4004'
-      expect(response).to match(/peas.domain 127\.0\.0\.1:4004/)
+      response = @cli.run 'admin settings peas.domain 127.0.0.1:5443'
+      expect(response).to match(/peas.domain 127\.0\.0\.1:5443/)
     end
   end
 
@@ -37,11 +37,11 @@ describe 'The Peas PaaS Integration Tests', :integration do
         expect(response).to match(/-----> Installing dependencies/)
         expect(response).to match(/-----> Discovering process types/)
         expect(response).to match(/-----> Scaling process 'web:1'/)
-        expect(response).to match %r{       Deployed to http:\/\/node-js-sample.vcap.me:4004}
+        expect(response).to match %r{       Deployed to http:\/\/node-js-sample.vcap.me:5080}
         expect(response.lines.length).to be > 30
         # The app should be accessible
         sleep 5
-        response = http_get "node-js-sample.vcap.me:4004"
+        response = http_get "node-js-sample.vcap.me:5080"
         expect(response).to eq 'Hello World!'
       end
 
@@ -50,7 +50,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         response = @cli.sh 'git push peas master'
         expect(response).to match(/Fetching custom buildpack/)
         sleep 5
-        response = http_get "node-js-sample.vcap.me:4004"
+        response = http_get "node-js-sample.vcap.me:5080"
         expect(response).to eq 'Hello World!'
       end
     end
@@ -61,7 +61,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         expect(response).to eq '{"FOO"=>"BAR"}'
         @cli.sh 'git push peas master'
         sleep 5
-        response = http_get "node-js-sample.vcap.me:4004"
+        response = http_get "node-js-sample.vcap.me:5080"
         expect(response).to eq 'Hello BAR!'
       end
       it 'should delete config for an app' do
@@ -87,7 +87,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
       expect(response).to eq "App 'node-js-sample' successfully created"
       @cli.sh 'git push peas master'
       sleep 5
-      response = http_get 'node-js-sample.vcap.me:4004'
+      response = http_get 'node-js-sample.vcap.me:5080'
       expect(response).to eq 'Hello World!'
     end
     describe 'Config' do
@@ -116,7 +116,7 @@ describe 'The Peas PaaS Integration Tests', :integration do
         )
       end
       it 'should enable an app to interact with a service' do
-        response = http_get 'node-js-sample.vcap.me:4004/mongo'
+        response = http_get 'node-js-sample.vcap.me:5080/mongo'
         expect(response).to eq 'Barometer'
       end
     end

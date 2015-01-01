@@ -3,18 +3,13 @@ require "enumerator"
 
 module Peas
   class Proxy
-
-    def initialize(app)
-      @app = app
-    end
-
     def call(env)
       req = Rack::Request.new(env)
       method = req.request_method.downcase
       method[0..0] = method[0..0].upcase
 
       uri = find_destination(req)
-      return @app.call(env) unless uri
+      return [200, {}, ["Peas has no application at this address"]] unless uri
 
       sub_request = Net::HTTP.const_get(method).new("#{uri.path}#{'?' if uri.query}#{uri.query}")
 

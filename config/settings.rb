@@ -27,13 +27,19 @@ module Peas
 
   # See self.domain() for more info
   # 'vcap.me' is managed by Cloud Foundry and has wildcard resolution to 127.0.0.1
-  DEFAULT_CONTROLLER_DOMAIN = ENV['PEAS_HOST'] || 'vcap.me'
+  CONTROLLER_DOMAIN = ENV['PEAS_HOST'] || 'vcap.me'
 
-  # Port 4000 is just the default port used by Puma (the HTTP server) in a development environment
-  DEFAULT_API_PORT = 4000
+  # The publicly accessible address for the pod. Only relevant if we're running as a pod of course
+  POD_HOST = ENV['DIND_HOST'] || 'localhost'
 
   # Port on which the messaging server runs
   SWITCHBOARD_PORT = ENV['SWITCHBOARD_PORT'] || 9345
+
+  # Port for the proxy server
+  PROXY_PORT = ENV['PEAS_PROXY_PORT'] || '80'
+
+  # Port for the Peas API. Possibly conflicts with value from Settings model, 'peas.domain'
+  API_PORT = ENV['PEAS_API_PORT'] || '443'
 
   # Root path of the project on the host filesystem
   ROOT_PATH = File.join(File.dirname(__FILE__), "../")
@@ -53,7 +59,7 @@ module Peas
 
   # Environment, normally one of: 'production', 'development', 'test'
   def self.environment
-    ENV['PEAS_ENV']
+    ENV['PEAS_ENV'] || 'production'
   end
 
   # Used for lots of things.
@@ -63,13 +69,12 @@ module Peas
   # 4) By builder to create the FQDN for an app; eg http://mycoolapp.peasserver.com
   # Note that only 4) is effected by changing the :domain key in the Setting model
   def self.domain
-    domain = Setting.retrieve 'peas.domain'
-    # Make sure the domain always has a protocol at the beginning
-    if domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
-      domain
-    else
-      "http://#{domain}"
-    end
+    uri = Setting.retrieve 'peas.domain'
+    # Ensure URI begins with a protocol to enable parsing
+    uri = "https://#{uri}" unless uri[/\Ahttp:\/\//] || uri[/\Ahttps:\/\//]
+    parsed = URI.parse uri
+    # Make sure there's no port at the end
+    "https://#{parsed.host}"
   end
 
   # Returns only the host part of the Peas domain. Eg; 'vcap.me' from http://vcap.me:4000
@@ -84,17 +89,12 @@ module Peas
   # Is this instance of Peas functioning as a controller?
   # Unless otherwise stated, Peas will function in a standalone state of being both the controller and a pod.
   def self.controller?
-    ENV['PEAS_CONTROLLER'] ||= 'true'
+    ENV['PEAS_CONTROLLER'] || 'true'
   end
 
   # Is this instance of Peas functioning as a pod?
   def self.pod?
-    ENV['PEAS_POD'] ||= 'true'
-  end
-
-  # The publicly accessible address for the pod. Only relevant if we're running as a pod of course
-  def self.pod_host
-    ENV['DIND_HOST'] || 'localhost'
+    ENV['PEAS_POD'] || 'true'
   end
 
   # Introspect the lib/services folder to find the available classes that allow the management

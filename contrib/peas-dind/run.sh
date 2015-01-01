@@ -1,10 +1,11 @@
 #!/bin/bash
 # Convenience script for booting the Peas Docker image with a data container.
-# Usage: run.sh [api_port] [git_port]
+# Usage: run.sh [api_port] [git_port] [proxy_port]
 set -e
 
-API_PORT=${1:-4000}
+API_PORT=${1:-4443}
 GIT_PORT=${2:-2222}
+PROXY_PORT=${3:-4080}
 
 # Make the assumption that if we're exposing Peas port 80, then this is a non-development environment
 if [ "$API_PORT" -eq "80" ]; then
@@ -41,9 +42,12 @@ docker run \
   --volumes-from peas-data \
   --name=peas \
   -e "PEAS_ENV=$PEAS_ENV" \
+  -e "API_PORT=$API_PORT" \
   -e "GIT_PORT=$GIT_PORT" \
+  -e "PROXY_PORT=$PROXY_PORT" \
   $mount_local_repo \
-  -p $API_PORT:4000 \
+  -p $API_PORT:4443 \
+  -p $PROXY_PORT:4080 \
   -p $GIT_PORT:22 \
   -p 9345:9345 \
   tombh/peas

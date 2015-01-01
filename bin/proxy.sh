@@ -1,5 +1,5 @@
 #! /bin/sh
-PEAS_PROXY_LISTENING=true \
+export PEAS_PROXY_LISTENING=true
 bundle exec puma config.ru \
--p 4080 \
+-p ${PEAS_PROXY_PORT:=80} \
 --env ${PEAS_ENV:=development}
