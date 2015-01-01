@@ -1,5 +1,6 @@
 require 'httparty'
 require 'socket'
+require 'openssl'
 
 class API
   include HTTParty
@@ -51,7 +52,11 @@ class API
   end
 
   def self.switchboard_connection
-    TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
+    socket = TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
+    ssl = OpenSSL::SSL::SSLSocket.new socket
+    ssl.sync_close = true
+    ssl.connect
+    ssl
   end
 
   # Stream the output of a Switchboard job
@@ -94,7 +99,7 @@ class API
       STDIN.raw do |stdin|
         IO.copy_stream stdin, socket
       end
-      socket.close_write
+      socket.close
     end
 
     # Write response to STDOUT

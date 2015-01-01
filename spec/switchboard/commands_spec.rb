@@ -233,8 +233,12 @@ describe 'Switchboard Pea Commands', :celluloid do
       # blocking container.attach() request. It may be possible to automatically abort by setting
       # a lower limit for READ_TIMEOUT
       before :each do
-        @socket = double(TCPSocket)
-        allow(TCPSocket).to receive(:new).and_return(@socket)
+        raw = double TCPSocket
+        allow(TCPSocket).to receive(:new).and_return(raw)
+        @socket = double(OpenSSL::SSL::SSLSocket)
+        allow(OpenSSL::SSL::SSLSocket).to receive(:new).and_return(@socket)
+        allow(@socket).to receive(:sync_close=)
+        allow(@socket).to receive(:connect)
         allow(@socket).to receive(:close)
         allow(@socket).to receive(:puts).with('')
         allow(@socket).to receive(:puts).with(any_args)

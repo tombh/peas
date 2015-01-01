@@ -9,7 +9,11 @@ module Peas
     end
 
     def self.connection
-      TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
+      client = TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
+      ssl_client = OpenSSL::SSL::SSLSocket.new client
+      ssl_client.sync_close = true # Close both tcp and ssl socket at the same time
+      ssl_client.connect
+      ssl_client
     end
 
     def self.wait_for_connection

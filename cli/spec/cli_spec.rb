@@ -78,6 +78,7 @@ describe 'Peas CLI' do
     end
 
     it 'should scale an app', :with_socket do
+      expect(@socket).to receive(:puts).with('subscribe.job_progress.123')
       stub_request(
         :put,
         TEST_DOMAIN + '/app/test-test/scale?scaling_hash=%7B%22web%22:%223%22,%22worker%22:%222%22%7D'
@@ -95,10 +96,17 @@ describe 'Peas CLI' do
         output = cli %w(run FINAL COMMAND)
         expect(output).to eq "tty.test-test\nFINAL COMMAND\n"
       end
-      it 'should run one-off with input from STDIN' do
-        io = StringIO.new 'FINAL COMMAND'
+      # This one has taken me soooooo long to figure out. This is testing the ability to open up
+      # an SSH-like TTY, that among other things will let you interact with ncurses programs like
+      # VIM. So it's important that the duplex (simultaneous read/write) connections are tested.
+      it 'should run one-off commands with input from STDIN' do
+        # Using a pipe rather than a plain string means that no EOF is sent, which prematurely
+        # closes the connection.
+        read, write = IO.pipe
+        write.write "FINAL COMMAND\n"
+        # Stub the pipe into STDIN.raw to simulate typing
         allow(STDIN).to receive(:raw) do |&block|
-          block.call io
+          block.call read
         end
         output = cli %w(run WITH STDIN)
         expect(output).to eq "tty.test-test\nWITH STDIN\nFINAL COMMAND\n"
@@ -130,21 +138,17 @@ describe 'Peas CLI' do
   end
 
   describe 'Logs' do
-    it 'should stream logs' do
-      socket = double 'TCPSocket'
-      allow(socket).to receive(:puts)
-      allow(socket).to receive(:gets).and_return("Here's ya logs", "MOAR", false)
-      allow(TCPSocket).to receive(:new).and_return(socket)
+    it 'should stream logs', :with_socket do
+      expect(@socket).to receive(:puts).with('stream_logs.test-test')
+      allow(@socket).to receive(:gets).and_return("Here's ya logs", "MOAR", false)
       output = cli %w(logs)
       expect(output).to eq "Here's ya logs\nMOAR\n"
     end
   end
 
-  it 'should retrieve and output a long-running command' do
-    socket = double 'TCPSocket'
-    expect(socket).to receive(:puts).with('subscribe.job_progress.123')
-    allow(socket).to receive(:gets).and_return("doing", "something", "done", false)
-    allow(TCPSocket).to receive(:new).and_return(socket)
+  it 'should retrieve and output a long-running command', :with_socket do
+    expect(@socket).to receive(:puts).with('subscribe.job_progress.123')
+    allow(@socket).to receive(:gets).and_return("doing", "something", "done", false)
     expect(API).to receive(:puts).with "doing"
     expect(API).to receive(:puts).with "something"
     expect(API).to receive(:puts).with "done"
@@ -153,7 +157,7 @@ describe 'Peas CLI' do
 
   it 'should show a warning when there is a version mismatch' do
     stub_request(:get, TEST_DOMAIN + '/app/test-test/config')
-        .to_return(body: '{"version": "100000.1000000.100000"}')
+      .to_return(body: '{"version": "100000.1000000.100000"}')
     output = cli %w(config)
     expect(output).to include 'Your version of the CLI client is out of date'
   end

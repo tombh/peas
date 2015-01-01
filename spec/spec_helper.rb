@@ -126,7 +126,10 @@ SWITCHBOARD_TEST_PORT = 79345
 Celluloid.logger = nil unless ENV['CELLULOID_LOGS']
 
 def client_connection
-  TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
+  socket = TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
+  ssl = OpenSSL::SSL::SSLSocket.new socket
+  ssl.connect
+  ssl
 end
 
 def switchboard_server
@@ -139,6 +142,7 @@ def with_socket_pair
   # Server port needs to be different so the worker can run at the same time
   server = TCPServer.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT + 1
   client = TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT + 1
+
   peer = server.accept
 
   begin

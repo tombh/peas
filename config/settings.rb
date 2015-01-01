@@ -36,8 +36,19 @@ module Peas
   SWITCHBOARD_PORT = ENV['SWITCHBOARD_PORT'] || 9345
 
   # Root path of the project on the host filesystem
+  ROOT_PATH = File.join(File.dirname(__FILE__), "../")
+
+  # SSL key
+  SSL_KEY_PATH = "#{ROOT_PATH}/contrib/ssl-keys/server.key"
+  SSL_KEY = OpenSSL::PKey::RSA.new File.read(SSL_KEY_PATH)
+
+  # SSL certificate
+  SSL_CERT_PATH = "#{ROOT_PATH}/contrib/ssl-keys/server.crt"
+  SSL_CERT = OpenSSL::X509::Certificate.new File.read(SSL_CERT_PATH)
+
+  # Alias for ROOT_PATH
   def self.root
-    File.join(File.dirname(__FILE__), "../")
+    ROOT_PATH
   end
 
   # Environment, normally one of: 'production', 'development', 'test'

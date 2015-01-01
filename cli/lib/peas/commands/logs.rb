@@ -5,7 +5,7 @@ command :logs do |c|
   c.switch [:f, :follow]
 
   c.action do |_global_options, options, _args|
-    follow = options[:follow] ? 'follow' : ''
-    API.stream_output "stream_logs.#{Git.name_from_remote} #{follow}"
+    follow = options[:follow] ? ' follow' : ''
+    API.stream_output "stream_logs.#{Git.name_from_remote}#{follow}"
   end
 end

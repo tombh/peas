@@ -1,6 +1,7 @@
-require 'rubygems'
 require 'stringio'
+require 'rubygems'
 require 'webmock/rspec'
+require 'openssl'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "../"))
 require 'lib/peas'
@@ -10,6 +11,10 @@ ROOT = File.join(File.expand_path(File.dirname(__FILE__)), '..')
 $LOAD_PATH.unshift(File.join(ROOT, 'lib'))
 TEST_DOMAIN = 'http://vcap.me:4000'
 SWITCHBOARD_TEST_PORT = 79345
+SSL_KEY_PATH = "#{ROOT}/../contrib/ssl-keys/server.key"
+SSL_KEY = OpenSSL::PKey::RSA.new File.read(SSL_KEY_PATH)
+SSL_CERT_PATH = "#{ROOT}/../contrib/ssl-keys/server.crt"
+SSL_CERT = OpenSSL::X509::Certificate.new File.read(SSL_CERT_PATH)
 
 RSpec.configure do |config|
   config.mock_with :rspec
@@ -20,19 +25,26 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :with_socket) do
-    @socket = double 'TCPSocket'
-    expect(@socket).to receive(:puts).with('subscribe.job_progress.123')
-    allow(TCPSocket).to receive(:new).and_return(@socket)
+    tcp = instance_double TCPSocket
+    allow(TCPSocket).to receive(:new).and_return(tcp)
+    @socket = instance_double OpenSSL::SSL::SSLSocket
+    allow(OpenSSL::SSL::SSLSocket).to receive(:new).and_return(@socket)
+    allow(@socket).to receive(:sync_close=)
+    allow(@socket).to receive(:connect)
   end
 
   config.before(:each, :with_echo_server) do
-    @server = TCPServer.new 'vcap.me', SWITCHBOARD_TEST_PORT
+    tcp_server = TCPServer.new 'vcap.me', SWITCHBOARD_TEST_PORT
+    context = OpenSSL::SSL::SSLContext.new
+    context.key = SSL_KEY
+    context.cert = SSL_CERT
     Thread.new do
+      @server = OpenSSL::SSL::SSLServer.new tcp_server, context
       @connection = @server.accept
       begin
         Timeout.timeout(2) do
           while (line = @connection.gets)
-            @connection.puts line
+            @connection.write line
             @connection.close if line.strip == 'FINAL COMMAND'
           end
         end
