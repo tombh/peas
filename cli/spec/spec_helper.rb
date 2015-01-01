@@ -9,7 +9,7 @@ require 'lib/peas'
 ENV['GLI_ENV'] = 'test'
 ROOT = File.join(File.expand_path(File.dirname(__FILE__)), '..')
 $LOAD_PATH.unshift(File.join(ROOT, 'lib'))
-TEST_DOMAIN = 'http://vcap.me:4000'
+TEST_DOMAIN = 'https://vcap.me:4000'
 SWITCHBOARD_TEST_PORT = 79345
 SSL_KEY_PATH = "#{ROOT}/../contrib/ssl-keys/server.key"
 SSL_KEY = OpenSSL::PKey::RSA.new File.read(SSL_KEY_PATH)

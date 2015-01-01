@@ -18,25 +18,25 @@ describe 'Peas CLI' do
 
   describe 'Settings' do
     it 'should set and use the domain setting' do
-      stub_request(:put, 'http://new-domain.com:4000/admin/settings?peas.domain=new-domain.com:4000')
+      stub_request(:put, 'https://new-domain.com:4000/admin/settings?peas.domain=new-domain.com:4000')
         .to_return(body: response_mock({}))
-      expect(Git).to receive(:sh).with("git config peas.domain http://new-domain.com:4000")
+      expect(Git).to receive(:sh).with("git config peas.domain https://new-domain.com:4000")
       cli %w(admin settings peas.domain new-domain.com:4000)
       config = JSON.parse File.open('/tmp/.peas').read
-      expect(config).to eq("domain" => "http://new-domain.com:4000")
+      expect(config).to eq("domain" => "https://new-domain.com:4000")
     end
 
     it 'should set a normal setting' do
-      stub_request(:put, 'http://vcap.me:4000/admin/settings?mongodb.uri=mongodb://uri')
+      stub_request(:put, 'https://vcap.me:4000/admin/settings?mongodb.uri=mongodb://uri')
         .to_return(body: response_mock(
-          defaults: { 'peas.domain' => 'http://boss.com' },
+          defaults: { 'peas.domain' => 'https://boss.com' },
           services: {
             'mongodb.uri' => 'mongodb://uri',
             'postgres.uri' => 'xsgfd'
           }
         ))
       output = cli %w(admin settings mongodb.uri mongodb://uri)
-      expect(output).to eq("Available settings\n\nDefaults:\n  peas.domain http://boss.com\n\nServices:\n  mongodb.uri mongodb://uri\n  postgres.uri xsgfd\n\n")
+      expect(output).to eq("Available settings\n\nDefaults:\n  peas.domain https://boss.com\n\nServices:\n  mongodb.uri mongodb://uri\n  postgres.uri xsgfd\n\n")
     end
 
   end
