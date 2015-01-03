@@ -99,7 +99,7 @@ RSpec.configure do |config|
           next
         end
       end
-      # Change the fixtures path depending on the current current folder version
+      # Change the fixtures path depending on the current folder version
       VCR.configure do |c|
         c.cassette_library_dir = DOCKER_API_FIXTURES_BASE + '/' + version
       end

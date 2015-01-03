@@ -125,41 +125,46 @@ describe App do
     end
 
     describe 'Building an image', :docker do
-      before :each do
+      it "should build an image and include the ENV vars saved in the app's config" do
         create_non_bare_repo 'nodejs', app.local_repo_path
         builder.tar_repo
-      end
-
-      it 'should build an app resulting in a new Docker image' do
-        container = builder.create_build_container
-        allow(container).to receive(:attach).and_yield(:stdout, '-----> Node.js app detected')
-        expect(app).to receive(:broadcast).with(/-----> Node.js app detected/)
-        expect(container).to receive(:start)
-        expect(container).to receive(:commit)
-        expect(container).to receive(:delete)
-        builder.create_app_image
-      end
-
-      it "should include the ENV vars saved in the app's config" do
         app.config_update('FOO' => 'BAR')
-        container = builder.create_build_container
-        # Hack to detect whether this is being recorded for the first time or not
-        unless VCR.current_cassette.originally_recorded_at.nil?
-          allow(container).to receive(:attach).and_yield(:stdout, '-----> Node.js app detected')
+        @container = builder.create_build_container
+        # Simulate output from the container if a VCR is being played back
+        # Because :attach conects via sockets not HTTP
+        if VCR.current_cassette.originally_recorded_at.nil?
+          puts "Building app with buildstep (should only happen once)..."
+        else
+          allow(@container).to receive(:attach).and_yield(:stdout, '-----> Node.js app detected')
         end
+        expect(app).to receive(:broadcast).with(/-----> Node.js app detected/)
+        expect(@container).to receive(:start).and_call_original
+        expect(@container).to receive(:commit).and_call_original
+        expect(@container).to receive(:delete).and_call_original
         details = builder.create_app_image
         expect(details['Config']['Env']).to include("FOO=BAR")
       end
 
       it 'should deal with a failed build' do
-        container = builder.create_build_container
-        allow(container).to receive(:attach).and_yield(:stderr, 'Something went wrong')
-        allow(container).to receive(:wait).and_return('StatusCode' => -1)
-        expect(container).to_not receive(:commit)
-        expect(container).to receive(:delete)
+        create_non_bare_repo 'sweetpea', app.local_repo_path
+        builder.tar_repo
+        @container = builder.create_build_container
+        # Simulate output from the container if a VCR is being played back
+        # Because :attach conects via sockets not HTTP
+        if VCR.current_cassette.originally_recorded_at.nil?
+          puts "Building app with buildstep (should only happen once)..."
+        else
+          allow(@container).to receive(:attach).and_yield(
+            :sterr,
+            '-----> Unable to select a buildpack'
+          )
+        end
+        expect(@container).to receive(:start).and_call_original
+        expect(@container).to_not receive(:commit)
+        expect(@container).to receive(:delete).and_call_original
         expect {
           builder.create_app_image
-        }.to raise_error Peas::PeasError, /Something went wrong/
+        }.to raise_error Peas::PeasError, /Unable to select a buildpack/
       end
     end
   end

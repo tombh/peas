@@ -2,14 +2,14 @@
 http_interactions:
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.12/containers/create
+    uri: unix:///var/run/docker.sock/v1.15/containers/create
     body:
       encoding: UTF-8
       string: '{"Image":"progrium/buildstep","Env":[],"OpenStdin":true,"StdinOnce":true,"Cmd":["/bin/bash","-c","mkdir
         -p /app \u0026\u0026 tar -xf - -C /app \u0026\u0026 /build/builder"]}'
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - application/json
   response:
@@ -20,13 +20,13 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 28 Nov 2014 09:04:08 GMT
+      - Fri, 02 Jan 2015 20:04:30 GMT
       Content-Length:
       - '90'
     body:
       encoding: UTF-8
       string: |
-        {"Id":"8c080e1be05d628585dfe68579a80256565cbda2a04f99425fa38bf8cf555fd4","Warnings":null}
+        {"Id":"8553d1e54c3e11d7ffa5e43954e0e16fc8e57ddff57091da512efb474617be2d","Warnings":null}
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:08 GMT
+  recorded_at: Fri, 02 Jan 2015 20:04:30 GMT
 recorded_with: VCR 2.9.3

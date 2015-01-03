@@ -2,14 +2,14 @@
 http_interactions:
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.12/containers/create
+    uri: unix:///var/run/docker.sock/v1.15/containers/create
     body:
       encoding: UTF-8
       string: '{"Image":"progrium/buildstep","Env":[],"OpenStdin":true,"StdinOnce":true,"Cmd":["/bin/bash","-c","mkdir
         -p /app \u0026\u0026 tar -xf - -C /app \u0026\u0026 /build/builder"]}'
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - application/json
   response:
@@ -20,24 +20,24 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 28 Nov 2014 09:04:31 GMT
+      - Sat, 03 Jan 2015 13:22:43 GMT
       Content-Length:
       - '90'
     body:
       encoding: UTF-8
       string: |
-        {"Id":"bd209bb4c7de791ee6996550ca928dbaf02bdf98c501a8bb365729b24e9978ee","Warnings":null}
+        {"Id":"8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47","Warnings":null}
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:31 GMT
+  recorded_at: Sat, 03 Jan 2015 13:22:43 GMT
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.12/containers/bd209bb4c7de791ee6996550ca928dbaf02bdf98c501a8bb365729b24e9978ee/start
+    uri: unix:///var/run/docker.sock/v1.15/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47/start
     body:
       encoding: UTF-8
       string: "{}"
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - application/json
   response:
@@ -46,21 +46,44 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Fri, 28 Nov 2014 09:04:31 GMT
+      - Sat, 03 Jan 2015 13:22:43 GMT
     body:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:31 GMT
+  recorded_at: Sat, 03 Jan 2015 13:22:43 GMT
 - request:
-    method: get
-    uri: unix:///var/run/docker.sock/v1.12/containers/bd209bb4c7de791ee6996550ca928dbaf02bdf98c501a8bb365729b24e9978ee/json
+    method: post
+    uri: unix:///var/run/docker.sock/v1.15/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47/attach?stderr=true&stdin=true&stdout=true&stream=true
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/vnd.docker.raw-stream
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sat, 03 Jan 2015 13:22:44 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.15/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47/wait
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - text/plain
   response:
@@ -71,24 +94,52 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 28 Nov 2014 09:04:31 GMT
+      - Sat, 03 Jan 2015 13:22:44 GMT
       Content-Length:
-      - '2000'
+      - '17'
     body:
       encoding: UTF-8
       string: |
-        {"Args":["-c","mkdir -p /app \u0026\u0026 tar -xf - -C /app \u0026\u0026 /build/builder"],"Config":{"AttachStderr":false,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","mkdir -p /app \u0026\u0026 tar -xf - -C /app \u0026\u0026 /build/builder"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"bd209bb4c7de","Image":"progrium/buildstep","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":false,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-11-28T09:04:31.553752747Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/bd209bb4c7de791ee6996550ca928dbaf02bdf98c501a8bb365729b24e9978ee/hostname","HostsPath":"/var/lib/docker/containers/bd209bb4c7de791ee6996550ca928dbaf02bdf98c501a8bb365729b24e9978ee/hosts","Id":"bd209bb4c7de791ee6996550ca928dbaf02bdf98c501a8bb365729b24e9978ee","Image":"9d1cecece3a7ce222e0ec7e84012358b24ed3827a98804a70749a808001bd627","MountLabel":"","Name":"/sad_wilson","NetworkSettings":{"Bridge":"docker0","Gateway":"172.17.42.1","IPAddress":"172.17.0.69","IPPrefixLen":16,"MacAddress":"02:42:ac:11:00:45","PortMapping":null,"Ports":{}},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/var/lib/docker/containers/bd209bb4c7de791ee6996550ca928dbaf02bdf98c501a8bb365729b24e9978ee/resolv.conf","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":29322,"Restarting":false,"Running":true,"StartedAt":"2014-11-28T09:04:31.669155652Z"},"Volumes":{},"VolumesRW":{}}
+        {"StatusCode":1}
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:31 GMT
+  recorded_at: Sat, 03 Jan 2015 13:22:44 GMT
 - request:
-    method: post
-    uri: unix:///var/run/docker.sock/v1.12/containers/bd209bb4c7de791ee6996550ca928dbaf02bdf98c501a8bb365729b24e9978ee/kill
+    method: get
+    uri: unix:///var/run/docker.sock/v1.15/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47/json
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message: 
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 03 Jan 2015 13:22:44 GMT
+      Content-Length:
+      - '1965'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Args":["-c","mkdir -p /app \u0026\u0026 tar -xf - -C /app \u0026\u0026 /build/builder"],"Config":{"AttachStderr":false,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","mkdir -p /app \u0026\u0026 tar -xf - -C /app \u0026\u0026 /build/builder"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"8611e5490442","Image":"progrium/buildstep","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":false,"User":"","Volumes":null,"WorkingDir":""},"Created":"2015-01-03T13:22:43.848999516Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47/hostname","HostsPath":"/var/lib/docker/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47/hosts","Id":"8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47","Image":"9d1cecece3a7ce222e0ec7e84012358b24ed3827a98804a70749a808001bd627","MountLabel":"","Name":"/hopeful_curie","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"MacAddress":"","PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/var/lib/docker/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47/resolv.conf","State":{"ExitCode":1,"FinishedAt":"2015-01-03T13:22:44.638519916Z","Paused":false,"Pid":0,"Restarting":false,"Running":false,"StartedAt":"2015-01-03T13:22:43.977567864Z"},"Volumes":{},"VolumesRW":{}}
+    http_version: 
+  recorded_at: Sat, 03 Jan 2015 13:22:44 GMT
+- request:
+    method: post
+    uri: unix:///var/run/docker.sock/v1.15/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47/kill
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - text/plain
   response:
@@ -97,10 +148,33 @@ http_interactions:
       message: 
     headers:
       Date:
-      - Fri, 28 Nov 2014 09:04:31 GMT
+      - Sat, 03 Jan 2015 13:22:44 GMT
     body:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:31 GMT
+  recorded_at: Sat, 03 Jan 2015 13:22:44 GMT
+- request:
+    method: delete
+    uri: unix:///var/run/docker.sock/v1.15/containers/8611e54904429f153e9b024edc51c213f07571e69125ab49edbc5d55bb4b3d47?force=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Swipely/Docker-API 1.17.0
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 204
+      message: 
+    headers:
+      Date:
+      - Sat, 03 Jan 2015 13:22:44 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sat, 03 Jan 2015 13:22:44 GMT
 recorded_with: VCR 2.9.3

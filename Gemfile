@@ -4,7 +4,7 @@ gem 'foreman'
 gem 'puma'
 gem 'rack'
 # Pin grape until this is fixed https://github.com/tim-vandecasteele/grape-swagger/issues/149
-gem 'grape', '0.9.0' #, github: 'intridea/grape'
+gem 'grape'
 gem 'grape-swagger'
 gem 'mongoid', github: 'mongoid/mongoid'
 gem 'celluloid'

@@ -2,14 +2,14 @@
 http_interactions:
 - request:
     method: post
-    uri: unix:///var/run/docker.sock/v1.12/containers/create
+    uri: unix:///var/run/docker.sock/v1.15/containers/create
     body:
       encoding: UTF-8
       string: '{"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh;
         do source $file; done; ls"],"Image":"fabricated","Name":"pea::one-off.1@fabricated","AttachStderr":true,"OpenStdin":true,"StdinOnce":true,"Tty":true}'
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - application/json
   response:
@@ -20,24 +20,24 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 28 Nov 2014 09:04:37 GMT
+      - Fri, 02 Jan 2015 20:08:36 GMT
       Content-Length:
       - '90'
     body:
       encoding: UTF-8
       string: |
-        {"Id":"3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05","Warnings":null}
+        {"Id":"303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8","Warnings":null}
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:37 GMT
+  recorded_at: Fri, 02 Jan 2015 20:08:36 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.12/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/json
+    uri: unix:///var/run/docker.sock/v1.15/containers/303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8/json
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - text/plain
   response:
@@ -48,24 +48,24 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 28 Nov 2014 09:04:37 GMT
+      - Fri, 02 Jan 2015 20:08:36 GMT
       Content-Length:
-      - '1665'
+      - '1667'
     body:
       encoding: UTF-8
       string: |
-        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"3eb55ea9dcbd","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-11-28T09:04:37.169008368Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05","Image":"e21bd354418ef2354d529576f67dee16192136279461e798669adbc9fbbbad0b","MountLabel":"","Name":"/dreamy_pike","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"MacAddress":"","PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Restarting":false,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"303eece7f369","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2015-01-02T20:08:36.785974017Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8","Image":"e21bd354418ef2354d529576f67dee16192136279461e798669adbc9fbbbad0b","MountLabel":"","Name":"/boring_wilson","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"MacAddress":"","PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Restarting":false,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:37 GMT
+  recorded_at: Fri, 02 Jan 2015 20:08:36 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.12/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/json
+    uri: unix:///var/run/docker.sock/v1.15/containers/303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8/json
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - text/plain
   response:
@@ -76,47 +76,24 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 28 Nov 2014 09:04:37 GMT
+      - Fri, 02 Jan 2015 20:08:36 GMT
       Content-Length:
-      - '1665'
+      - '1667'
     body:
       encoding: UTF-8
       string: |
-        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"3eb55ea9dcbd","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-11-28T09:04:37.169008368Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05","Image":"e21bd354418ef2354d529576f67dee16192136279461e798669adbc9fbbbad0b","MountLabel":"","Name":"/dreamy_pike","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"MacAddress":"","PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Restarting":false,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"303eece7f369","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2015-01-02T20:08:36.785974017Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8","Image":"e21bd354418ef2354d529576f67dee16192136279461e798669adbc9fbbbad0b","MountLabel":"","Name":"/boring_wilson","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"MacAddress":"","PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Restarting":false,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:37 GMT
-- request:
-    method: post
-    uri: unix:///var/run/docker.sock/v1.12/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/start
-    body:
-      encoding: UTF-8
-      string: "{}"
-    headers:
-      User-Agent:
-      - Swipely/Docker-API 1.15.0
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 204
-      message: 
-    headers:
-      Date:
-      - Fri, 28 Nov 2014 09:04:37 GMT
-    body:
-      encoding: UTF-8
-      string: ''
-    http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:37 GMT
+  recorded_at: Fri, 02 Jan 2015 20:08:36 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.12/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/json
+    uri: unix:///var/run/docker.sock/v1.15/containers/303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8/json
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - text/plain
   response:
@@ -127,24 +104,24 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 28 Nov 2014 09:04:37 GMT
+      - Fri, 02 Jan 2015 20:08:36 GMT
       Content-Length:
-      - '2019'
+      - '1667'
     body:
       encoding: UTF-8
       string: |
-        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"3eb55ea9dcbd","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-11-28T09:04:37.169008368Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/hostname","HostsPath":"/var/lib/docker/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/hosts","Id":"3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05","Image":"e21bd354418ef2354d529576f67dee16192136279461e798669adbc9fbbbad0b","MountLabel":"","Name":"/dreamy_pike","NetworkSettings":{"Bridge":"docker0","Gateway":"172.17.42.1","IPAddress":"172.17.0.70","IPPrefixLen":16,"MacAddress":"02:42:ac:11:00:46","PortMapping":null,"Ports":{}},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/var/lib/docker/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/resolv.conf","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":29901,"Restarting":false,"Running":true,"StartedAt":"2014-11-28T09:04:37.290203475Z"},"Volumes":{},"VolumesRW":{}}
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"303eece7f369","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2015-01-02T20:08:36.785974017Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8","Image":"e21bd354418ef2354d529576f67dee16192136279461e798669adbc9fbbbad0b","MountLabel":"","Name":"/boring_wilson","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"MacAddress":"","PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Restarting":false,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:37 GMT
+  recorded_at: Fri, 02 Jan 2015 20:08:36 GMT
 - request:
     method: get
-    uri: unix:///var/run/docker.sock/v1.12/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/json
+    uri: unix:///var/run/docker.sock/v1.15/containers/303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8/json
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - Swipely/Docker-API 1.15.0
+      - Swipely/Docker-API 1.17.0
       Content-Type:
       - text/plain
   response:
@@ -155,13 +132,13 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 28 Nov 2014 09:04:37 GMT
+      - Fri, 02 Jan 2015 20:08:36 GMT
       Content-Length:
-      - '2019'
+      - '1667'
     body:
       encoding: UTF-8
       string: |
-        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"3eb55ea9dcbd","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2014-11-28T09:04:37.169008368Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"/var/lib/docker/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/hostname","HostsPath":"/var/lib/docker/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/hosts","Id":"3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05","Image":"e21bd354418ef2354d529576f67dee16192136279461e798669adbc9fbbbad0b","MountLabel":"","Name":"/dreamy_pike","NetworkSettings":{"Bridge":"docker0","Gateway":"172.17.42.1","IPAddress":"172.17.0.70","IPPrefixLen":16,"MacAddress":"02:42:ac:11:00:46","PortMapping":null,"Ports":{}},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"/var/lib/docker/containers/3eb55ea9dcbd8d3944d81e06a7b840f60784263f671c6af9d9ff075ff5904c05/resolv.conf","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":29901,"Restarting":false,"Running":true,"StartedAt":"2014-11-28T09:04:37.290203475Z"},"Volumes":{},"VolumesRW":{}}
+        {"Args":["-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"Config":{"AttachStderr":true,"AttachStdin":false,"AttachStdout":false,"Cmd":["/bin/bash","-c","export HOME=/app; cd /app; for file in .profile.d/*.sh; do source $file; done; ls"],"CpuShares":0,"Cpuset":"","Domainname":"","Entrypoint":null,"Env":["FOO=BAR","PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"],"ExposedPorts":null,"Hostname":"303eece7f369","Image":"fabricated","Memory":0,"MemorySwap":0,"NetworkDisabled":false,"OnBuild":null,"OpenStdin":true,"PortSpecs":null,"SecurityOpt":null,"StdinOnce":true,"Tty":true,"User":"","Volumes":null,"WorkingDir":""},"Created":"2015-01-02T20:08:36.785974017Z","Driver":"aufs","ExecDriver":"native-0.2","HostConfig":{"Binds":null,"CapAdd":null,"CapDrop":null,"ContainerIDFile":"","Devices":null,"Dns":null,"DnsSearch":null,"ExtraHosts":null,"Links":null,"LxcConf":null,"NetworkMode":"","PortBindings":null,"Privileged":false,"PublishAllPorts":false,"RestartPolicy":{"MaximumRetryCount":0,"Name":""},"VolumesFrom":null},"HostnamePath":"","HostsPath":"","Id":"303eece7f3696d17183e8e04e7121d32ba1f5c7236422983b0bb7da77bb992f8","Image":"e21bd354418ef2354d529576f67dee16192136279461e798669adbc9fbbbad0b","MountLabel":"","Name":"/boring_wilson","NetworkSettings":{"Bridge":"","Gateway":"","IPAddress":"","IPPrefixLen":0,"MacAddress":"","PortMapping":null,"Ports":null},"Path":"/bin/bash","ProcessLabel":"","ResolvConfPath":"","State":{"ExitCode":0,"FinishedAt":"0001-01-01T00:00:00Z","Paused":false,"Pid":0,"Restarting":false,"Running":false,"StartedAt":"0001-01-01T00:00:00Z"},"Volumes":null,"VolumesRW":null}
     http_version: 
-  recorded_at: Fri, 28 Nov 2014 09:04:37 GMT
+  recorded_at: Fri, 02 Jan 2015 20:08:36 GMT
 recorded_with: VCR 2.9.3
