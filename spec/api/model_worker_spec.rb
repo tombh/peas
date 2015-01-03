@@ -84,7 +84,7 @@ describe Peas::ModelWorker, :with_worker do
         break if line['status'] == 'failed' || line['status'] == 'complete'
       end
       expect(statuses.uniq).to eq ['queued', 'working', 'complete']
-      expect(bodies.compact.uniq).to eq((0...100).map { |n| n.to_s })
+      expect(bodies.compact.uniq).to eq((0...100).map(&:to_s))
     end
 
     it 'should log activity to app logs if the job is on an App model' do
@@ -95,6 +95,7 @@ describe Peas::ModelWorker, :with_worker do
     end
 
     it 'should broadcast to the originating parent job in nested workers' do
+      # Suffers occasional race condition
       class App
         def parent_worker
           worker(block_until_complete: true).child_worker
