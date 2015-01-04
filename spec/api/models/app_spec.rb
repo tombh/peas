@@ -105,7 +105,6 @@ describe App do
     end
 
     describe 'Builder prep' do
-
       before :each do
         create_non_bare_repo 'sweetpea', app.local_repo_path
       end

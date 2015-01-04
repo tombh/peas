@@ -95,7 +95,6 @@ describe Peas::ModelWorker, :with_worker do
     end
 
     it 'should broadcast to the originating parent job in nested workers' do
-      # Suffers occasional race condition
       class App
         def parent_worker
           worker(block_until_complete: true).child_worker

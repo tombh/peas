@@ -58,18 +58,28 @@ module Peas
     # Send status updates for the current and pareant jobs, so that other processes can listen to progress
     def broadcasters(message)
       @job_broadcasters ||= {}
-      # Broadcast to current and parent. But only both if they're actually different jobs
-      [@current_job, @parent_job].uniq.each do |job|
+      # Broadcast to parent and current. But only both if they're actually different jobs.
+      #
+      # There's a potential race condition if broadcasting to @current_job *before* parent_job;
+      # this is because broadcasting to @current_job triggers execution flow in the caller process, whilst
+      # broadcasting to @parent_job is more cosmetic, it's just nice to know the progress of child workers.
+      # So there's a possibility that a :complete status is broadcast to @current_job which shuts down the
+      # process and, if it's the final child process, then goes to shut down the parent process, *before*
+      # it has a chance to receive the @parent_job broadcast. Therefore, it is important that @parent_job
+      # is broadcast to first.
+      [@parent_job, @current_job].uniq.each do |job|
         unless @job_broadcasters.key? job
           @job_broadcasters[job] = Peas::Switchboard.connection
           @job_broadcasters[job].puts "publish.job_progress.#{job} history"
         end
+        # Avoid pass by ref problems, when sending multiple, manipulated versions of the same message
+        message_to_send = message.clone
         # Don't update the parent job's status with the current job's status, unless it's to notify of failure.
         # All we want to do is make sure that parent job gets human-readable progress details from child jobs.
         if (job == @parent_job) && (@current_job != @parent_job)
-          message.delete :status if message[:status] != 'failed'
+          message_to_send.delete :status if message[:status] != 'failed'
         end
-        @job_broadcasters[job].puts message.to_json if message[:status] || message[:body]
+        @job_broadcasters[job].puts message_to_send.to_json if message[:status] || message[:body]
       end
     end
 
