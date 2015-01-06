@@ -37,6 +37,23 @@ module Peas
           key => response
         }.merge! extra
       end
+
+      def authenticate!
+        error!('Unauthorized. Invalid or expired token.', 401) unless current_user
+      end
+
+      def current_user
+        api_key = headers.fetch 'X-Api-Key', false
+        if api_key
+          begin
+            @current_user = User.find_by api_key: api_key
+          rescue Mongoid::Errors::DocumentNotFound
+            false
+          end
+        else
+          false
+        end
+      end
     end
 
     rescue_from :all do |e|
@@ -45,10 +62,6 @@ module Peas
         error_response(message: "#{e.message} @ #{e.backtrace[0]}")
       end
     end if Peas.environment != 'test'
-
-    # Make sure all paths are loaded before the catch-all 404 block
-    mount Peas::AdminMethods
-    mount Peas::AppMethods
 
     route :any, '/' do
       respond(

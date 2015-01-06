@@ -16,6 +16,10 @@ module Peas
 
     # /admin
     resource :admin do
+      before do
+        authenticate!
+      end
+
       # GET /admin/settings
       desc "Show all the available settings"
       get :settings do

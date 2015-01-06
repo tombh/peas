@@ -18,6 +18,11 @@ describe Peas::API do
   end
 
   describe 'Apps' do
+    before :each do
+      Fabricate :user
+      header 'x-api-key', 'letmein'
+    end
+
     it "should list all apps" do
       expect(peas_app).to be_a App
       get '/app'
@@ -94,23 +99,6 @@ describe Peas::API do
       expect(JSON.parse(last_response.body)).to eq('error' => 'App does not exist')
     end
 
-    describe 'Settings' do
-      it 'should list defaults and available services' do
-        Setting.create key: 'mongodb.uri', value: 'mongodb://uri'
-        get '/admin/settings'
-        response = JSON.parse(last_response.body)['message']
-        expect(response['defaults']['peas.domain']).to eq Setting.retrieve('peas.domain')
-        expect(response['services']['mongodb.uri']).to eq Setting.retrieve('mongodb.uri')
-      end
-
-      it "should create a new setting" do
-        put '/admin/settings', domain: 'test.com'
-        expect(Setting.count).to eq 1
-        domain = Setting.where(key: 'domain').first.value
-        expect(domain).to eq 'test.com'
-      end
-    end
-
     describe 'Config ENV vars' do
       it 'should return 400 if no config values are given' do
         put "/app/#{peas_app.name}/config"
@@ -157,7 +145,81 @@ describe Peas::API do
         end
       end
     end
+  end
 
+  describe 'Admin' do
+    before :each do
+      Fabricate :user
+      header 'x-api-key', 'letmein'
+    end
+
+    describe 'Settings' do
+      it 'should list defaults and available services' do
+        Setting.create key: 'mongodb.uri', value: 'mongodb://uri'
+        get '/admin/settings'
+        response = JSON.parse(last_response.body)['message']
+        expect(response['defaults']['peas.domain']).to eq Setting.retrieve('peas.domain')
+        expect(response['services']['mongodb.uri']).to eq Setting.retrieve('mongodb.uri')
+      end
+
+      it "should create a new setting" do
+        put '/admin/settings', domain: 'test.com'
+        expect(Setting.count).to eq 1
+        domain = Setting.where(key: 'domain').first.value
+        expect(domain).to eq 'test.com'
+      end
+    end
+  end
+
+  describe 'Authentication' do
+    it 'should accept a request for auth by returning a document to sign' do
+      post '/auth/request', username: 'tombh', public_key: File.read('spec/fixtures/ssh_keys/id_rsa.pub')
+      expect(last_response.status).to eq 201
+      user = User.find_by(username: 'tombh')
+      expect(user.signme.length).to eq 86
+      response = JSON.parse last_response.body
+      expect(response['message']['sign']).to eq user.signme
+    end
+
+    it 'should set and return a working API key when given a valid signed document' do
+      doc = 'SIGNMEsecurecode'
+      user = Fabricate :user, signme: doc
+      digest = OpenSSL::Digest::SHA256.new
+      keypair = OpenSSL::PKey::RSA.new File.read 'spec/fixtures/ssh_keys/id_rsa'
+      signature = keypair.sign digest, doc
+      post '/auth/verify', username: 'tombh', signed: signature
+      expect(last_response.status).to eq 201
+      api_key = user.reload.api_key
+      expect(api_key).to_not eq doc
+      response = JSON.parse last_response.body
+      expect(response['message']['api_key']).to eq user.api_key
+    end
+
+    it 'should refuse access to a restricted method without a valid API key' do
+      Fabricate :user
+      header 'x-api-key', 'letmeinbutdont'
+      get '/app'
+      expect(last_response.status).to eq 401
+      response = JSON.parse last_response.body
+      expect(response['error']).to eq 'Unauthorized. Invalid or expired token.'
+    end
+
+    it 'should grant access to a restricted method with a valid API key' do
+      Fabricate :user
+      header 'x-api-key', 'letmein'
+      get '/app'
+      expect(last_response.status).to eq 200
+      response = JSON.parse last_response.body
+      expect(response['message']).to eq []
+    end
+
+    it "should refuse a new user if there's an existing user" do
+      Fabricate :user
+      post '/auth/request', username: 'chief', public_key: File.read('spec/fixtures/ssh_keys/id_rsa.pub')
+      expect(last_response.status).to eq 400
+      response = JSON.parse last_response.body
+      expect(response['error']).to eq 'User does not exist, ask admin user to add you'
+    end
   end
 
   describe 'Version check' do
@@ -167,5 +229,4 @@ describe Peas::API do
       get "/app/#{peas_app.name}/config"
     end
   end
-
 end

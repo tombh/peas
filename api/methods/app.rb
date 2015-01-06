@@ -1,5 +1,4 @@
 module Peas
-  class AppMethods < Grape::API; end
   class API < Grape::API
     format :json
 
@@ -14,6 +13,10 @@ module Peas
 
     # /app
     resource :app do
+      before do
+        authenticate!
+      end
+
       desc "List all apps"
       get do
         respond App.all.map(&:name)
@@ -21,7 +24,6 @@ module Peas
 
       desc "Create an app"
       params do
-        requires :public_key, type: String, desc: "User's SSH public key" if Peas::DIND
         optional :muse, type: String, desc: "A clue to help generate the app's name"
       end
       post do

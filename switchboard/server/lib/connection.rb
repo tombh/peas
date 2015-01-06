@@ -24,6 +24,8 @@ class Connection
     _, @port, @host = @socket.peeraddr
     debug "Received connection (ID: #{@socket.object_id}) from #{@host}:#{@port}"
 
+    authenticate
+
     # The first line of a request should contain something like:
     # 'app_logs.5390f5665a454e77990b0000 option1 option2'
     begin
@@ -51,6 +53,10 @@ class Connection
     else
       warn "Uknown command requested in connection header"
     end
+  end
+
+  def authenticate
+
   end
 
   # Resets the inactivity timer

@@ -58,7 +58,19 @@ class API
     ssl = OpenSSL::SSL::SSLSocket.new socket
     ssl.sync_close = true
     ssl.connect
-    ssl
+    switchboard_auth ssl
+  end
+
+  def self.switchbboard_auth(socket)
+    data = socket.gets
+    digest = OpenSSL::Digest::SHA256.new
+    keypair = OpenSSL::PKey::RSA.new(File.read("#{ENV['HOME']}/.ssh/id_rsa"))
+    signature = keypair.sign(digest, data)
+    socket.puts signature
+    unless socket.gets == 'AUTH_SUCCESS'
+      Peas.error_message "Authorisation failed"
+      exit_now!
+    end
   end
 
   # Stream the output of a Switchboard job
