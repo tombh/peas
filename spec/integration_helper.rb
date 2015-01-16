@@ -128,7 +128,7 @@ class Cli
   # Skip the Peas CLI client, mostly for git pushing
   def sh(cmd)
     Peas.sh "cd #{@path} && " \
-      "GIT_SSH='#{Peas.root}/spec/integration/ssh_without_stricthostkeycheck.sh'" \
+      "GIT_SSH='#{Peas.root}/spec/integration/custom_ssh_command.sh'" \
       " #{cmd}"
   end
 end
