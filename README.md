@@ -43,7 +43,7 @@ git push peas master
 ```
 
 #Demo
-I'm currently experimenting with maintaining a live install at [peasdemo.com](http://peasdemo.com).
+I'm currently experimenting with maintaining a live install at [peasdemo.com](https://peasdemo.com).
 It comes with MongoDB and Postgres already installed. All you'll need is an app to deploy and the
 Peas CLI;
 ```

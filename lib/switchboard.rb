@@ -8,11 +8,13 @@ module Peas
       @socket
     end
 
-    def self.connection
-      client = TCPSocket.new Peas.host, Peas::SWITCHBOARD_PORT
+    def self.connection(host = Peas.host, port = Peas::SWITCHBOARD_PORT)
+      client = TCPSocket.new host, port
       ssl_client = OpenSSL::SSL::SSLSocket.new client
       ssl_client.sync_close = true # Close both tcp and ssl socket at the same time
       ssl_client.connect
+      ssl_client.puts Setting.retrieve 'peas.switchboard_key'
+      raise Peas::SwitchboardAuthError unless ssl_client.gets.strip == 'AUTHORISED'
       ssl_client
     end
 

@@ -1,7 +1,7 @@
 def format_settings(hash)
   puts "Available settings"
   puts ''
-  hash.each do |type, settings|
+  hash['message'].each do |type, settings|
     puts "#{type.capitalize}:"
     settings.each do |setting, value|
       value = '[unset]' if value == ''
@@ -23,13 +23,12 @@ command :admin do |admin|
           # Update Git config
           Git.sh "git config peas.domain #{domain}"
           # Update file
-          content = Peas.config.merge('domain' => domain).to_json
-          File.open(Peas.config_file, 'w+') { |f| f.write(content) }
+          Peas.update_config domain: domain
           @api = API.new # Refresh settings from git/file because there's a new domain URI
         end
-        @api.request(:put, '/admin/settings', args[0] => args[1]) { |response| format_settings response }
+        format_settings @api.request(:put, '/admin/settings', { args[0] => args[1] }, print: false)
       else
-        @api.request(:get, '/admin/settings') { |response| format_settings response }
+        format_settings @api.request(:get, '/admin/settings', print: false)
       end
     end
   end

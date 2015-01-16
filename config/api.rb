@@ -38,8 +38,9 @@ module Peas
         }.merge! extra
       end
 
+      # Use whenever you want to require authenication for a method
       def authenticate!
-        error!('Unauthorized. Invalid or expired token.', 401) unless current_user
+        error!('Unauthorised. Invalid or expired token.', 401) unless current_user
       end
 
       def current_user
@@ -53,6 +54,12 @@ module Peas
         else
           false
         end
+      end
+
+      # Needed to unpack a OpenSSL signed document
+      def base64_url_decode(str)
+        str += '=' * (4 - str.length.modulo(4))
+        Base64.decode64(str.tr('-_', '+/'))
       end
     end
 

@@ -9,6 +9,10 @@ require_relative '../lib/error'
 
 TMP_PATH = '/tmp/peas'
 FileUtils.mkdir_p TMP_PATH
+ssh_path = "#{TMP_PATH}/.ssh"
+FileUtils.mkdir_p ssh_path
+FileUtils.cp "#{Dir.pwd}/spec/fixtures/ssh_keys/id_rsa", ssh_path
+FileUtils.cp "#{Dir.pwd}/spec/fixtures/ssh_keys/id_rsa.pub", ssh_path
 
 # Refactored this just because it's used so many times
 API_PORT = 5443
@@ -70,6 +74,8 @@ class ContainerConnection
   end
   # Reset DBs and docker ready for new tests
   def env_reset
+    # The .peas file retains the API key between resets so it needs to be deleted
+    File.delete "#{TMP_PATH}/.peas" if File.exist? "#{TMP_PATH}/.peas"
     # TODO: need a way to check if these commands were successful
     bash "mongo peas --eval 'db.dropDatabase()'"
     bash "mongo nodejssample --eval 'db.dropDatabase()'"
@@ -104,7 +110,7 @@ class Cli
   # Helpers to call Peas CLI client
   def base_cmd
     "cd #{@path} && " \
-    'HOME=/tmp/peas ' \
+    "HOME=#{TMP_PATH} " \
     "PEAS_API_ENDPOINT=vcap.me:#{API_PORT} " \
     'SWITCHBOARD_PORT=7345 ' \
     "#{Peas.root}cli/bin/peas-dev"
@@ -121,7 +127,9 @@ class Cli
 
   # Skip the Peas CLI client, mostly for git pushing
   def sh(cmd)
-    Peas.sh "cd #{@path} && GIT_SSH='#{Peas.root}/spec/integration/ssh_without_stricthostkeycheck.sh' #{cmd}"
+    Peas.sh "cd #{@path} && " \
+      "GIT_SSH='#{Peas.root}/spec/integration/ssh_without_stricthostkeycheck.sh'" \
+      " #{cmd}"
   end
 end
 
@@ -149,19 +157,15 @@ RSpec.configure do |config|
         --name peas-test \
         --volumes-from peas-data-test \
         -v #{Peas.root}:/home/peas/repo \
-        -p #{API_PORT}:#{API_PORT} \
+        -p #{API_PORT}:4443 \
         -p 5080:5080 \
         -p 2223:22 \
         -p 7345:9345 \
         -e PEAS_ENV=production \
-        -e API_PORT=#{API_PORT} \
-        -e PROXY_PORT=5080 \
-        -e GIT_PORT=2223 \
+        -e PEAS_PROXY_PORT=5080 \
+        -e PEAS_GIT_PORT=2223 \
         tombh/peas"
     )
-    # Whatever user is running these tests, copy their public key to the fake home directory for uploading by the client
-    Peas.sh "mkdir -p #{TMP_PATH}/.ssh"
-    Peas.sh "cp -f ~/.ssh/id_rsa.pub #{TMP_PATH}/.ssh"
     # Wait until the container has completely booted
     Timeout.timeout(4 * 60) do
       result = `bash -c \

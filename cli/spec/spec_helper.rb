@@ -9,7 +9,7 @@ require 'lib/peas'
 ENV['GLI_ENV'] = 'test'
 ROOT = File.join(File.expand_path(File.dirname(__FILE__)), '..')
 $LOAD_PATH.unshift(File.join(ROOT, 'lib'))
-TEST_DOMAIN = 'https://vcap.me:4000'
+TEST_DOMAIN = 'https://vcap.me:4443'
 SWITCHBOARD_TEST_PORT = 79345
 SSL_KEY_PATH = "#{ROOT}/../contrib/ssl-keys/server.key"
 SSL_KEY = OpenSSL::PKey::RSA.new File.read(SSL_KEY_PATH)
@@ -34,6 +34,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :with_echo_server) do
+    allow_any_instance_of(API).to receive(:api_key).and_return('APIKEY')
     tcp_server = TCPServer.new 'vcap.me', SWITCHBOARD_TEST_PORT
     context = OpenSSL::SSL::SSLContext.new
     context.key = SSL_KEY
@@ -43,6 +44,12 @@ RSpec.configure do |config|
       @connection = @server.accept
       begin
         Timeout.timeout(2) do
+          auth = @connection.gets.strip
+          if auth == 'APIKEY'
+            @connection.puts 'AUTHORISED'
+          else
+            @connection.puts 'UNAUTHORISED'
+          end
           while (line = @connection.gets)
             @connection.write line
             @connection.close if line.strip == 'FINAL COMMAND'
@@ -73,7 +80,7 @@ end
 
 # Form a response as the API would. Useful as you only need to provide a string without any JSON
 # formatting
-def response_mock(response, key = :message)
+def response_mock(response = {}, key = :message)
   {
     'version' => Peas::VERSION,
     key => response

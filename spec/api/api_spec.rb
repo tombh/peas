@@ -164,7 +164,6 @@ describe Peas::API do
 
       it "should create a new setting" do
         put '/admin/settings', domain: 'test.com'
-        expect(Setting.count).to eq 1
         domain = Setting.where(key: 'domain').first.value
         expect(domain).to eq 'test.com'
       end
@@ -187,7 +186,8 @@ describe Peas::API do
       digest = OpenSSL::Digest::SHA256.new
       keypair = OpenSSL::PKey::RSA.new File.read 'spec/fixtures/ssh_keys/id_rsa'
       signature = keypair.sign digest, doc
-      post '/auth/verify', username: 'tombh', signed: signature
+      encoded = Base64.urlsafe_encode64(signature)
+      post '/auth/verify', username: 'tombh', signed: encoded
       expect(last_response.status).to eq 201
       api_key = user.reload.api_key
       expect(api_key).to_not eq doc
@@ -201,7 +201,7 @@ describe Peas::API do
       get '/app'
       expect(last_response.status).to eq 401
       response = JSON.parse last_response.body
-      expect(response['error']).to eq 'Unauthorized. Invalid or expired token.'
+      expect(response['error']).to eq 'Unauthorised. Invalid or expired token.'
     end
 
     it 'should grant access to a restricted method with a valid API key' do

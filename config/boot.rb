@@ -35,3 +35,6 @@ require 'config/api'
 
 # Create a pod stub if this a default combined controller-pod setup
 Pod.create_stub
+
+# Create a token that Switchboard clients can use to authorise to the Switchboard server
+Setting.set_switchboard_key

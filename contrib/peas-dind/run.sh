@@ -7,8 +7,8 @@ API_PORT=${1:-4443}
 GIT_PORT=${2:-2222}
 PROXY_PORT=${3:-4080}
 
-# Make the assumption that if we're exposing Peas port 80, then this is a non-development environment
-if [ "$API_PORT" -eq "80" ]; then
+# Make the assumption that if we're exposing Peas port 443, then this is a non-development environment
+if [ "$API_PORT" -eq "443" ]; then
   export DIND_HOST=$(curl icanhazip.com)
   restart_or_remove="--restart=always" # Ensure Peas starts on system boot using Docker's restart policy
 else
@@ -25,7 +25,8 @@ if [ -z "$data_container" ]; then
   # /data/db: Mongo data
   # /home/peas/.bundler: Gems (just speeds up boot because you don't have to wait for any updated gems to install)
   # /home/git: App repos and SSH public keys
-  # TODO: consider having only a single mount and symlinking all the other required persistence paths to it
+  # TODO: Use a single mount and symlinking all other paths to it. Otherwise you have to rebuild for
+  # every new path :(
 	docker run \
 	  -v /var/lib/docker \
 	  -v /data/db \
@@ -42,9 +43,8 @@ docker run \
   --volumes-from peas-data \
   --name=peas \
   -e "PEAS_ENV=$PEAS_ENV" \
-  -e "API_PORT=$API_PORT" \
-  -e "GIT_PORT=$GIT_PORT" \
-  -e "PROXY_PORT=$PROXY_PORT" \
+  -e "PEAS_GIT_PORT=$GIT_PORT" \
+  -e "PEAS_PROXY_PORT=$PROXY_PORT" \
   $mount_local_repo \
   -p $API_PORT:4443 \
   -p $PROXY_PORT:4080 \

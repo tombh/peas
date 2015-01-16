@@ -5,8 +5,8 @@ module Peas
       # POST /auth/request
       desc "Request authentication with username and public key, returns document to sign"
       params do
-        requires :username, type: String, desc: "Username"
-        requires :public_key, type: String, desc: "User's SSH public key"
+        requires :username, type: String, desc: "Username", allow_blank: false
+        requires :public_key, type: String, desc: "User's SSH public key", allow_blank: false
       end
       post :request do
         response = {}
@@ -20,6 +20,8 @@ module Peas
             status 400
             return respond 'User does not exist, ask admin user to add you', :error
           end
+        else
+          user = user.first
         end
         user.signme = SecureRandom.urlsafe_base64 64
         user.save!
@@ -30,16 +32,17 @@ module Peas
       # POST /auth/verify
       desc "Verify a signed document. Returns a new API key"
       params do
-        requires :username, type: String, desc: "Username"
-        requires :signed, type: String, desc: "A OpenSSL signed document"
+        requires :username, type: String, desc: "Username", allow_blank: false
+        requires :signed, type: String, desc: "A Base64 encoded OpenSSL signed document", allow_blank: false
       end
       post :verify do
         user = User.find_by username: params[:username]
         # Convert the SSH key to an OpenSSL key
         public_key = OpenSSHKeyConverter.decode_pubkey user.public_key
         document = user.signme
+        signature = base64_url_decode params[:signed]
         # Confirm that the user signed the doc with the private key that pairs with their public key
-        if public_key.verify(OpenSSL::Digest::SHA256.new, params[:signed], document)
+        if public_key.verify(OpenSSL::Digest::SHA256.new, signature, document)
           # Issue them an api_key which can be used to access methods on the API
           api_key = SecureRandom.urlsafe_base64 64
           user.api_key = api_key

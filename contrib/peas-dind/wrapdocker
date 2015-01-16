@@ -118,10 +118,9 @@ PEAS_ENV=${PEAS_ENV:-development}
 su - peas <<EOF
 # TODO: consider prepending all Peas env vars with 'PEAS', so that we can automagically loop through them and not
 # have to remember to change them here and in contrib/peas-dind/run.sh
-export PEAS_API_PORT=$API_PORT
-export PEAS_GIT_PORT=$GIT_PORT
-export PEAS_PROXY_PORT=$PROXY_PORT
 export PEAS_ENV=$PEAS_ENV
+export PEAS_GIT_PORT=$PEAS_GIT_PORT
+export PEAS_PROXY_PORT=$PEAS_PROXY_PORT
 
 export BUNDLE_PATH=$BUNDLE_PATH
 export BUNDLE_APP_CONFIG=$BUNDLE_PATH/peas_config

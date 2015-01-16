@@ -11,7 +11,7 @@ command :config do |c|
       @api.request(
         :delete,
         "/app/#{Git.name_from_remote}/config",
-        keys: args.to_json
+        'keys' => args.to_json
       )
     end
   end
@@ -32,7 +32,7 @@ command :config do |c|
       @api.request(
         :put,
         "/app/#{Git.name_from_remote}/config",
-        vars: vars.to_json
+        'vars' => vars.to_json
       )
     end
   end

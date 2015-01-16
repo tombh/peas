@@ -41,7 +41,7 @@ RSpec.configure do |config|
     allow(Docker).to receive(:version).and_return('Version' => Peas::DOCKER_VERSION)
     Pod.destroy_all
     Pod.create_stub
-    Pod.create_stub
+    Setting.set_switchboard_key
   end
 
   config.after(:each) do
@@ -126,10 +126,7 @@ SWITCHBOARD_TEST_PORT = 79345
 Celluloid.logger = nil unless ENV['CELLULOID_LOGS']
 
 def client_connection
-  socket = TCPSocket.new SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
-  ssl = OpenSSL::SSL::SSLSocket.new socket
-  ssl.connect
-  ssl
+  Peas::Switchboard.connection SWITCHBOARD_TEST_HOST, SWITCHBOARD_TEST_PORT
 end
 
 def switchboard_server

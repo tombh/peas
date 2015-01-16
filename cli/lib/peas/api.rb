@@ -4,7 +4,7 @@ require 'openssl'
 
 class API
   include HTTParty
-  # TODO: Don't want to genuine SSL cert errors, say if there's a CA root cert
+  # TODO: Don't want to ignore genuine SSL cert errors, say if there's a CA root cert
   default_options.update(verify: false) # Ignore self-signed SSL error
 
   LONG_POLL_TIMEOUT = 10 * 60
@@ -16,8 +16,15 @@ class API
   end
 
   # Generic wrapper to the Peas API
-  def request(verb, method, params = nil)
-    response = self.class.send(verb, "#{method}", query: params).body
+  def request(verb, method, query = {}, auth: true, print: true)
+    options = { query: query }
+    options[:headers] = { 'x-api-key' => api_key } if auth
+    request = [
+      verb.to_s.downcase,
+      "#{method}",
+      options
+    ]
+    response = self.class.send(request.shift, *request).body
     json = response ? JSON.parse(response) : {}
     # If there was an HTTP-level error
     raise json['error'].color(:red) if json.key? 'error'
@@ -27,13 +34,40 @@ class API
       API.stream_job json['job']
     else
       check_versions(json)
-      if block_given?
-        yield json['message']
-      else
-        puts json['message']
-      end
+      puts json['message'] if print
       json
     end
+  end
+
+  # Get the API key from local cache, or request a new one
+  def api_key
+    # First check local storage
+    key = Peas.config['api_key']
+    return key if key
+    # Other wise request a new one
+    key_path = "#{ENV['HOME']}/.ssh/id_rsa"
+    unless File.exist? key_path
+      exit_now! 'Please add an SSH key'
+    end
+    username = ENV['USER'] # TODO: Ensure cross platform
+    params = {
+      username: username,
+      public_key: File.read("#{key_path}.pub")
+    }
+    response = request('POST', '/auth/request', params, auth: false, print: false)
+    doc = response['message']['sign']
+    digest = OpenSSL::Digest::SHA256.new
+    keypair = OpenSSL::PKey::RSA.new(File.read(key_path))
+    signature = keypair.sign(digest, doc)
+    encoded = Base64.urlsafe_encode64(signature)
+    params = {
+      username: username,
+      signed: encoded
+    }
+    response = request('POST', '/auth/verify', params, auth: false, print: false)
+    key = response['message']['api_key']
+    Peas.update_config api_key: key
+    key
   end
 
   # Check CLI client is up to date.
@@ -58,19 +92,12 @@ class API
     ssl = OpenSSL::SSL::SSLSocket.new socket
     ssl.sync_close = true
     ssl.connect
-    switchboard_auth ssl
-  end
-
-  def self.switchbboard_auth(socket)
-    data = socket.gets
-    digest = OpenSSL::Digest::SHA256.new
-    keypair = OpenSSL::PKey::RSA.new(File.read("#{ENV['HOME']}/.ssh/id_rsa"))
-    signature = keypair.sign(digest, data)
-    socket.puts signature
-    unless socket.gets == 'AUTH_SUCCESS'
-      Peas.error_message "Authorisation failed"
-      exit_now!
+    ssl.puts API.new.api_key
+    unless ssl.gets.strip == 'AUTHORISED'
+      ssl.close
+      raise 'Unauthoirsed access to Switchboard connection.'
     end
+    ssl
   end
 
   # Stream the output of a Switchboard job

@@ -8,4 +8,7 @@ module Peas
 
   # Raised when there's an error shelling to the command line
   class ShellError < PeasError; end
+
+  # Raised when there's an auth error connecting to Switchboard
+  class SwitchboardAuthError < PeasError; end
 end

@@ -24,9 +24,9 @@ class Connection
     _, @port, @host = @socket.peeraddr
     debug "Received connection (ID: #{@socket.object_id}) from #{@host}:#{@port}"
 
-    authenticate
+    return unless authenticate
 
-    # The first line of a request should contain something like:
+    # The line after authentication should contain something like:
     # 'app_logs.5390f5665a454e77990b0000 option1 option2'
     begin
       response = read_line
@@ -55,8 +55,25 @@ class Connection
     end
   end
 
+  # Check the user's API key
   def authenticate
-
+    @current_user = false
+    api_key = read_line.strip
+    if api_key.length >= 64
+      if api_key == Setting.retrieve('peas.switchboard_key')
+        @current_user = :pod
+      else
+        user = User.where(api_key: api_key) unless user == :pod
+        @current_user = user if user.count == 1
+      end
+      if @current_user
+        write_line 'AUTHORISED'
+        return true
+      end
+    end
+    write_line 'UNAUTHORISED'
+    close
+    false
   end
 
   # Resets the inactivity timer

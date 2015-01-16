@@ -14,6 +14,12 @@ module Peas
     JSON.parse contents
   end
 
+  # Merge new key/values into the config file
+  def self.update_config(hash)
+    content = Peas.config.merge(hash).to_json
+    File.open(Peas.config_file, 'w+') { |f| f.write(content) }
+  end
+
   # Hierarchy of sources for the Peas API domain
   def self.api_domain
     git_domain = Git.sh 'git config peas.domain'
@@ -25,7 +31,7 @@ module Peas
     elsif Peas.config['domain']
       Peas.config['domain']
     else
-      'vcap.me:4000'
+      'vcap.me:4443'
     end
     unless domain[/\Ahttp:\/\//] || domain[/\Ahttps:\/\//]
       "https://#{domain}"

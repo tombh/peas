@@ -22,4 +22,21 @@ class Setting
     # See if setting is in DEFAULTS otherwise return ''
     DEFAULTS.fetch key, ''
   end
+
+  # Create a token that Switchboard clients can use to authorise to the Switchboard server.
+  # Basically, this answers the question of whether a remote pod can access the same DB as that
+  # used by the controller.
+  # It changes with every controller boot to provide some security through expiration.
+  def self.set_switchboard_key
+    return unless Peas.controller? # No need to update the key when pods boot
+    key = 'peas.switchboard_key'
+    value = SecureRandom.urlsafe_base64(64)
+    setting = Setting.where key: key
+    if setting.count == 1
+      setting.first.value = value
+      setting.first.save!
+    else
+      Setting.create key: key, value: value
+    end
+  end
 end

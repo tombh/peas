@@ -4,19 +4,19 @@ require 'switchboard/server/lib/connection'
 Dir["#{Peas.root}/switchboard/clients/**/*.rb"].each { |f| require f }
 
 describe 'Switchboard Pea Commands', :celluloid do
-
   describe 'Server Commands' do
     describe 'Logs' do
-
       it 'should receive and write log lines to DB' do
         app = Fabricate :app
         pea = Fabricate :pea, app: app
         with_socket_pair do |client, peer|
           connection = Connection.new(peer)
+          client.puts Setting.retrieve 'peas.switchboard_key'
           client.puts "app_logs.#{pea._id}"
           client.puts 'Been busy and stuff '
           client.puts 'More busy and other stuff '
           connection.dispatch
+          expect(client.gets.strip).to eq 'AUTHORISED'
           sleep 0.2
           logs = app.logs_collection.find.to_a
           expect(logs[0]['line']).to include Date.today.to_s
@@ -32,8 +32,10 @@ describe 'Switchboard Pea Commands', :celluloid do
         app.log 'Do you even log?', 'testing'
         with_socket_pair do |client, peer|
           connection = Connection.new(peer)
+          client.puts Setting.retrieve 'peas.switchboard_key'
           client.puts "stream_logs.#{app.name}"
           connection.dispatch
+          expect(client.gets.strip).to eq 'AUTHORISED'
           first = client.gets
           expect(first).to include Date.today.to_s
           expect(first).to include 'app[testing]: Cool story bro'
@@ -48,8 +50,10 @@ describe 'Switchboard Pea Commands', :celluloid do
         app.log 'Existing', 'testing'
         with_socket_pair do |client, peer|
           connection = Connection.new(peer)
+          client.puts Setting.retrieve 'peas.switchboard_key'
           client.puts "stream_logs.#{app.name} follow"
           connection.dispatch
+          expect(client.gets.strip).to eq 'AUTHORISED'
           client.gets
           app.log 'New logs!', 'testing'
           fresh = client.gets
@@ -118,8 +122,10 @@ describe 'Switchboard Pea Commands', :celluloid do
         allow_any_instance_of(Pea).to receive(:destroy)
         with_socket_pair do |client, peer|
           connection = Connection.new(peer)
+          client.puts Setting.retrieve 'peas.switchboard_key'
           client.puts "tty.#{app.name}"
           connection.dispatch
+          expect(client.gets.strip).to eq 'AUTHORISED'
           client.puts "ls"
           # Wait up to 5 secs for the container to boot
           Timeout.timeout(5) do
@@ -138,8 +144,10 @@ describe 'Switchboard Pea Commands', :celluloid do
           allow_any_instance_of(Docker::Container).to receive(:attach).and_yield { sleep 0.1 }
           expect_any_instance_of(Docker::Container).to receive(:delete)
           connection = Connection.new(peer)
+          client.puts Setting.retrieve 'peas.switchboard_key'
           client.puts "tty.#{app.name}"
           connection.dispatch
+          expect(client.gets.strip).to eq 'AUTHORISED'
           client.puts "ls"
           # Wait up to 5 secs for the container to boot
           Timeout.timeout(5) do
@@ -170,8 +178,10 @@ describe 'Switchboard Pea Commands', :celluloid do
           server_actor = Celluloid::Actor[:switchboard_server]
           with_socket_pair do |client, peer|
             connection = Connection.new(peer)
+            client.puts Setting.retrieve 'peas.switchboard_key'
             client.puts "tty.#{app.name}"
             connection.dispatch
+            expect(client.gets.strip).to eq 'AUTHORISED'
             client.puts "ls"
             client.puts "INPUT"
             # Wait up to 5 secs for the worker to create the container mock
@@ -190,8 +200,10 @@ describe 'Switchboard Pea Commands', :celluloid do
       it 'should shell out to the command line' do
         with_socket_pair do |client, peer|
           connection = Connection.new(peer)
+          client.puts Setting.retrieve 'peas.switchboard_key'
           client.puts "admin_tty"
           connection.dispatch
+          expect(client.gets.strip).to eq 'AUTHORISED'
           client.puts "echo REKT"
           client.gets
           expect(client.gets.strip).to eq 'REKT'
@@ -241,6 +253,7 @@ describe 'Switchboard Pea Commands', :celluloid do
         allow(@socket).to receive(:connect)
         allow(@socket).to receive(:close)
         allow(@socket).to receive(:puts).with('')
+        allow(@socket).to receive(:gets).and_return('AUTHORISED')
         allow(@socket).to receive(:puts).with(any_args)
         @app = Fabricate :app, name: 'node-js-sample'
         @pea = Fabricate :pea, app: @app, port: nil, docker_id: nil

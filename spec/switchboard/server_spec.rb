@@ -59,6 +59,7 @@ describe 'Switchboard', :celluloid do
         conn_double = instance_double Connection
         allow(connection).to receive(:async).and_return(conn_double)
         expect(conn_double).to receive(:send).with('fake')
+        client.puts Setting.retrieve 'peas.switchboard_key'
         client.puts 'fake.foo.bar'
         connection.dispatch
       end
@@ -69,6 +70,7 @@ describe 'Switchboard', :celluloid do
         connection = Connection.new(peer)
         expect(connection.wrapped_object).to_not receive(:call)
         expect(connection.wrapped_object).to receive(:warn).with(/Uknown command/)
+        client.puts Setting.retrieve 'peas.switchboard_key'
         client.puts 'call'
         connection.dispatch
       end

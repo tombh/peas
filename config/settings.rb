@@ -86,15 +86,15 @@ module Peas
     "#{Peas.host}:#{SWITCHBOARD_PORT}"
   end
 
-  # Is this instance of Peas functioning as a controller?
   # Unless otherwise stated, Peas will function in a standalone state of being both the controller and a pod.
+  # Is this instance of Peas functioning as a controller?
   def self.controller?
-    ENV['PEAS_CONTROLLER'] || 'true'
+    ENV['PEAS_CONTROLLER'] == 'false' ? false : true
   end
 
   # Is this instance of Peas functioning as a pod?
   def self.pod?
-    ENV['PEAS_POD'] || 'true'
+    ENV['PEAS_POD'] == 'false' ? false : true
   end
 
   # Introspect the lib/services folder to find the available classes that allow the management

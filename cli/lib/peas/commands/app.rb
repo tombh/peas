@@ -15,11 +15,13 @@ command :create do |c|
     unless File.exist? public_key_path
       exit_now! "Couldn't find an SSH public key", 1
     end
+    params = {
+      'muse' => Git.name_from_remote(Git.remote('origin')),
+    }
     response = @api.request(
       :post,
       '/app',
-      muse: Git.name_from_remote(Git.remote('origin')),
-      public_key: File.open(public_key_path).read
+      params
     )
     Git.add_remote response['remote_uri']
   end
@@ -55,7 +57,7 @@ command :scale do |c|
     @api.request(
       :put,
       "/app/#{Git.name_from_remote}/scale",
-      scaling_hash: scaling_hash.to_json
+      'scaling_hash' => scaling_hash.to_json
     )
   end
 end
