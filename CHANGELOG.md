@@ -1,4 +1,9 @@
 ###0.6.0
+**16th January 2015**    
+**Features**:
+* Users! Authentication using the user's SSH key.
+* API and Switchboard are protected by an API key. First user automatically becomes super admin.
+
 **1st January 2015**    
 **Features**:
 * SSL for the API and the socket server
