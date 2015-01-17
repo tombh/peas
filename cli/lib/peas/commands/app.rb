@@ -7,13 +7,9 @@ end
 
 desc 'Create an app'
 command :create do |c|
-  public_key_path = "#{ENV['HOME']}/.ssh/id_rsa.pub"
   c.action do |_global_options, _options, _args|
     unless Git.remote('peas').empty?
       exit_now! "This repo already has an app (#{Git.name_from_remote}) associated with it.", 1
-    end
-    unless File.exist? public_key_path
-      exit_now! "Couldn't find an SSH public key", 1
     end
     params = {
       'muse' => Git.name_from_remote(Git.remote('origin')),

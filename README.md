@@ -21,14 +21,14 @@ of Ruby;
 [Celluloid](http://celluloid.io/),
 and more.
 
-#Quickstart
+#Quickstart for live installation on remote server
 ```bash
-# Remote
+# Remote VPS commands
 ssh root@some_vanilla_server.com
 curl -sSL https://raw.githubusercontent.com/tombh/peas/master/contrib/bootstrap.sh | sh
 #=> (lots of logs about Peas downloading and booting up)
 
-# Locally
+# Local commands
 gem install peas-cli
 cd /my/cool/app/folder
 peas admin settings peas.domain some_vanilla_server.com
@@ -42,7 +42,7 @@ git push peas master
 #        Deployed to http://mycoolapp.some_vanilla_server.com"
 ```
 
-#Installation
+#General Installation Instructions
 There is a universal installation script at `contrib/bootstrap.sh`, it can be run directly on most
 vanilla *nix systems with root access;
 
@@ -54,6 +54,8 @@ to install the OS's native Docker package (ensuring Docker is managed by an init
 starts at boot.
 
 **Local development environment**    
+To run on Windows and OSX, please follow the 'vagrant' instructions below.
+
 This is the preferred method for local development, but note that local development is also possible
 with the Docker installation method.
 All you will need is; Ruby(>=2.1),
