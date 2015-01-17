@@ -42,18 +42,6 @@ git push peas master
 #        Deployed to http://mycoolapp.some_vanilla_server.com"
 ```
 
-#Demo
-I'm currently experimenting with maintaining a live install at [peasdemo.com](https://peasdemo.com).
-It comes with MongoDB and Postgres already installed. All you'll need is an app to deploy and the
-Peas CLI;
-```
-gem install peas-cli
-peas admin settings peas.domain peasdemo.com
-peas create
-git push peas master
-```
-At some point, once it's proven to work, I'll reset the VPS (Digital Ocean) image every 24 hours.
-
 #Installation
 There is a universal installation script at `contrib/bootstrap.sh`, it can be run directly on most
 vanilla *nix systems with root access;
@@ -79,7 +67,7 @@ bundle install
 bundle exec guard
 ```
 
-The Peas API will be available at `vcap.me:4000`.
+The Peas API will be available at `vcap.me:4443`.
 
 **Docker**   
 This installation method will work anywhere that Docker can be installed, so both locally and on
@@ -89,13 +77,13 @@ To install and boot just use `./contrib/peas-dind/run.sh` (ie. you will need to 
 first). For a detailed explanation read
 `contrib/peas-dind/README.md`.
 
-The Peas API will be available at `vcap.me:4000`.
+The Peas API will be available at `vcap.me:4443`.
 
 **Vagrant**   
 Most likely useful to you if you are on Windows. There is a Vagrantfile in the root of the project.
 All it does is boot a recent VM of Ubuntu and then installs Peas using the Docker method above.
 
-The Peas API will be available at `peas.local:4000`.
+The Peas API will be available at `peas.local:4443`.
 
 **CLI client**   
 To interact with the Peas API you will need to install the command line client:
@@ -117,6 +105,15 @@ to `127.0.0.1`.
 
 To use a different domain:
 `peas admin settings peas.domain customdomain.com`
+
+**Users**    
+Peas is currently authenticated by an API key on a per user basis. The first user is automatically
+created when you first interact with the CLI. It uses your default SSH key and username, so there
+is no need to register.
+
+At the moment you will need to use the controller's console to add more users:
+  1. `peas admin run rake console`
+  2. `User.create name: 'newusername', public_key: 'public key string'`
 
 **Deploying**   
 Next thing is to get into the directory of the git repo for the app you want to deploy.
@@ -142,6 +139,10 @@ all new apps will get created with a config variable of something like;
 New services can be added by creating a new class in `lib/services`. You can use any of the existing service classes as
 a template.
 
+**Debugging**
+You can get a shell to the controller with `peas admin run bash`. There is no root access at the 
+moment, but you can view logs, run `rake console` and restart services.
+
 **All current CLI commands**
 ```
 admin      - Admin commands:
@@ -158,7 +159,8 @@ scale      - Scale an app
 ```
 
 #Roadmap
-  * Users. Peas currently has absolutely no concept of users :/
+  * Adding extra users with varying permissions.
+  * Auto Pod scaling across servers.  
 
 ##Video Presentation
 Given at Bristol Ruby User Group on June 26th 2014 (1h16m)

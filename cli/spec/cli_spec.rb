@@ -54,11 +54,7 @@ describe 'Peas CLI' do
     end
 
     it 'should create an app and its remote' do
-      public_key_path = "#{ENV['HOME']}/.ssh/id_rsa.pub"
-      allow(File).to receive(:open).and_call_original
-      expect(File).to receive(:exist?).with(public_key_path) { true }
-      expect(File).to receive(:open).with(public_key_path) { double(read: 'apublickey') }
-      stub_request(:post, TEST_DOMAIN + '/app?muse=test-test&public_key=apublickey')
+      stub_request(:post, TEST_DOMAIN + '/app?muse=test-test')
         .with(headers: { 'X-Api-Key' => 'APIKEY' })
         .to_return(
           body: {

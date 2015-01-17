@@ -16,7 +16,12 @@ class API
   end
 
   # Generic wrapper to the Peas API
-  def request(verb, method, query = {}, auth: true, print: true)
+  # `verb` HTTP verb
+  # `method` API method, eg; /app/create
+  # `query` Query params
+  # `auth` Whether to authenticate against the API. Eg; /auth/request doesn't need auth
+  # `print` Whether to output or return the response
+  def request(verb, method, query = {}, auth = true, print = true)
     options = { query: query }
     options[:headers] = { 'x-api-key' => api_key } if auth
     request = [
