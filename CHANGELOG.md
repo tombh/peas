@@ -1,9 +1,16 @@
-###0.6.0
+###0.7.1
+**18th January 2015**    
+**Bugfixes**:
+* Fix for CLI triggering Stack overflow. Was caused by not updating all methods to older
+  non-keyword args.
+
+###0.7.0
 **16th January 2015**    
 **Features**:
 * Users! Authentication using the user's SSH key.
 * API and Switchboard are protected by an API key. First user automatically becomes super admin.
 
+###0.6.0
 **1st January 2015**    
 **Features**:
 * SSL for the API and the socket server

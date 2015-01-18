@@ -24,12 +24,12 @@ class API
   def request(verb, method, query = {}, auth = true, print = true)
     options = { query: query }
     options[:headers] = { 'x-api-key' => api_key } if auth
-    request = [
+    request_args = [
       verb.to_s.downcase,
       "#{method}",
       options
     ]
-    response = self.class.send(request.shift, *request).body
+    response = self.class.send(request_args.shift, *request_args).body
     json = response ? JSON.parse(response) : {}
     # If there was an HTTP-level error
     raise json['error'].color(:red) if json.key? 'error'
@@ -59,7 +59,7 @@ class API
       username: username,
       public_key: File.read("#{key_path}.pub")
     }
-    response = request('POST', '/auth/request', params, auth: false, print: false)
+    response = request('POST', '/auth/request', params, false, false)
     doc = response['message']['sign']
     digest = OpenSSL::Digest::SHA256.new
     keypair = OpenSSL::PKey::RSA.new(File.read(key_path))
@@ -69,7 +69,7 @@ class API
       username: username,
       signed: encoded
     }
-    response = request('POST', '/auth/verify', params, auth: false, print: false)
+    response = request('POST', '/auth/verify', params, false, false)
     key = response['message']['api_key']
     Peas.update_config api_key: key
     key

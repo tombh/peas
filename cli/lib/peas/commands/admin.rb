@@ -28,7 +28,7 @@ command :admin do |admin|
         end
         format_settings @api.request(:put, '/admin/settings', { args[0] => args[1] }, true, false)
       else
-        format_settings @api.request(:get, '/admin/settings', true, false)
+        format_settings @api.request(:get, '/admin/settings', {}, true, false)
       end
     end
   end

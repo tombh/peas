@@ -141,7 +141,7 @@ all new apps will get created with a config variable of something like;
 New services can be added by creating a new class in `lib/services`. You can use any of the existing service classes as
 a template.
 
-**Debugging**
+**Debugging**    
 You can get a shell to the controller with `peas admin run bash`. There is no root access at the 
 moment, but you can view logs, run `rake console` and restart services.
 
