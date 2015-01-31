@@ -21,6 +21,8 @@ of Ruby;
 [Celluloid](http://celluloid.io/),
 and more.
 
+Peas is still beta software. Expect breaking changes.
+
 #Quickstart for live installation on remote server
 ```bash
 # Remote VPS commands
@@ -165,7 +167,7 @@ scale      - Scale an app
   * Auto Pod scaling across servers.  
 
 ##Video Presentation
-Given at Bristol Ruby User Group on June 26th 2014 (1h16m)
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=Y5vb5YEatnw
-" target="_blank"><img src="http://img.youtube.com/vi/Y5vb5YEatnw/0.jpg"
+Given at London Ruby User Group on November 10th 2014 (0h31m)
+<a href="https://skillsmatter.com/skillscasts/5928-peas-a-docker-and-ruby-based-paas
+" target="_blank"><img src="http://i.imgur.com/xxSqCPy.jpg"
 alt="Peas presentation" width="480" border="10" /></a>
