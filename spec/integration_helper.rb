@@ -10,14 +10,12 @@ require_relative '../lib/error'
 TMP_PATH = '/tmp/peas'
 FileUtils.mkdir_p TMP_PATH
 ssh_path = "#{TMP_PATH}/.ssh"
-ssh_private = "#{Dir.pwd}/spec/fixtures/ssh_keys/id_rsa"
-ssh_public = "#{Dir.pwd}/spec/fixtures/ssh_keys/id_rsa.pub"
 FileUtils.mkdir_p ssh_path
-FileUtils.cp ssh_private, ssh_path
-FileUtils.cp ssh_public, ssh_path
+FileUtils.cp "#{Dir.pwd}/spec/fixtures/ssh_keys/id_rsa", ssh_path
+FileUtils.cp "#{Dir.pwd}/spec/fixtures/ssh_keys/id_rsa.pub", ssh_path
 File.chmod(0700, ssh_path)
-File.chmod(0600, ssh_private)
-File.chmod(0644, ssh_public)
+File.chmod(0600, "#{ssh_path}/id_rsa")
+File.chmod(0644, "#{ssh_path}/id_rsa.pub")
 
 # Refactored this just because it's used so many times
 API_PORT = 5443
