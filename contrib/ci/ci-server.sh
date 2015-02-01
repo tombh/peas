@@ -67,7 +67,7 @@ if [ "$1" == "--run-tests" ]; then
   echo "Installing API dependencies..."
   bundle install
   echo "Running main application tests..."
-  bundle exec rspec
+  CODECLIMATE_REPO_TOKEN=6ff1de0d4310127c6f8e34ea13d71c9b335ca58f24656265ed93d6a01726a5b2 bundle exec rspec
   echo "Running integration tests..."
   bundle exec rspec spec/integration --tag integration --tag service
 

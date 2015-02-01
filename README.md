@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/tombh/peas.svg?branch=master)](https://travis-ci.org/tombh/peas)
+[![Code Climate](https://codeclimate.com/github/tombh/peas/badges/gpa.svg)](https://codeclimate.com/github/tombh/peas)
 Peas
 ====
 __PaaS for the People__

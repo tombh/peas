@@ -1,3 +1,6 @@
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+
 ENV["RACK_ENV"] = ENV["PEAS_ENV"] = 'test'
 
 require File.expand_path("../../config/boot", __FILE__)
