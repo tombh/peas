@@ -4,8 +4,8 @@ Peas
 ====
 __PaaS for the People__
 
-Peas is a Heroku-style Platform as a Service written in Ruby using [Docker](http://www.docker.io). It is heavily
-inspired by [Deis](http://deis.io) and [Dokku](https://github.com/progrium/dokku).
+Peas is a Heroku-style Platform as a Service written in Ruby using [Docker](https://www.docker.io/). It is heavily
+inspired by [Deis](http://deis.io) and [Dokku](https://github.com/dokku/dokku).
 
 Peas' philosophy is to be an accessible and easily hackable PaaS. It doesn't aim to be a complete
 enterprise solution. Instead it aims to be a relatively unopinionated, but solid starting place using all the goodness
@@ -19,7 +19,7 @@ of Ruby;
 [Puma](http://puma.io/),
 [Grape](http://intridea.github.io/grape/),
 [GLI](http://davetron5000.github.io/gli/),
-[Celluloid](http://celluloid.io/),
+[Celluloid](https://celluloid.io/),
 and more.
 
 Peas is still beta software. Expect breaking changes.
@@ -62,8 +62,8 @@ To run on Windows and OSX, please follow the 'vagrant' instructions below.
 This is the preferred method for local development, but note that local development is also possible
 with the Docker installation method.
 All you will need is; Ruby(>=2.1),
-[Docker](https://www.docker.io/gettingstarted/)(>=1.1)
-and [Mongo DB](http://docs.mongodb.org/manual/installation/)(>=2.6).
+[Docker](https://www.docker.com/gettingstarted/)(>=1.1)
+and [Mongo DB](https://docs.mongodb.com/manual/installation/)(>=2.6).
 All of these are generally installable via your system's package manager, no compiling should be necessary.
 ```bash
 docker pull progrium/buildstep # This runs Heroku buildpacks against repos to create deployable app images
