@@ -96,7 +96,7 @@ GEM
     hitimes (1.2.2)
     i18n (0.7.0)
     ice_nine (0.11.1)
-    json (1.8.1)
+    json (1.8.6)
     listen (2.8.4)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -111,7 +111,7 @@ GEM
     multi_json (1.10.1)
     multi_xml (0.5.5)
     nenv (0.1.1)
-    nio4r (1.0.1)
+    nio4r (2.0.0)
     optionable (0.2.0)
     origin (2.1.1)
     parser (2.2.0.1)
@@ -123,9 +123,8 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (2.10.2)
-      rack (>= 1.1, < 2.0)
-    rack (1.6.0)
+    puma (3.7.0)
+    rack (2.0.1)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-mount (0.8.3)
@@ -206,3 +205,6 @@ DEPENDENCIES
   rubocop
   vcr
   webmock
+
+BUNDLED WITH
+   1.14.3
