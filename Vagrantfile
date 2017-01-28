@@ -1,9 +1,9 @@
 Vagrant.configure('2') do |config|
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "raring64-daily"
+  config.vm.box = "trusty64-daily"
 
   # Built 25-Jan-2014 04:11
-  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
   # Avahi-daemon will broadcast the server's address as peas.local
   config.vm.host_name = "peas"
