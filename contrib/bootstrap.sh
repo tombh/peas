@@ -9,8 +9,14 @@ chmod 755 /usr/local/bin/pacapt
 # Upgrade the package database
 pacapt -Sy
 
-# Try to isolate the Docker package, avoiding packages that aren't to do with Linux containers
-docker=$(pacapt -Ss docker | grep -i container | head -1 | awk '{print $1;}')
+# Check OS
+if [[ "$(uname)" == "Darwin" ]]; then
+	# Use boot2docker for OS X
+	docker='boot2docker'
+else
+	# Try to isolate the Docker package, avoiding packages that aren't to do with Linux containers
+	docker=$(pacapt -Ss docker | grep -i container | head -1 | awk '{print $1;}')
+fi
 
 # Install Docker. Crudely bombard the installation with 'y' in case there are any user prompts
 printf 'y\ny\ny\ny\ny\n' | pacapt -S $docker
